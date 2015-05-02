@@ -1,9 +1,9 @@
 require 'zip'
 require 'sqlite3'
+require 'feidee_utils/database'
 
 module FeideeUtils
 class Kbf
-  Header = "SQLite format 3\0"
   DatabaseName = 'mymoney.sqlite'
 
   UnusedTables = %w(android_metadata t_account_info t_budget_item t_currency t_deleted_tradingEntity
@@ -27,18 +27,8 @@ class Kbf
       zipfile.each do |entry|
         if entry.name == DatabaseName
           # Each call to get_input_stream will create a new stream
-          file_stream = entry.get_input_stream
-
-          # Discard the first a few bytes content.
-          file_stream.read(Header.length)
-
-          # Write the rest to a tempfile.
-          @sqlite_file = Tempfile.new("kingdee_sqlite", binmode: true)
-          @sqlite_file.write(Header)
-          @sqlite_file.write(file_stream.read)
-          @sqlite_file.fsync
-
-          @sqlite_db = SQLite3::Database.new(@sqlite_file.path)
+          @original_sqlite_db_entry = entry
+          @sqlite_db = FeideeUtils::Database.new(entry.get_input_stream)
         end
       end
     end
@@ -65,6 +55,10 @@ class Kbf
           backup_obj.step(-1)
           backup_obj.finish
           backup_sqlite_db.close
+        }
+
+        define_method(:original_sqlite_backup) { |dest_file_path|
+          File.open(dest_file_path, "wb+").write(@original_sqlite_db_entry.get_input_stream.read);
         }
       end
       mod
@@ -136,51 +130,5 @@ class Kbf
     timestamp = @sqlite_db.get_first_row("SELECT max(lastUpdateTime) FROM #{Tables[:transactions]};")[0]
     @sqlite_timestamp = timestamp == nil ? Time.at(0) : Time.at(timestamp / 1000)
   end
-
-  AllKnownTables = {
-    t_account:                "As named",
-    t_account_book:           "A group of accounts, travel accounts etc.",
-    t_account_extra:          "Extra account configs, key/value pair.",
-    t_account_group:          "A group of accounts, saving/chekcing etc.",
-    t_account_info:           "Additional info of accounts: banks etc.",
-    t_accountgrant:           "???",
-    t_budget_item:            "Used to create budgets. An extension of category.",
-    t_binding:                "???",
-    t_category:               "Transaction categories.",
-    t_currency:               "Currency types.",
-    t_exchange:               "Currency exchange rates.",
-    t_fund:                   "List of money manage institute names. Abandoned.",
-    t_fund_holding:           "Fund accounts.",
-    t_fund_trans:             "Fund transactions.",
-    t_fund_price_history:     "Fund price history",
-    t_id_seed:                "ID seeds for all tables.",
-    t_import_history:         "As named.",
-    t_import_source:          "Import data from text messages etc.",
-    t_jct_clientdeviceregist: "???",
-    t_jct_clientdevicestatus: "???",
-    t_jct_syncbookfilelist:   "???",
-    t_jct_usergrant:          "??? Maybe if the user has purchased any service.",
-    t_jct_userlog:            "As named.",
-    t_local_recent:           "Local merchandise used recently",
-    t_message:                "Kingdee ads.",
-    t_metadata:               "Database version, client version etc.",
-    t_module_stock_holding:   "Stock accounts.",
-    t_module_stock_info:      "???",
-    t_module_stock_trans:     "Stock transactions.",
-    t_notification:           "???",
-    t_profile:                "User profile, default stuff when configuring account books.",
-    t_property:               "Data collected on user settings, key/value pair.",
-    t_syncResource:           "???",
-    t_sync_logs:              "As named.",
-    t_tag:                    "Other support like roles/merchandise.",
-    t_tradingEntity:          "Merchandise. Used together with t_user in Debt Center.",
-    t_trans_debt:             "Transactions in Debt Center.",
-    t_trans_debt_group:       "Transaction groups in Debt Center.",
-    t_transaction:            "As named.",
-    t_transaction_projectcategory_map: "???",
-    t_transaction_template:   "As named. UI.",
-    t_user:                   "Multi-user support.",
-    t_usage_count:            "As named. Abandoned."
-  }
 end
 end
