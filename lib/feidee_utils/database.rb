@@ -1,8 +1,11 @@
 require 'sqlite3'
 
+# A thin wrapper around SQLite3
 module FeideeUtils
   class Database < SQLite3::Database
     Header = "SQLite format 3\0"
+
+    attr_reader :sqlite_file
 
     def initialize(private_sqlite)
       # Discard the first a few bytes content.

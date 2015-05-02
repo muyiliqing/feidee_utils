@@ -19,7 +19,7 @@ class Kbf
     transactions: "t_transaction",
   }
 
-  attr_reader :zipfile, :sqlite_db, :sqlite_file, :extra_tables, :missing_tables
+  attr_reader :zipfile, :sqlite_db, :extra_tables, :missing_tables
   attr_reader :platform, :sqlite_name, :sqlite_timestamp
 
   def initialize(input_stream)
