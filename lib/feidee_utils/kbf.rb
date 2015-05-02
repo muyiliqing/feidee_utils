@@ -1,6 +1,7 @@
 require 'zip'
 require 'sqlite3'
 
+module FeideeUtils
 class Kbf
   Header = "SQLite format 3\0"
   DatabaseName = 'mymoney.sqlite'
@@ -181,4 +182,5 @@ class Kbf
     t_user:                   "Multi-user support.",
     t_usage_count:            "As named. Abandoned."
   }
+end
 end
