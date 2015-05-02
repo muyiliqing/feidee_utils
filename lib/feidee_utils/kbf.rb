@@ -46,8 +46,6 @@ class Kbf
         end
 
         define_method(:sqlite_backup) { |dest_file_path|
-          puts dest_file_path
-          puts dest_file_path.to_s
           @sqlite_db.execute("vacuum;")
 
           backup_sqlite_db = SQLite3::Database.new(dest_file_path.to_s)
