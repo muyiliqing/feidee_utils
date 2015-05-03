@@ -16,11 +16,6 @@ class KbfTest < MiniTest::Test
     assert @oneline_ios_backup.respond_to? :sqlite_backup
   end
 
-  def test_deleted_table_name
-    assert_equal "t_deleted_transaction", @fresh_ios_backup.send(:to_deleted_table_name, "t_transaction")
-    assert_equal "t_profile_delete", @fresh_ios_backup.send(:to_deleted_table_name, "t_profile")
-  end
-
   def test_read_fresh_backup
     empty_rows = @fresh_ios_backup.extract_transactions
     assert empty_rows.empty?

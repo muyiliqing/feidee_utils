@@ -72,21 +72,6 @@ class Kbf
   end
 
   private
-  NoDeleteSuffixTables = %w(account category tradingEntity transaction transaction_template)
-
-  def to_deleted_table_name(table_name)
-    NoDeleteSuffixTables.each do |core_name|
-      if table_name == "t_" + core_name then
-        return "t_" + "deleted_" + core_name;
-      end
-    end
-
-    return table_name + "_delete"
-  end
-
-  def to_deleted_table_names(table_names)
-    table_names.map do |x| to_deleted_table_name(x) end
-  end
 
   def custom_tables
     rows = @sqlite_db.execute <<-SQL
@@ -101,7 +86,7 @@ class Kbf
   end
 
   def drop_unused_tables
-    useful_tables = (Tables.values + to_deleted_table_names(Tables.values)).sort
+    useful_tables = (Tables.values + Tables.values.map do |x| Record.trash_table_name(x) end).sort
     tables_empty = (custom_tables - useful_tables).select do |table|
       @sqlite_db.execute("SELECT * FROM #{table};").empty?
     end
