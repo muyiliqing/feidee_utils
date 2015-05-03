@@ -9,6 +9,8 @@ module FeideeUtils
       @field_type = Hash[ columns.zip(types) ]
     end
 
+    @entity_name = 'record'
+
     class << self
       @@database = nil
 
@@ -20,17 +22,15 @@ module FeideeUtils
         @@database
       end
 
-      def last_name
-        self.name.split('::').last.downcase
-      end
+      attr_accessor :entity_name
 
       def id_field_name name = nil
-        name ||= self.last_name
+        name ||= self.entity_name
         "#{name}POID"
       end
 
       def table_name name = nil
-        name ||= self.last_name
+        name ||= self.entity_name
         "t_#{name}"
       end
 

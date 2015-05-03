@@ -1,14 +1,13 @@
+
 module FeideeUtils
-  class Transaction < Record
+  class Account < Record
     module ClassMethods
       def entity_name
-        "transaction"
+        "account"
       end
     end
-
     module Accessors
     end
-
     extend ClassMethods
     include Accessors
   end

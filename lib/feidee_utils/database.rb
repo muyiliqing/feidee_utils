@@ -9,7 +9,6 @@ module FeideeUtils
 
     MetaTable = "t_metadata"
 
-    # TODO: how should I fix this?
     Tables = {
       accounts: "t_account",
       account_groups: "t_account_group",
@@ -20,6 +19,7 @@ module FeideeUtils
     attr_reader :sqlite_file
     attr_reader :platform, :sqlite_name, :sqlite_timestamp
     attr_reader :extra_tables, :missing_tables
+    attr_reader :namespaced
 
     def initialize(private_sqlite, minimal = false)
       @sqlite_file = Database.feidee_to_sqlite(private_sqlite)
@@ -28,6 +28,25 @@ module FeideeUtils
 
       extract_metadata
       drop_unused_tables if minimal
+
+      # To use Record with different databases, generate a set of classes for each db
+      db_self = self
+      @namespaced = Module.new do |mod|
+        const_set(:Record, Class.new(Record) {
+          # To get eger evaluation
+          define_singleton_method("database") { db_self }
+          def self.database=(value) raise "Cannot reassign the database, create a new Database instead" end
+        })
+
+        const_set(:Transaction, Class.new(mod::Record) {
+          extend FeideeUtils::Transaction::ClassMethods
+          include FeideeUtils::Transaction::Accessors
+        })
+        const_set(:Account, Class.new(mod::Record) {
+          extend FeideeUtils::Account::ClassMethods
+          include FeideeUtils::Account::Accessors
+        })
+      end
     end
 
     def sqlite_backup(dest_file_path)

@@ -10,7 +10,14 @@ class RecordTest < MiniTest::Test
     @sqlite_db.execute("INSERT INTO t_record values(2, 2, 'base');")
     @sqlite_db.execute("CREATE TABLE t_tag(tagPOID INT PRIMARY KEY, tag_name VARCHAR(255));")
     @sqlite_db.execute("INSERT INTO t_tag values(2, 'base');")
+
     FeideeUtils::Record.database = @sqlite_db
+    @fake_tag_table = Class.new(FeideeUtils::Record) do
+      self.entity_name = 'tag'
+    end
+    @fake_transaction_table = Class.new(FeideeUtils::Record) do
+      self.entity_name = 'transaction'
+    end
   end
 
   def test_id_field_name
@@ -21,24 +28,13 @@ class RecordTest < MiniTest::Test
     assert_equal 't_record', FeideeUtils::Record.table_name
   end
 
-  def test_subclass_last_name
-    fake_tag_table = Class.new(FeideeUtils::Record) do
-      def self.name
-        'Record::Tag'
-      end
-    end
-    assert_equal 'tag', fake_tag_table.last_name
+  def test_subclass_entity_name
+    assert_equal 'tag', @fake_tag_table.entity_name
   end
 
   def test_trash_table_name
     assert_equal 't_record_delete', FeideeUtils::Record.trash_table_name
-    fake_transaction_table = Class.new(FeideeUtils::Record) do
-      def self.name
-        'Transaction'
-      end
-    end
-
-    assert_equal 't_deleted_transaction', fake_transaction_table.trash_table_name
+    assert_equal 't_deleted_transaction', @fake_transaction_table.trash_table_name
   end
 
   def test_all
@@ -59,13 +55,7 @@ class RecordTest < MiniTest::Test
   end
 
   def test_subclass_find_by_id
-    fake_tag_table = Class.new(FeideeUtils::Record) do
-      def self.name
-        'Record::Tag'
-      end
-    end
-
-    tag = fake_tag_table.find_by_id(2)
+    tag = @fake_tag_table.find_by_id(2)
     assert_equal 2, tag.field['tagPOID']
     assert_equal 'base', tag.field['tag_name']
   end

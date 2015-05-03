@@ -1,6 +1,9 @@
 require 'zip'
 require 'sqlite3'
 require 'feidee_utils/database'
+require 'feidee_utils/record'
+require 'feidee_utils/transaction'
+require 'feidee_utils/account'
 
 module FeideeUtils
 class Kbf
@@ -21,7 +24,15 @@ class Kbf
   end
 
   def extract_original_sqlite(dest_file_path = nil)
-    Database.feidee_to_sqlite(@original_sqlite_db_entry.get_input_stream, dest_file_path)
+    FeideeUtils::Database.feidee_to_sqlite(@original_sqlite_db_entry.get_input_stream, dest_file_path)
+  end
+
+  def extract_transactions
+    @sqlite_db.namespaced::Transaction.all
+  end
+
+  def extract_accounts
+    @sqlite_db.namespaced::Account.all
   end
 
   class << self

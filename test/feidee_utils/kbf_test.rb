@@ -9,8 +9,21 @@ class KbfTest < MiniTest::Test
     @oneline_ios_backup = FeideeUtils::Kbf.open_file(base_path.join("../data/QiQi-20150422204102.kbf"))
   end
 
-  def test_read_backup
+  def test_parse_zip
     assert @fresh_ios_backup.sqlite_db.is_a? FeideeUtils::Database
     assert @oneline_ios_backup.sqlite_db.is_a? FeideeUtils::Database
+  end
+
+  def test_extract_sqlite
+    backup_file = @oneline_ios_backup.extract_original_sqlite(nil)
+    db = SQLite3::Database.new(backup_file.path)
+    assert !db.closed?
+  end
+
+  def test_read_backup
+    empty_rows = @fresh_ios_backup.extract_transactions
+    assert empty_rows.empty?
+    one_line = @oneline_ios_backup.extract_accounts
+    assert_equal 1, one_line.size()
   end
 end
