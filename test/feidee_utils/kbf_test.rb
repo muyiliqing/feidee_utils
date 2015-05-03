@@ -9,34 +9,8 @@ class KbfTest < MiniTest::Test
     @oneline_ios_backup = FeideeUtils::Kbf.open_file(base_path.join("../data/QiQi-20150422204102.kbf"))
   end
 
-  def test_defined_module
-    assert @fresh_ios_backup.respond_to? :extract_transactions
-    assert @oneline_ios_backup.respond_to? :extract_transactions
-    assert @fresh_ios_backup.respond_to? :sqlite_backup
-    assert @oneline_ios_backup.respond_to? :sqlite_backup
-  end
-
-  def test_read_fresh_backup
-    empty_rows = @fresh_ios_backup.extract_transactions
-    assert empty_rows.empty?
-  end
-
-  def test_read_oneline_backup
-    one_line = @oneline_ios_backup.extract_transactions
-    assert_equal 1, one_line.size()
-  end
-
-  def test_paltform
-    assert_equal "iOS", @oneline_ios_backup.platform
-  end
-
-  def test_timestamp
-    assert_equal Time.parse("1970-01-01 10:00:00 +1000"), @fresh_ios_backup.sqlite_timestamp
-    assert_equal Time.parse("2015-04-22 20:40:29 +1000"), @oneline_ios_backup.sqlite_timestamp
-  end
-
-  def test_backup_name
-    assert_equal "QiQi", @fresh_ios_backup.sqlite_name
-    assert_equal "QiQi", @oneline_ios_backup.sqlite_name
+  def test_read_backup
+    assert @fresh_ios_backup.sqlite_db.is_a? FeideeUtils::Database
+    assert @oneline_ios_backup.sqlite_db.is_a? FeideeUtils::Database
   end
 end
