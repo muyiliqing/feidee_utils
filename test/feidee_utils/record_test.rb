@@ -13,10 +13,15 @@ class RecordTest < MiniTest::Test
 
     FeideeUtils::Record.database = @sqlite_db
     @fake_tag_table = Class.new(FeideeUtils::Record) do
-      self.entity_name = 'tag'
+      def self.entity_name
+        'tag'
+      end
     end
+
     @fake_transaction_table = Class.new(FeideeUtils::Record) do
-      self.entity_name = 'transaction'
+      def self.entity_name
+        'transaction'
+      end
     end
   end
 

@@ -38,14 +38,22 @@ module FeideeUtils
           def self.database=(value) raise "Cannot reassign the database, create a new Database instead" end
         })
 
-        const_set(:Transaction, Class.new(mod::Record) {
-          extend FeideeUtils::Transaction::ClassMethods
-          include FeideeUtils::Transaction::Accessors
-        })
-        const_set(:Account, Class.new(mod::Record) {
-          extend FeideeUtils::Account::ClassMethods
-          include FeideeUtils::Account::Accessors
-        })
+        FeideeUtils::Record.child_classes.each do |child_class|
+          if child_class.name.start_with? FeideeUtils.name
+            class_name = child_class.name.sub(/#{FeideeUtils.name}::/, '')
+            # Generate a const for the child class
+            const_set(class_name, Class.new(mod::Record) {
+              # Try mimic the behavior of this sub class
+              # That requires all subclasses only implement via modules.
+              if child_class.constants.include? :ClassMethods
+                extend child_class::ClassMethods
+              end
+              child_class.included_modules.each do |sub_mod|
+                include sub_mod
+              end
+            })
+          end
+        end
       end
     end
 

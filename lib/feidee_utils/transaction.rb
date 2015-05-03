@@ -6,10 +6,6 @@ module FeideeUtils
       end
     end
 
-    module Accessors
-    end
-
     extend ClassMethods
-    include Accessors
   end
 end

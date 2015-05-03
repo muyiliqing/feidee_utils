@@ -22,7 +22,16 @@ module FeideeUtils
         @@database
       end
 
-      attr_accessor :entity_name
+      attr_reader :child_classes
+
+      def inherited(child_class)
+        @child_classes ||= Set.new
+        if child_class.name != nil && (child_class.name.start_with? FeideeUtils.name)
+          @child_classes.add(child_class)
+        end
+      end
+
+      attr_reader :entity_name
 
       def id_field_name name = nil
         name ||= self.entity_name
