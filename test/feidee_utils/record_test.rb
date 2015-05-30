@@ -11,7 +11,11 @@ class RecordTest < MiniTest::Test
     @sqlite_db.execute("CREATE TABLE t_tag(tagPOID INT PRIMARY KEY, tag_name VARCHAR(255));")
     @sqlite_db.execute("INSERT INTO t_tag values(2, 'base');")
 
-    FeideeUtils::Record.database = @sqlite_db
+    temp_db = @sqlite_db
+    FeideeUtils::Record.class_eval do
+      define_singleton_method(:database) { temp_db }
+    end
+
     @fake_tag_table = Class.new(FeideeUtils::Record) do
       def self.entity_name
         'tag'

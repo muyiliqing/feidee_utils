@@ -24,30 +24,17 @@ module FeideeUtils
       @field_type = Hash[ columns.zip(types) ]
     end
 
-    @entity_name = 'record'
-
     class << self
-      @@database = nil
-
-      def database=(sqlite_db)
-        @@database = sqlite_db
-      end
-
+      protected
       def database
-        @@database
+        raise NotImplementedError.new("Subclasses must set database")
       end
 
-      attr_reader :child_classes
-
-      def inherited(child_class)
-        @child_classes ||= Set.new
-        if child_class.name != nil && (child_class.name.start_with? FeideeUtils.name)
-          @child_classes.add(child_class)
-        end
+      def entity_name
+        "record"
       end
 
-      attr_reader :entity_name
-
+      public
       def id_field_name name = nil
         name ||= self.entity_name
         "#{name}POID"
@@ -95,28 +82,28 @@ module FeideeUtils
     end
 
     class << self
+      attr_reader :child_classes
+
+      def inherited(child_class)
+        @child_classes ||= Set.new
+        if child_class.name != nil && (child_class.name.start_with? FeideeUtils.name)
+          @child_classes.add(child_class)
+        end
+      end
+
       # To use Record with different databases, generate a set of classes for each db
       def generate_namespaced_record_classes(db)
         Module.new do |mod|
-          const_set(:Record, Class.new(Record) {
-            # To get eger evaluation
-            define_singleton_method("database") { db }
-            def self.database=(value) raise "Cannot reassign the database, create a new Database instead" end
+          const_set(:Database, Module.new {
+            define_method("database") { db }
           })
 
           Record.child_classes.each do |child_class|
             if child_class.name.start_with? FeideeUtils.name
               class_name = child_class.name.sub(/#{FeideeUtils.name}::/, '')
               # Generate a const for the child class
-              const_set(class_name, Class.new(mod::Record) {
-                # Try mimic the behavior of this sub class
-                # That requires all subclasses only implement via modules.
-                if child_class.constants.include? :ClassMethods
-                  extend child_class::ClassMethods
-                end
-                child_class.included_modules.each do |sub_mod|
-                  include sub_mod
-                end
+              const_set(class_name, Class.new(child_class) {
+                extend mod::Database
               })
             end
           end
