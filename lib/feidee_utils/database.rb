@@ -29,32 +29,7 @@ module FeideeUtils
       extract_metadata
       drop_unused_tables if minimal
 
-      # To use Record with different databases, generate a set of classes for each db
-      db_self = self
-      @namespaced = Module.new do |mod|
-        const_set(:Record, Class.new(Record) {
-          # To get eger evaluation
-          define_singleton_method("database") { db_self }
-          def self.database=(value) raise "Cannot reassign the database, create a new Database instead" end
-        })
-
-        FeideeUtils::Record.child_classes.each do |child_class|
-          if child_class.name.start_with? FeideeUtils.name
-            class_name = child_class.name.sub(/#{FeideeUtils.name}::/, '')
-            # Generate a const for the child class
-            const_set(class_name, Class.new(mod::Record) {
-              # Try mimic the behavior of this sub class
-              # That requires all subclasses only implement via modules.
-              if child_class.constants.include? :ClassMethods
-                extend child_class::ClassMethods
-              end
-              child_class.included_modules.each do |sub_mod|
-                include sub_mod
-              end
-            })
-          end
-        end
-      end
+      @namespaced = Record.generate_namespaced_record_classes(self)
     end
 
     def sqlite_backup(dest_file_path)
