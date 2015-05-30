@@ -5,15 +5,13 @@ module FeideeUtils
   # are provided by ActiveRecord::Base. For example, Base.all(), Base.find_by_id() are tied to a specific
   # table in a specific database.
   # The problem we are solving here is not the same as ActiveRecord. In ActiveRecord, the databases
-  # are static, i.e. they won't be changed during runtime. Meanwhile, in our case, new databases can be
-  # created at runtime, when a new KBF backup file is uploaded. Furthermore, multiple instances of different databases
+  # are static, i.e. they won't be changed at runtime. Meanwhile, in our case, new databases can be created
+  # at runtime, when a new KBF backup file is uploaded. Furthermore, multiple instances of different databases
   # can co-exist at the same time. To provide the same syntax as ActiveRecord, a standalone "Base" class has
   # to be created for each database.
   # In our implementation, when a new database is created, a subclass of Record is created in a new namepsace.
-  # For each subclass of Record, a new class with silimar code is copied to the new namespace. The super
-  # class of the new class is set to the namespaced version of Record.
-  # There's no such thing as "copy a class and change it's superclass". Thus each subclass of Record must be
-  # implemented sololy by modules, so that those modules can be included by the generated classes.
+  # For each subclass of Record, a new subclass is copied to the new namespace, with it's database method
+  # overloaded.
   class Record
     attr_reader :raw_row
     attr_reader :field, :field_type
