@@ -27,14 +27,6 @@ class Kbf
     FeideeUtils::Database.feidee_to_sqlite(@original_sqlite_db_entry.get_input_stream, dest_file_path)
   end
 
-  def extract_transactions
-    @sqlite_db.namespaced::Transaction.all
-  end
-
-  def extract_accounts
-    @sqlite_db.namespaced::Account.all
-  end
-
   class << self
     def open_file(file_name)
       return Kbf.new(File.open(file_name))
