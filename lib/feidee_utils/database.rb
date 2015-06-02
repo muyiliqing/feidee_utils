@@ -4,16 +4,17 @@ require 'sqlite3'
 module FeideeUtils
   class Database < SQLite3::Database
     UnusedTables = %w(android_metadata t_account_info t_budget_item t_currency t_deleted_tradingEntity
-    t_deleted_tag t_deleted_transaction_template t_exchange t_fund t_id_seed t_local_recent t_metadata
-    t_message t_profile t_property t_tag t_tradingEntity t_transaction_template t_usage_count t_user)
-
-    MetaTable = "t_metadata"
+    t_deleted_tag t_deleted_transaction_template t_exchange t_fund t_id_seed t_local_recent
+    t_message t_property t_tag t_tradingEntity t_transaction_template t_usage_count t_user)
 
     Tables = {
       accounts: "t_account",
       account_groups: "t_account_group",
       categories: "t_category",
       transactions: "t_transaction",
+
+      metadata: "t_metadata",
+      profile: "t_profile",
     }
 
     attr_reader :sqlite_file
@@ -21,13 +22,13 @@ module FeideeUtils
     attr_reader :extra_tables, :missing_tables
     attr_reader :namespaced
 
-    def initialize(private_sqlite, minimal = false)
+    def initialize(private_sqlite, strip = false)
       @sqlite_file = Database.feidee_to_sqlite(private_sqlite)
 
       super(@sqlite_file.path)
 
       extract_metadata
-      drop_unused_tables if minimal
+      drop_unused_tables if strip
 
       @namespaced = Record.generate_namespaced_record_classes(self)
     end
@@ -74,9 +75,9 @@ module FeideeUtils
     end
 
     def extract_metadata
-      @platform = self.execute("SELECT platform from #{MetaTable}")[0][0];
+      @platform = self.execute("SELECT platform from #{Tables["metadata"]}")[0][0];
 
-      @sqlite_name = self.get_first_row("SELECT accountBookName FROM t_profile;")[0];
+      @sqlite_name = self.get_first_row("SELECT accountBookName FROM #{Tables["profile"]};")[0];
 
       # This is not recorded in the database, so the lastest lastUpdateTime of all
       # transactions is chosen.
