@@ -18,6 +18,10 @@ module FeideeUtils
       field["name"]
     end
 
+    # NOTE: balance is not set for credit cards etc. Instead
+    # credit/debit are used.
+    # Guess: The special behavior is be controlled by
+    # account_group_poid.
     def balance
       self.class.to_bigdecimal(field["balance"]) + credit - debit
     end
@@ -34,6 +38,10 @@ module FeideeUtils
       field["currencyType"]
     end
 
+    # NOTE: The parent poid of an orphan is 0.
+    # The parent poid of a toplevel parent is -1.
+    # Guess: A parent can't have it's parents,
+    # i.e. a parent's parent poid is -1.
     def parent_poid
       field["parent"]
     end
