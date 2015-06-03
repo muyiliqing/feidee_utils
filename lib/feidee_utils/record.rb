@@ -13,8 +13,11 @@ module FeideeUtils
   # For each subclass of Record, a new subclass is copied to the new namespace, with it's database method
   # overloaded.
   class Record
+    protected
     attr_reader :raw_row
     attr_reader :field, :field_type
+
+    public
     def initialize(columns, types, raw_row)
       @raw_row = raw_row
 
