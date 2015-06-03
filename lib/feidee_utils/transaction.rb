@@ -1,3 +1,5 @@
+require 'feidee_utils/record'
+
 module FeideeUtils
   class Transaction < Record
     module ClassMethods
@@ -103,10 +105,13 @@ module FeideeUtils
           key = transaction.key_parts
           if incomming_count.has_key? key and incomming_count[key] > 0
             incomming_count[key] -= 1
-            return false
+            false
+          else
+            true
           end
+        else
+          true
         end
-        true
       end
     end
 

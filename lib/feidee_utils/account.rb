@@ -63,12 +63,6 @@ module FeideeUtils
       field["accountGroupPOID"]
     end
 
-    private
-    def self.to_bigdecimal number
-      # Be aware of the precision lost from String -> Float -> BigDecimal.
-      BigDecimal.new(number, 12).round(2)
-    end
-
     # Ignored fields:
     # tradingEntityPOID: Then opening bank
     # usedCount

@@ -1,6 +1,7 @@
 require "feidee_utils/account"
 require "feidee_utils/database"
 require 'minitest/autorun'
+require 'pathname'
 
 class AccountTest < MiniTest::Test
   def setup
