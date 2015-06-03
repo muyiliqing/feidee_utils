@@ -26,7 +26,7 @@ module FeideeUtils
     end
 
     def poid
-      @field[id_field_name]
+      @field[self.class.id_field_name]
     end
 
     def last_update_time

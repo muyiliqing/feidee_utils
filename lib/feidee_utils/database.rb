@@ -75,9 +75,9 @@ module FeideeUtils
     end
 
     def extract_metadata
-      @platform = self.execute("SELECT platform from #{Tables["metadata"]}")[0][0];
+      @platform = self.execute("SELECT platform from #{Tables[:metadata]}")[0][0];
 
-      @sqlite_name = self.get_first_row("SELECT accountBookName FROM #{Tables["profile"]};")[0];
+      @sqlite_name = self.get_first_row("SELECT accountBookName FROM #{Tables[:profile]};")[0];
 
       # This is not recorded in the database, so the lastest lastUpdateTime of all
       # transactions is chosen.

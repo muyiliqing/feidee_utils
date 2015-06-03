@@ -55,17 +55,17 @@ class RecordTest < MiniTest::Test
 
   def test_find_by_id
     record = FeideeUtils::Record.find_by_id(1)
-    assert_equal 1, record.field['recordPOID']
-    assert_equal 1, record.field['record_key']
-    assert_equal 'stupid record', record.field['record_value']
-    assert_equal 'INT', record.field_type['recordPOID']
-    assert_equal 'INT', record.field_type['record_key']
-    assert_equal 'VARCHAR(255)', record.field_type['record_value']
+    assert_equal 1, (record.send :field)['recordPOID']
+    assert_equal 1, (record.send :field)['record_key']
+    assert_equal 'stupid record', (record.send :field)['record_value']
+    assert_equal 'INT', (record.send :field_type)['recordPOID']
+    assert_equal 'INT', (record.send :field_type)['record_key']
+    assert_equal 'VARCHAR(255)', (record.send :field_type)['record_value']
   end
 
   def test_subclass_find_by_id
     tag = @fake_tag_table.find_by_id(2)
-    assert_equal 2, tag.field['tagPOID']
-    assert_equal 'base', tag.field['tag_name']
+    assert_equal 2, (tag.send :field)['tagPOID']
+    assert_equal 'base', (tag.send :field)['tag_name']
   end
 end

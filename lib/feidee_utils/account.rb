@@ -1,3 +1,5 @@
+require 'feidee_utils/record'
+require 'bigdecimal'
 
 module FeideeUtils
   class Account < Record
@@ -17,8 +19,15 @@ module FeideeUtils
     end
 
     def balance
-      # Be aware of the precision lost from String -> Float -> BigDecimal.
-      BigDecimal.new(field["balance"], 12).round(2)
+      self.class.to_bigdecimal(field["balance"]) + credit - debit
+    end
+
+    def credit
+      self.class.to_bigdecimal(field["amountOfCredit"])
+    end
+
+    def debit
+      self.class.to_bigdecimal(field["amountOfLiability"])
     end
 
     def currency
@@ -46,16 +55,16 @@ module FeideeUtils
       field["accountGroupPOID"]
     end
 
+    private
+    def self.to_bigdecimal number
+      # Be aware of the precision lost from String -> Float -> BigDecimal.
+      BigDecimal.new(number, 12).round(2)
+    end
+
     # Ignored fields:
-    # tradingEntityPOID:
+    # tradingEntityPOID: Then opening bank
     # usedCount
-    # accountGroupPOID
-    # amountOfLiability
-    # amountOfCredit
-    # ordered
-    # code
     # hidden
-    # clientID
     # TODO: WTF are these fields?
     # ordered
     # code

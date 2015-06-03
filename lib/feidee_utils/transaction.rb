@@ -13,8 +13,8 @@ module FeideeUtils
       1 => :income,
       2 => :transfer,
       3 => :transfer,
-      8 => :initial_balance, # Appended later.
-      9 => :initial_balance, # When creating account.
+      8 => :initial_balance, # Positive.
+      9 => :initial_balance, # Negative.
     }
 
     def created_at
