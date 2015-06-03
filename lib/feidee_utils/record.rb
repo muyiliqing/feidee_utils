@@ -30,7 +30,7 @@ module FeideeUtils
     end
 
     def last_update_time
-      timestamp_to_time(@field["lastUpdateTime"] / 1000.0)
+      timestamp_to_time(@field["lastUpdateTime"])
     end
 
     def last_update_time_str

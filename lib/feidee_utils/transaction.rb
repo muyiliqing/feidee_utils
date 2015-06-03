@@ -74,11 +74,11 @@ module FeideeUtils
     # Amount accessors
 
     def buyer_deduction
-      field["buyerMoney"]
+      sign_by_type(field["buyerMoney"])
     end
 
     def seller_addition
-      field["sellerMoney"]
+      sign_by_type(field["sellerMoney"])
     end
 
     class DifferentAmountException < Exception
@@ -87,6 +87,32 @@ module FeideeUtils
     def amount
       raise DifferentAmountException unless buyer_deduction == seller_addition
       buyer_deduction
+    end
+
+    def uuid
+      field["relation"]
+    end
+
+    class TransfersNotPaired < Exception
+    end
+
+    def self.remove_uuid_duplications transactions
+      uuids_map = transactions.inject({}) do |uuids, transaction|
+        if transaction.raw_type == 2 or transaction.raw_type == 3
+          uuid = transaction.uuid
+          uuids[uuid] ||= []
+          uuids[uuid] << transaction.poid
+        end
+        uuids
+      end
+
+      uuids_map.each do |uuid, transfers|
+        raise TransfersNotPaired.new([uuid] + transfers) if transfers.size != 2
+      end
+
+      transactions.select do |transaction|
+        !(transaction.raw_type == 3 and uuids_map.has_key? transaction.uuid)
+      end
     end
 
     def self.remove_duplications transactions
@@ -128,19 +154,23 @@ module FeideeUtils
       ]
     end
 
+    private
+    def sign_by_type num
+      raw_type == 9 ? -num : num
+    end
+
     # TODO: add support for photos.
     # photoName
     # photoNeedUpload
     # TODO: WTF are those fields?
-    # relation            varchar(200) default ''
     # relationUnitPOID    LONG
-    # ffrom               varchar(250) default ''
     # clientID            LONG default 0
     # FSourceKey          varchar(100) DEFAULT NULL
     #
     # Ignored:
     # creatorTradingEntityPOID
     # modifierTradingEntityPOID
+    # ffrom: The signature of the App writting this transaction.
 
     # Schema:
     # transactionPOID LONG NOT NULL,

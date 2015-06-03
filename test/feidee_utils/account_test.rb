@@ -65,4 +65,14 @@ class AccountTest < MiniTest::Test
   def test_account_group_poid
     @accounts.each do |account| refute_nil account.account_group_poid end
   end
+
+  def test_memo
+    assert_equal "My precious", @cash.memo
+  end
+
+  def test_last_update_time
+    @accounts.each do |account|
+      assert_equal 2015, account.last_update_time.year
+    end
+  end
 end
