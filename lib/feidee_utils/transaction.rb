@@ -30,7 +30,11 @@ module FeideeUtils
     end
 
     def type
-      TypeEnum[field["type"]]
+      TypeEnum[raw_type]
+    end
+
+    def raw_type
+      field["type"]
     end
 
     def memo
@@ -81,6 +85,42 @@ module FeideeUtils
     def amount
       raise DifferentAmountException unless buyer_deduction == seller_addition
       buyer_deduction
+    end
+
+    def self.remove_duplications transactions
+      # count the number of incomming transfers.
+      incomming_count = transactions.inject(Hash.new(0)) do |hash, transaction|
+        if transaction.raw_type == 2
+          key = transaction.key_parts
+          hash[key] += 1
+        end
+        hash
+      end
+
+      # Remove outgoing transfer accordingly.
+      transactions.select do |transaction|
+        if transaction.raw_type == 3
+          key = transaction.key_parts
+          if incomming_count.has_key? key and incomming_count[key] > 0
+            incomming_count[key] -= 1
+            return false
+          end
+        end
+        true
+      end
+    end
+
+    def key_parts
+      @key_parts ||= [
+        buyer_account_poid,
+        seller_account_poid,
+        trade_at.to_s,
+        created_at.to_s,
+        modified_at.to_s,
+        buyer_deduction,
+        seller_addition,
+        memo,
+      ]
     end
 
     # TODO: add support for photos.
