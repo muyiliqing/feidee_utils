@@ -22,6 +22,24 @@ module FeideeUtils
       @field_type = Hash[ columns.zip(types) ]
     end
 
+    def poid
+      @field[id_field_name]
+    end
+
+    def last_update_time
+      timestamp_to_time(@field["lastUpdateTime"] / 1000.0)
+    end
+
+    def last_update_time_str
+      # Only date is in the timestamp. (on iOS)
+      last_update_time.strftime("%F")
+    end
+
+    private
+    def timestamp_to_time num
+      Time.at(num / 1000.0, num % 1000)
+    end
+
     class << self
       protected
       def database
