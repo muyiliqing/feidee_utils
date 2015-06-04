@@ -2,7 +2,7 @@ require 'feidee_utils/kbf'
 require 'feidee_utils/database'
 require 'feidee_utils/record'
 require 'feidee_utils/account'
-require 'feidee_utils/tranaction'
+require 'feidee_utils/transaction'
 
 module FeideeUtils
 end
