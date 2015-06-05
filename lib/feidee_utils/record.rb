@@ -47,19 +47,6 @@ module FeideeUtils
         name ||= self.entity_name
         "t_#{name}"
       end
-
-      NoDeleteSuffixTables = %w(account category tradingEntity transaction transaction_template)
-
-      def trash_table_name name = nil
-        name ||= self.table_name
-        NoDeleteSuffixTables.each do |core_name|
-          if name == "t_" + core_name then
-            return "t_" + "deleted_" + core_name;
-          end
-        end
-
-        name + "_delete"
-      end
     end
 
     # Basic accessors, poid, last update time, etc.

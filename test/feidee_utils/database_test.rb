@@ -32,4 +32,10 @@ class DatabaseTest < MiniTest::Test
     one_line = @oneline_ios_backup.execute("SELECT * from t_transaction;")
     assert_equal 1, one_line.size()
   end
+
+  def test_trash_table_name
+    assert_equal 't_record_delete', (FeideeUtils::Database.trash_table_name "t_record")
+    assert_equal 't_deleted_transaction', (FeideeUtils::Database.trash_table_name "t_transaction")
+  end
+
 end

@@ -42,11 +42,6 @@ class RecordTest < MiniTest::Test
     assert_equal 'tag', @fake_tag_table.entity_name
   end
 
-  def test_trash_table_name
-    assert_equal 't_record_delete', FeideeUtils::Record.trash_table_name
-    assert_equal 't_deleted_transaction', @fake_transaction_table.trash_table_name
-  end
-
   # Accessors
   def test_poid
     raw_result = @sqlite_db.query("SELECT * FROM t_record WHERE record_key = 1")

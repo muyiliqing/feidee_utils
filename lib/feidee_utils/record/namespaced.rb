@@ -13,13 +13,15 @@ module FeideeUtils
 
         # To use Record with different databases, generate a set of classes for each db
         def generate_namespaced_record_classes(db)
+          @child_classes ||= Set.new
+          this = self
           Module.new do |mod|
             const_set(:Database, Module.new {
               define_method("database") { db }
               define_method("environment") { mod }
             })
 
-            Record.child_classes.each do |child_class|
+            this.child_classes.each do |child_class|
               if child_class.name.start_with? FeideeUtils.name
                 class_name = child_class.name.sub(/#{FeideeUtils.name}::/, '')
                 # Generate a const for the child class

@@ -1,4 +1,5 @@
 require 'sqlite3'
+require 'feidee_utils/record'
 
 # A thin wrapper around SQLite3
 module FeideeUtils
@@ -57,7 +58,7 @@ module FeideeUtils
     end
 
     def drop_unused_tables
-      useful_tables = (Tables.values + Tables.values.map do |x| Record.trash_table_name(x) end).sort
+      useful_tables = (Tables.values + Tables.values.map do |x| trash_table_name(x) end).sort
       tables_empty = (all_tables - useful_tables).select do |table|
         self.execute("SELECT * FROM #{table};").empty?
       end
@@ -103,6 +104,20 @@ module FeideeUtils
         sqlite_file.write(private_sqlite.read)
         sqlite_file.fsync
         sqlite_file
+      end
+    end
+
+    class << self
+      NoDeleteSuffixTables = %w(account category tradingEntity transaction transaction_template)
+
+      def trash_table_name name
+        NoDeleteSuffixTables.each do |core_name|
+          if name == "t_" + core_name then
+            return "t_" + "deleted_" + core_name;
+          end
+        end
+
+        name + "_delete"
       end
     end
 
