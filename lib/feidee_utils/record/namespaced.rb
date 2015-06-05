@@ -16,6 +16,7 @@ module FeideeUtils
           Module.new do |mod|
             const_set(:Database, Module.new {
               define_method("database") { db }
+              define_method("environment") { mod }
             })
 
             Record.child_classes.each do |child_class|
