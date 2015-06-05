@@ -2,6 +2,7 @@ require 'feidee_utils/record/accessors'
 require 'feidee_utils/record/namespaced'
 require 'feidee_utils/record/persistent'
 require 'feidee_utils/record/utils'
+require 'feidee_utils/record/modified_record'
 
 module FeideeUtils
   # The implementation here is wired.
@@ -18,7 +19,6 @@ module FeideeUtils
   # For each subclass of Record, a new subclass is copied to the new namespace, with it's database method
   # overloaded.
   class Record
-    protected
     attr_reader :field, :field_type
 
     public
