@@ -58,7 +58,7 @@ module FeideeUtils
     end
 
     def drop_unused_tables
-      useful_tables = (Tables.values + Tables.values.map do |x| trash_table_name(x) end).sort
+      useful_tables = (Tables.values + Tables.values.map do |x| self.class.trash_table_name(x) end).sort
       tables_empty = (all_tables - useful_tables).select do |table|
         self.execute("SELECT * FROM #{table};").empty?
       end
