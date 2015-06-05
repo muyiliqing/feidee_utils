@@ -55,6 +55,20 @@ class RecordTest < MiniTest::Test
     assert_equal 1, record.poid
   end
 
+  def test_define_accessors
+    assert (FeideeUtils::Record.respond_to? :define_accessors), "Record doesn't have define_accessors class method."
+    klass = Class.new(FeideeUtils::Record) do
+      def field
+        { "x" => 2, "y" => 1}
+      end
+
+      define_accessors({ xxx: "x", yyy: "y" })
+    end
+    instance = klass.new([], [], [])
+    assert_equal 2, instance.xxx
+    assert_equal 1, instance.yyy
+  end
+
   # Persistent
   def test_all
     records = FeideeUtils::Record.all
