@@ -10,6 +10,32 @@ module FeideeUtils
 
     extend ClassMethods
 
+    FieldMappings = {
+      raw_created_at:         "createdTime",
+      raw_modified_at:        "modifiedTime",
+      raw_trade_at:           "tradeTime",
+      raw_type:               "type",
+      memo:                   "memo",
+      buyer_account_poid:     "buyerAccountPOID",
+      buyer_category_poid:    "buyerCategoryPOID",
+      seller_account_poid:    "sellerAccountPOID",
+      seller_category_poid:   "sellerCategoryPOID",
+      raw_buyer_deduction:    "buyerMoney",
+      raw_seller_addition:    "sellerMoney",
+      uuid:                   "relation",
+    }
+
+    IgnoredFields = [
+      "creatorTradingEntityPOID",
+      "modifierTradingEntityPOID",
+      "ffrom",                # The signature of the App writting this transaction.
+      "photoName",            # To be added
+      "photoNeedUpload",      # To be added
+      "relationUnitPOID",     # WTF
+      "clientID",             # WTF
+      "FSourceKey",           # WTF
+    ]
+
     TypeEnum = {
       0 => :expenditure,
       1 => :income,
@@ -19,48 +45,22 @@ module FeideeUtils
       9 => :initial_balance, # Negative.
     }
 
+    define_accessors(FieldMappings)
+
     def created_at
-      timestamp_to_time(field["createdTime"])
+      timestamp_to_time(raw_created_at)
     end
 
     def modified_at
-      timestamp_to_time(field["modifiedTime"])
+      timestamp_to_time(raw_modified_at)
     end
 
     def trade_at
-      timestamp_to_time(field["tradeTime"])
+      timestamp_to_time(raw_trade_at)
     end
 
     def type
       TypeEnum[raw_type]
-    end
-
-    def raw_type
-      field["type"]
-    end
-
-    def memo
-      field["memo"]
-    end
-
-    # Account accessors
-
-    def buyer_account_poid
-      field["buyerAccountPOID"]
-    end
-
-    def seller_account_poid
-      field["sellerAccountPOID"]
-    end
-
-    # Category accessors
-
-    def buyer_category_poid
-      field["buyerCategoryPOID"]
-    end
-
-    def seller_category_poid
-      field["sellerCategoryPOID"]
     end
 
     class DifferentCategoryException < Exception
@@ -74,11 +74,11 @@ module FeideeUtils
     # Amount accessors
 
     def buyer_deduction
-      sign_by_type(field["buyerMoney"])
+      sign_by_type(raw_buyer_deduction)
     end
 
     def seller_addition
-      sign_by_type(field["sellerMoney"])
+      sign_by_type(raw_seller_addition)
     end
 
     class DifferentAmountException < Exception
@@ -87,10 +87,6 @@ module FeideeUtils
     def amount
       raise DifferentAmountException unless buyer_deduction == seller_addition
       buyer_deduction
-    end
-
-    def uuid
-      field["relation"]
     end
 
     class TransfersNotPaired < Exception
@@ -158,19 +154,6 @@ module FeideeUtils
     def sign_by_type num
       raw_type == 9 ? -num : num
     end
-
-    # TODO: add support for photos.
-    # photoName
-    # photoNeedUpload
-    # TODO: WTF are those fields?
-    # relationUnitPOID    LONG
-    # clientID            LONG default 0
-    # FSourceKey          varchar(100) DEFAULT NULL
-    #
-    # Ignored:
-    # creatorTradingEntityPOID
-    # modifierTradingEntityPOID
-    # ffrom: The signature of the App writting this transaction.
 
     # Schema:
     # transactionPOID LONG NOT NULL,
