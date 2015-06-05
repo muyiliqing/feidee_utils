@@ -1,3 +1,8 @@
+require 'feidee_utils/record/accessors'
+require 'feidee_utils/record/namespaced'
+require 'feidee_utils/record/persistent'
+require 'feidee_utils/record/utils'
+
 module FeideeUtils
   # The implementation here is wired.
   # The goal is to create a class hierachy similar to ActiveRecord, where every table is represented by a
@@ -14,39 +19,12 @@ module FeideeUtils
   # overloaded.
   class Record
     protected
-    attr_reader :raw_row
     attr_reader :field, :field_type
 
     public
     def initialize(columns, types, raw_row)
-      @raw_row = raw_row
-
       @field = Hash[ columns.zip(raw_row) ]
       @field_type = Hash[ columns.zip(types) ]
-    end
-
-    def poid
-      @field[self.class.id_field_name]
-    end
-
-    def last_update_time
-      timestamp_to_time(@field["lastUpdateTime"])
-    end
-
-    def last_update_time_str
-      # Only date is in the timestamp. (on iOS)
-      last_update_time.strftime("%F")
-    end
-
-    private
-    def timestamp_to_time num
-      Time.at(num / 1000.0, num % 1000)
-    end
-
-    protected
-    def self.to_bigdecimal number
-      # Be aware of the precision lost from String -> Float -> BigDecimal.
-      BigDecimal.new(number, 12).round(2)
     end
 
     class << self
@@ -56,7 +34,7 @@ module FeideeUtils
       end
 
       def entity_name
-        "record"
+        raise NotImplementedError.new("Subclasses must set entity name")
       end
 
       public
@@ -82,58 +60,15 @@ module FeideeUtils
 
         name + "_delete"
       end
-
-      # Persistent
-      def all
-        arr = []
-        database.query("SELECT * FROM #{self.table_name}") do |result|
-          result.each do |raw_row|
-            arr << self.new(result.columns, result.types, raw_row)
-          end
-        end
-        arr
-      end
-
-      def find_by_id(id)
-        raw_result = database.query("SELECT * FROM #{self.table_name} WHERE #{self.id_field_name} = ?", id)
-        raw_row = raw_result.next
-
-        if raw_result.next != nil
-          raise "Getting more than one result with the same ID #{id} in table #{self.table_name}."
-        end
-
-        self.new(raw_result.columns, raw_result.types, raw_row)
-      end
     end
 
-    class << self
-      attr_reader :child_classes
-
-      def inherited(child_class)
-        @child_classes ||= Set.new
-        if child_class.name != nil && (child_class.name.start_with? FeideeUtils.name)
-          @child_classes.add(child_class)
-        end
-      end
-
-      # To use Record with different databases, generate a set of classes for each db
-      def generate_namespaced_record_classes(db)
-        Module.new do |mod|
-          const_set(:Database, Module.new {
-            define_method("database") { db }
-          })
-
-          Record.child_classes.each do |child_class|
-            if child_class.name.start_with? FeideeUtils.name
-              class_name = child_class.name.sub(/#{FeideeUtils.name}::/, '')
-              # Generate a const for the child class
-              const_set(class_name, Class.new(child_class) {
-                extend mod::Database
-              })
-            end
-          end
-        end
-      end
-    end
+    # Basic accessors, poid, last update time, etc.
+    include Accessors
+    # Helper methods to define new classes in a given namespace.
+    extend Namespaced::ClassMethods
+    # Helper methods to look up records.
+    extend Persistent::ClassMethods
+    # Helper methods to convert data types.
+    include Utils
   end
 end

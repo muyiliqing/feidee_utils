@@ -14,6 +14,7 @@ class RecordTest < MiniTest::Test
     temp_db = @sqlite_db
     FeideeUtils::Record.class_eval do
       define_singleton_method(:database) { temp_db }
+      define_singleton_method(:entity_name) { 'record' }
     end
 
     @fake_tag_table = Class.new(FeideeUtils::Record) do
@@ -46,6 +47,15 @@ class RecordTest < MiniTest::Test
     assert_equal 't_deleted_transaction', @fake_transaction_table.trash_table_name
   end
 
+  # Accessors
+  def test_poid
+    raw_result = @sqlite_db.query("SELECT * FROM t_record WHERE record_key = 1")
+    raw_row = raw_result.next
+    record = FeideeUtils::Record.new(raw_result.columns, raw_result.types, raw_row)
+    assert_equal 1, record.poid
+  end
+
+  # Persistent
   def test_all
     records = FeideeUtils::Record.all
     assert_equal 2, records.size
