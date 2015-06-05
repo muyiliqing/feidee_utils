@@ -10,67 +10,50 @@ module FeideeUtils
     end
     extend ClassMethods
 
-    TypeEnum = {
-      0 => :normal
+    FieldMappings = {
+      name:                 "name",
+      raw_balance:              "balance",
+      raw_credit:               "amountOfCredit",
+      raw_debit:                "amountOfLiability",
+      currency:             "currencyType",
+      # NOTE: The parent poid of an orphan is 0.
+      # The parent poid of a toplevel parent is -1.
+      # Guess: A parent can't have it's parents,
+      # i.e. a parent's parent poid is -1.
+      parent_poid:          "parent",
+      memo:                 "memo",
+      # Examples: saving accounts, credit cards, cash, insurances and so on.
+      account_group_poid:   "accountGroupPOID",
     }
 
-    def name
-      field["name"]
-    end
+    IgnoredFields = [
+      "tradingEntityPOID", # The opening bank
+      "type",             # Always 0
+      "usedCount",        # Always 0
+      "uuid",             # It's always empty.
+      "hidden",           # Field used by UI
+      "ordered",          # WTF
+      "code",             # WTF
+      "clientID",         # WTF
+    ]
+
+    define_accessors(FieldMappings)
 
     # NOTE: balance is not set for credit cards etc. Instead
     # credit/debit are used.
     # Guess: The special behavior is be controlled by
     # account_group_poid.
     def balance
-      self.class.to_bigdecimal(field["balance"]) + credit - debit
+      to_bigdecimal(raw_balance) + credit - debit
     end
 
     def credit
-      self.class.to_bigdecimal(field["amountOfCredit"])
+      to_bigdecimal(raw_credit)
     end
 
     def debit
-      self.class.to_bigdecimal(field["amountOfLiability"])
+      to_bigdecimal(raw_debit)
     end
-
-    def currency
-      field["currencyType"]
-    end
-
-    # NOTE: The parent poid of an orphan is 0.
-    # The parent poid of a toplevel parent is -1.
-    # Guess: A parent can't have it's parents,
-    # i.e. a parent's parent poid is -1.
-    def parent_poid
-      field["parent"]
-    end
-
-    def memo
-      field["memo"]
-    end
-
-    def type
-      TypeEnum[field["type"]]
-    end
-
-    def uuid
-      field["uuid"]
-    end
-
-    # Examples: saving accounts, credit cards, cash, insurances and so on.
-    def account_group_poid
-      field["accountGroupPOID"]
-    end
-
-    # Ignored fields:
-    # tradingEntityPOID: Then opening bank
-    # usedCount
-    # hidden
-    # TODO: WTF are these fields?
-    # ordered
-    # code
-    # clientID
 
     # Schema:
     # accountPOID LONG NOT NULL,
