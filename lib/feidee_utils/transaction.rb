@@ -89,6 +89,20 @@ module FeideeUtils
       buyer_deduction
     end
 
+    class ModifiedTransaction < ModifiedRecord
+      define_custom_methods([
+        :created_at,
+        :modified_at,
+        :trade_at,
+        :type,
+        :category_poid,
+        :buyer_deduction,
+        :seller_addition,
+        :amount,
+      ])
+      define_default_methods(FieldMappings)
+    end
+
     class TransfersNotPaired < Exception
     end
 
