@@ -16,10 +16,6 @@ module FeideeUtils
       raw_credit:           "amountOfCredit",
       raw_debit:            "amountOfLiability",
       currency:             "currencyType",
-      # NOTE: The parent poid of an orphan is 0.
-      # The parent poid of a toplevel parent is -1.
-      # Guess: A parent can't have it's parents,
-      # i.e. a parent's parent poid is -1.
       parent_poid:          "parent",
       memo:                 "memo",
       # Examples: saving accounts, credit cards, cash, insurances and so on.
@@ -55,8 +51,31 @@ module FeideeUtils
       to_bigdecimal(raw_debit)
     end
 
+    # Parent related.
     def parent
       self.class.find_by_id(parent_poid)
+    end
+
+    def has_parent?
+      parent_poid != 0 && !flagged_as_parent?
+    end
+
+    def flagged_as_parent?
+      parent_poid == -1
+    end
+
+    def flat_parent_hierachy?
+      !has_parent? or parent.flagged_as_parent?
+    end
+
+    def children
+      arr = []
+      self.class.database.query("SELECT * FROM #{self.class.table_name} WHERE parent = ?", poid) do |result|
+        result.each do |raw_row|
+          arr << self.class.new(result.columns, result.types, raw_row)
+        end
+      end
+      arr
     end
 
     class ModifiedAccount < Record::ModifiedRecord
