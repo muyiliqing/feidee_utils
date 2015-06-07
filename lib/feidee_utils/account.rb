@@ -12,9 +12,9 @@ module FeideeUtils
 
     FieldMappings = {
       name:                 "name",
-      raw_balance:              "balance",
-      raw_credit:               "amountOfCredit",
-      raw_debit:                "amountOfLiability",
+      raw_balance:          "balance",
+      raw_credit:           "amountOfCredit",
+      raw_debit:            "amountOfLiability",
       currency:             "currencyType",
       # NOTE: The parent poid of an orphan is 0.
       # The parent poid of a toplevel parent is -1.
@@ -27,10 +27,10 @@ module FeideeUtils
     }
 
     IgnoredFields = [
-      "tradingEntityPOID", # The opening bank
+      "tradingEntityPOID",
       "type",             # Always 0
       "usedCount",        # Always 0
-      "uuid",             # It's always empty.
+      "uuid",             # Always empty.
       "hidden",           # Field used by UI
       "ordered",          # WTF
       "code",             # WTF
@@ -55,11 +55,16 @@ module FeideeUtils
       to_bigdecimal(raw_debit)
     end
 
+    def parent
+      self.class.find_by_id(parent_poid)
+    end
+
     class ModifiedAccount < Record::ModifiedRecord
       define_custom_methods([
         :balance,
         :credit,
-        :debit
+        :debit,
+        :parent,
       ])
       define_default_methods(FieldMappings)
     end
