@@ -82,6 +82,12 @@ class RecordTest < MiniTest::Test
     assert_equal 'VARCHAR(255)', (record.send :field_type)['record_value']
   end
 
+  def test_find_by_id_not_found
+    assert_raises("No record found") do
+      FeideeUtils::Record.find_by_id(-1)
+    end
+  end
+
   def test_subclass_find_by_id
     tag = @fake_tag_table.find_by_id(2)
     assert_equal 2, (tag.send :field)['tagPOID']
