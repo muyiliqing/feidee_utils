@@ -12,8 +12,13 @@ namespace :sync do
     puts "copying source code..."
     FileUtils.cp_r Dir.glob("lib/*"), "/Users/ditsing/Git/cloud-ruby-dev/lib/"
   end
+  task :scallion do
+    puts "copying source code..."
+    FileUtils.cp_r Dir.glob("lib/*"), "/Users/ditsing/Git/scallion/lib/"
+  end
 end
 
 desc "Run tests"
 task :default => :test
 task :deploy => :'sync:source'
+task :scallion => :'sync:scallion'
