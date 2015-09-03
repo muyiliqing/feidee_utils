@@ -122,6 +122,12 @@ class TransactionTest < MiniTest::Test
     assert_equal 0, @income.buyer_account_poid
   end
 
+  def test_has_category
+    assert @income.has_category
+    refute @transfer_in.has_category
+    refute @transfer_out.has_category
+  end
+
   def test_category_poid
     assert_equal (-58), @income.category_poid
     assert_equal (-16), @expenditure.category_poid

@@ -66,6 +66,10 @@ module FeideeUtils
     class DifferentCategoryException < Exception
     end
 
+    def has_category
+      category_poid != 0
+    end
+
     def category_poid
       raise DifferentCategoryException unless buyer_category_poid == 0 or seller_category_poid == 0
       buyer_category_poid + seller_category_poid
