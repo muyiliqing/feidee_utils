@@ -20,6 +20,7 @@ module FeideeUtils
       memo:                 "memo",
       # Examples: saving accounts, credit cards, cash, insurances and so on.
       account_group_poid:   "accountGroupPOID",
+      raw_hidden:               "hidden",
     }
 
     IgnoredFields = [
@@ -27,8 +28,7 @@ module FeideeUtils
       "type",             # Always 0
       "usedCount",        # Always 0
       "uuid",             # Always empty.
-      "hidden",           # Field used by UI
-      "ordered",          # WTF
+      "ordered",          # The sequence number when showing in UI.
       "code",             # WTF
       "clientID",         # WTF
     ]
@@ -49,6 +49,10 @@ module FeideeUtils
 
     def debit
       to_bigdecimal(raw_debit)
+    end
+
+    def hidden?
+      raw_hidden == 1
     end
 
     # Parent related.

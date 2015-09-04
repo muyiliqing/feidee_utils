@@ -20,6 +20,8 @@ class AccountTest < MiniTest::Test
     @credit_one = @all.find do |account| account.name == "CreditOne" end
     @credit_two = @all.find do |account| account.name == "CreditTwo" end
 
+    @hidden_cash = @all.find do |account| account.name == "HiddenCash" end
+
     @accounts = [
       @cash, @debit,
       @parent, @checking, @saving,
@@ -101,6 +103,13 @@ class AccountTest < MiniTest::Test
   def test_last_update_time
     @accounts.each do |account|
       assert_equal 2015, account.last_update_time.year
+    end
+  end
+
+  def test_hidden
+    assert @hidden_cash.hidden?
+    @accounts.each do |account|
+      refute account.hidden?
     end
   end
 end
