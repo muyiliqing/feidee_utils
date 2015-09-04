@@ -66,7 +66,7 @@ module FeideeUtils
     class DifferentCategoryException < Exception
     end
 
-    def has_category
+    def has_category?
       category_poid != 0
     end
 

@@ -123,9 +123,9 @@ class TransactionTest < MiniTest::Test
   end
 
   def test_has_category
-    assert @income.has_category
-    refute @transfer_in.has_category
-    refute @transfer_out.has_category
+    assert @income.has_category?
+    refute @transfer_in.has_category?
+    refute @transfer_out.has_category?
   end
 
   def test_category_poid
