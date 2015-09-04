@@ -44,4 +44,10 @@ class CategoryTest < MiniTest::Test
     assert_equal 0, @expenditure.depth
     assert_equal 0, @income.depth
   end
+
+  def test_validate_integrity
+    assert_raises FeideeUtils::Category::InconsistentDepthException do
+      FeideeUtils::Category.new(["path", "depth"], [nil, nil], ["/1/2", 0])
+    end
+  end
 end

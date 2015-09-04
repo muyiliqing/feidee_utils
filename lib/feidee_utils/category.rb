@@ -10,11 +10,19 @@ module FeideeUtils
 
     extend ClassMethods
 
+    class InconsistentDepthException < Exception
+    end
+
+    def validate_integrity
+      path_depth = path.split("/").length - 2
+      raise InconsistentDepthException.new("Path is #{path}, but the given depth is #{depth}") if path_depth != depth
+    end
+
     FieldMappings = {
       name:                   "name",
       parent_poid:            "parentCategoryPOID",
       path:                   "path",
-      raw_depth:              "depth",
+      depth:                  "depth",
       used_count:             "usedCount",
       raw_type:               "type",
       ordered:                "ordered",
@@ -36,16 +44,6 @@ module FeideeUtils
 
     def type
       TypeEnum[raw_type]
-    end
-
-    class InconsistentDepthException < Exception
-    end
-
-    def depth
-      path_depth = path.split("/").length - 2
-      # TODO: Move all consistent checks to initializer.
-      raise InconsistentDepthException.new("Path is #{path}, but the given depth is #{raw_depth}") if path_depth != raw_depth
-      return path_depth
     end
 
     # Schema
