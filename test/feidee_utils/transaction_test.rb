@@ -60,9 +60,9 @@ class TransactionTest < MiniTest::Test
 
   def test_remove_duplications_extra_one
     extra_transaction = FeideeUtils::Transaction.new(
-      [ "type", "amount", "modifiedTime", "createdTime", "lastUpdateTime", "tradeTime", ],
-      [ Integer.class, Integer.class, nil, nil, nil, nil, nil ],
-      [ 3, 100, 0, 0, 0, 0],
+      [ "type", "amount", "modifiedTime", "createdTime", "lastUpdateTime", "tradeTime", "buyerCategoryPOID", "sellerCategoryPOID", ],
+      [ Integer.class, Integer.class, nil, nil, nil, nil, nil, nil, nil ],
+      [ 3, 100, 0, 0, 0, 0, 0, 0],
     )
 
     extra_transactions = @all + [ extra_transaction ]
@@ -133,6 +133,12 @@ class TransactionTest < MiniTest::Test
     assert_equal (-16), @expenditure.category_poid
   end
 
+  def test_validate_category_integrity_errors
+    assert_raises FeideeUtils::Transaction::DifferentCategoryException do
+      FeideeUtils::Transaction.new( ["buyerCategoryPOID", "sellerCategoryPOID"], [nil, nil], [1, 2])
+    end
+  end
+
   # TODO: test credit transfers.
 
   # ID 1..14
@@ -146,6 +152,15 @@ class TransactionTest < MiniTest::Test
   def test_amount
     @all.zip(Amounts).each do |transaction, amount|
       assert_equal amount, transaction.amount, "#{transaction.poid} incorrect amount"
+    end
+  end
+
+  def test_validate_amount_integrity_errors
+    assert_raises FeideeUtils::Transaction::DifferentAmountException do
+      FeideeUtils::Transaction.new(
+        ["buyerCategoryPOID", "sellerCategoryPOID", "buyerMoney", "sellerMoney"],
+        [nil, nil, nil, nil],
+        [0, 0, 0, 1])
     end
   end
 end

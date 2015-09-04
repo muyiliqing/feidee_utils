@@ -10,6 +10,23 @@ module FeideeUtils
 
     extend ClassMethods
 
+    class TransferWithCategoryException < Exception
+    end
+
+    class DifferentCategoryException < Exception
+    end
+
+    class DifferentAmountException < Exception
+    end
+
+    def validate_integrity
+      if type == :transfer
+        raise TransferWithCategoryException unless buyer_category_poid == 0 and seller_category_poid == 0
+      end
+      raise DifferentCategoryException unless buyer_category_poid == 0 or seller_category_poid == 0
+      raise DifferentAmountException unless buyer_deduction == seller_addition
+    end
+
     FieldMappings = {
       raw_created_at:         "createdTime",
       raw_modified_at:        "modifiedTime",
@@ -63,15 +80,11 @@ module FeideeUtils
       TypeEnum[raw_type]
     end
 
-    class DifferentCategoryException < Exception
-    end
-
     def has_category?
       category_poid != 0
     end
 
     def category_poid
-      raise DifferentCategoryException unless buyer_category_poid == 0 or seller_category_poid == 0
       buyer_category_poid + seller_category_poid
     end
 
@@ -85,11 +98,7 @@ module FeideeUtils
       sign_by_type(raw_seller_addition)
     end
 
-    class DifferentAmountException < Exception
-    end
-
     def amount
-      raise DifferentAmountException unless buyer_deduction == seller_addition
       buyer_deduction
     end
 
