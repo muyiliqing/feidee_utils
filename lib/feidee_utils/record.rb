@@ -25,6 +25,12 @@ module FeideeUtils
     def initialize(columns, types, raw_row)
       @field = Hash[ columns.zip(raw_row) ]
       @field_type = Hash[ columns.zip(types) ]
+
+      validate_integrity
+    end
+
+    def validate_integrity
+      # Do nothing.
     end
 
     class << self
