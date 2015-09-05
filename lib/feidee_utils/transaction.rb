@@ -10,21 +10,56 @@ module FeideeUtils
 
     extend ClassMethods
 
+    class TransferLackBuyerOrSellerException < Exception
+    end
+
     class TransferWithCategoryException < Exception
     end
 
-    class DifferentCategoryException < Exception
+    class InconsistentBuyerAndSellerSetException < Exception
     end
 
-    class DifferentAmountException < Exception
+    class InconsistentCategoryException < Exception
+    end
+
+    class InconsistentAmountException < Exception
     end
 
     def validate_integrity
       if type == :transfer
-        raise TransferWithCategoryException unless buyer_category_poid == 0 and seller_category_poid == 0
+        unless buyer_account_poid != 0 and seller_account_poid != 0
+          raise TransferLackBuyerOrSellerException,
+            "Both buyer and seller should be set in a transfer. " +
+            "Buyer account POID: #{buyer_account_poid}. Seller account POID: #{seller_account_poid}.\n" +
+            inspect
+        end
+        unless buyer_category_poid == 0 and seller_category_poid == 0
+          raise TransferWithCategoryException,
+            "Neither buyer or seller category should be set in a transfer. " +
+            "Buyer category POID: #{buyer_category_poid}. Seller category POID: #{seller_category_poid}.\n" +
+            inspect
+        end
+      else
+        unless (buyer_account_poid == 0) ^ (seller_account_poid == 0)
+          raise InconsistentBuyerAndSellerSetException,
+            "Exactly one of buyer and seller should be set in a non-transfer transaction. " +
+            "Buyer account POID: #{buyer_account_poid}. Seller account POID: #{seller_account_poid}.\n" +
+            inspect
+        end
+        unless buyer_category_poid == 0 or seller_category_poid == 0
+          raise InconsistentCategoryException,
+            "Only one of buyer and seller category should be set in a non-transfer transaction. "
+            "Buyer category POID: #{buyer_category_poid}. Seller category POID: #{seller_category_poid}.\n" +
+            inspect
+        end
+
+        unless buyer_deduction == seller_addition
+          raise InconsistentAmountException,
+            "Inconsistent amount set to buyer and seller. " +
+            "Buyer deduction: #{buyer_deduction}, seller_addition: #{seller_addition}.\n" +
+            inspect
+        end
       end
-      raise DifferentCategoryException unless buyer_category_poid == 0 or seller_category_poid == 0
-      raise DifferentAmountException unless buyer_deduction == seller_addition
     end
 
     FieldMappings = {
@@ -85,6 +120,7 @@ module FeideeUtils
     end
 
     def category_poid
+      # At least one of those two must be 0.
       buyer_category_poid + seller_category_poid
     end
 
@@ -99,6 +135,7 @@ module FeideeUtils
     end
 
     def amount
+      # Buyer deduction is always equal to seller addition.
       buyer_deduction
     end
 

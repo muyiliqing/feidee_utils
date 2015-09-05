@@ -122,6 +122,24 @@ class TransactionTest < MiniTest::Test
     assert_equal 0, @income.buyer_account_poid
   end
 
+  def test_validate_account_integrity_errors
+    assert_raises FeideeUtils::Transaction::InconsistentBuyerAndSellerSetException do
+      FeideeUtils::Transaction.new(["buyerAccountPOID", "sellerAccountPOID"], [nil, nil], [2, 3])
+    end
+    assert_raises FeideeUtils::Transaction::InconsistentBuyerAndSellerSetException do
+      FeideeUtils::Transaction.new(["buyerAccountPOID", "sellerAccountPOID"], [nil, nil], [0, 0])
+    end
+  end
+
+  def test_transfer_validate_account_integrity_errors
+    assert_raises FeideeUtils::Transaction::TransferLackBuyerOrSellerException do
+      FeideeUtils::Transaction.new(["type", "buyerAccountPOID"], [nil, nil], [2, 0])
+    end
+    assert_raises FeideeUtils::Transaction::TransferLackBuyerOrSellerException do
+      FeideeUtils::Transaction.new(["type", "sellerAccountPOID"], [nil, nil], [2, 0])
+    end
+  end
+
   def test_has_category
     assert @income.has_category?
     refute @transfer_in.has_category?
@@ -134,8 +152,17 @@ class TransactionTest < MiniTest::Test
   end
 
   def test_validate_category_integrity_errors
-    assert_raises FeideeUtils::Transaction::DifferentCategoryException do
-      FeideeUtils::Transaction.new( ["buyerCategoryPOID", "sellerCategoryPOID"], [nil, nil], [1, 2])
+    assert_raises FeideeUtils::Transaction::InconsistentCategoryException do
+      FeideeUtils::Transaction.new(["buyerAccountPOID", "buyerCategoryPOID", "sellerCategoryPOID"], [nil, nil, nil], [0, 1, 2])
+    end
+  end
+
+  def test_transfer_validate_category_integrity_errors
+    assert_raises FeideeUtils::Transaction::TransferWithCategoryException do
+      FeideeUtils::Transaction.new(["type", "buyerAccountPOID", "buyerCategoryPOID"], [nil, nil], [3, 2])
+    end
+    assert_raises FeideeUtils::Transaction::TransferWithCategoryException do
+      FeideeUtils::Transaction.new(["type", "buyerAccountPOID", "sellerCategoryPOID"], [nil, nil], [3, 2])
     end
   end
 
@@ -156,11 +183,11 @@ class TransactionTest < MiniTest::Test
   end
 
   def test_validate_amount_integrity_errors
-    assert_raises FeideeUtils::Transaction::DifferentAmountException do
+    assert_raises FeideeUtils::Transaction::InconsistentAmountException do
       FeideeUtils::Transaction.new(
-        ["buyerCategoryPOID", "sellerCategoryPOID", "buyerMoney", "sellerMoney"],
-        [nil, nil, nil, nil],
-        [0, 0, 0, 1])
+        ["buyerAccountPOID", "buyerCategoryPOID", "sellerCategoryPOID", "buyerMoney", "sellerMoney"],
+        [nil, nil, nil, nil, nil],
+        [0, 0, 0, 0, 1])
     end
   end
 end
