@@ -15,7 +15,11 @@ module FeideeUtils
 
     def validate_integrity
       path_depth = path.split("/").length - 2
-      raise InconsistentDepthException, "Path is '#{path}', but the given depth is #{depth}" if path_depth != depth
+      if path_depth != depth
+        raise InconsistentDepthException,
+          "Path is '#{path}', but the given depth is #{depth}.\n" +
+          inspect
+      end
     end
 
     FieldMappings = {
