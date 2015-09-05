@@ -112,14 +112,22 @@ class TransactionTest < MiniTest::Test
     end
   end
 
-  # TODO: make this better
-  def test_buyer_account_poid
+  def test_seller_account_poid
+    assert_equal (-17), @income.seller_account_poid
     assert_equal 0, @expenditure.seller_account_poid
+    assert_equal (-19), @transfer_in.seller_account_poid
+    assert_equal (-19), @transfer_out.seller_account_poid
+    assert_equal (-17), @debit_init.seller_account_poid
+    assert_equal (-18), @credit_init.seller_account_poid
   end
 
-  # TODO: make this better
-  def test_seller_account_poid
+  def test_buyer_account_poid
     assert_equal 0, @income.buyer_account_poid
+    assert_equal (-18), @expenditure.buyer_account_poid
+    assert_equal (-20), @transfer_in.buyer_account_poid
+    assert_equal (-20), @transfer_out.buyer_account_poid
+    assert_equal 0, @debit_init.buyer_account_poid
+    assert_equal 0, @credit_init.buyer_account_poid
   end
 
   def test_validate_account_integrity_errors
