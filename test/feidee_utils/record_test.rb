@@ -2,7 +2,7 @@ require "feidee_utils/record"
 require 'minitest/autorun'
 require 'sqlite3'
 
-class RecordTest < MiniTest::Test
+class FeideeUtils::RecordTest < MiniTest::Test
   def setup
     @sqlite_db = SQLite3::Database.new(":memory:")
     @sqlite_db.execute("CREATE TABLE t_record(recordPOID INT PRIMARY KEY, record_key INT, record_value VARCHAR(255));")

@@ -3,7 +3,7 @@ require "feidee_utils/database"
 require 'minitest/autorun'
 require 'pathname'
 
-class AccountTest < MiniTest::Test
+class FeideeUtils::AccountTest < MiniTest::Test
   def setup
     base_path = Pathname.new(File.dirname(__FILE__))
     @sqlite_db = FeideeUtils::Database.open_file(base_path.join("../data/QiQiTest.sqlite"))

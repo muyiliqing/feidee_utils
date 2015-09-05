@@ -2,7 +2,7 @@ require 'feidee_utils/database'
 require 'minitest/autorun'
 require 'pathname'
 
-class DatabaseTest < MiniTest::Test
+class FeideeUtils::DatabaseTest < MiniTest::Test
   def setup
     base_path = Pathname.new(File.dirname(__FILE__))
     @fresh_ios_backup = FeideeUtils::Database.open_file(base_path.join("../data/QiQi-20150422203954.sqlite"))

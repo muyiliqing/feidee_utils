@@ -2,7 +2,7 @@ require "feidee_utils/kbf"
 require 'minitest/autorun'
 require 'pathname'
 
-class KbfTest < MiniTest::Test
+class FeideeUtils::KbfTest < MiniTest::Test
   def setup
     base_path = Pathname.new(File.dirname(__FILE__))
     @fresh_ios_backup = FeideeUtils::Kbf.open_file(base_path.join("../data/QiQi-20150422203954.kbf"))
