@@ -159,10 +159,10 @@ class TransactionTest < MiniTest::Test
 
   def test_transfer_validate_category_integrity_errors
     assert_raises FeideeUtils::Transaction::TransferWithCategoryException do
-      FeideeUtils::Transaction.new(["type", "buyerAccountPOID", "buyerCategoryPOID"], [nil, nil], [3, 2])
+      FeideeUtils::Transaction.new(["type", "buyerCategoryPOID"], [nil, nil], [3, 2])
     end
     assert_raises FeideeUtils::Transaction::TransferWithCategoryException do
-      FeideeUtils::Transaction.new(["type", "buyerAccountPOID", "sellerCategoryPOID"], [nil, nil], [3, 2])
+      FeideeUtils::Transaction.new(["type", "sellerCategoryPOID"], [nil, nil], [3, 2])
     end
   end
 
