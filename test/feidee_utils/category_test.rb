@@ -1,12 +1,10 @@
 require "feidee_utils/category"
 require "feidee_utils/database"
 require 'minitest/autorun'
-require 'pathname'
 
 class FeideeUtils::CategoryTest < MiniTest::Test
   def setup
-    base_path = Pathname.new(File.dirname(__FILE__))
-    @sqlite_db = FeideeUtils::Database.open_file(base_path.join("../data/QiQiTest.sqlite"))
+    @sqlite_db = FeideeUtils::TestUtils.open_test_sqlite
 
     @expenditure = @sqlite_db.namespaced::Category.find_by_id(-1)
     @meals = @sqlite_db.namespaced::Category.find_by_id(-18)
