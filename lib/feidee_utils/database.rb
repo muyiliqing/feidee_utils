@@ -91,11 +91,17 @@ module FeideeUtils
         Database.new(File.open(file_name))
       end
 
-      Header = "SQLite format 3\0"
+      Header = "SQLite format 3\0".force_encoding("binary")
+      FeideeHeader_iOS = "%$^#&!@_@- -!F\xff\0".force_encoding('binary')
+      FeideeHeader_Android = ("\0" * 13 + "F\xff\0").force_encoding("binary")
 
       def feidee_to_sqlite(private_sqlite, sqlite_file = nil)
         # Discard the first a few bytes content.
-        private_sqlite.read(Header.length)
+        private_header = private_sqlite.read(Header.length)
+
+        if private_header != FeideeHeader_iOS and private_header != FeideeHeader_Android
+          raise "Unexpected header #{private_header.inspect} in private sqlite file."
+        end
 
         # Write the rest to a tempfile.
         sqlite_file ||= Tempfile.new("kingdee_sqlite", binmode: true)
