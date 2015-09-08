@@ -83,9 +83,10 @@ class FeideeUtils::RecordTest < MiniTest::Test
   end
 
   def test_find_by_id_not_found
-    assert_raises("No record found") do
+    e = assert_raises do
       FeideeUtils::Record.find_by_id(-1)
     end
+    assert_equal "No FeideeUtils::Record of poid -1 found", e.message
   end
 
   def test_subclass_find_by_id
