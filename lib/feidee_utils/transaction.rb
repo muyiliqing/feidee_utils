@@ -55,7 +55,7 @@ module FeideeUtils
 
         unless buyer_deduction == seller_addition
           raise InconsistentAmountException,
-            "Inconsistent amount set to buyer and seller. " +
+            "Buyer and seller should have the same amount set. " +
             "Buyer deduction: #{buyer_deduction}, seller_addition: #{seller_addition}.\n" +
             inspect
         end
