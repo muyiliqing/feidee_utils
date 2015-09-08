@@ -50,6 +50,8 @@ module FeideeUtils
       TypeEnum[raw_type]
     end
 
+    # TODO: defaine parent and has_parent?
+
     # Schema
     # categoryPOID LONG NOT NULL
     # name varchar(100) NOT NULL
