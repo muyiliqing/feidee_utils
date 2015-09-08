@@ -19,6 +19,7 @@ module FeideeUtils
       parent_poid:          "parent",
       memo:                 "memo",
       # Examples: saving accounts, credit cards, cash, insurances and so on.
+      # TODO: Add support for account groups.
       account_group_poid:   "accountGroupPOID",
       raw_hidden:               "hidden",
     }
