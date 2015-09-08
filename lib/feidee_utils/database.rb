@@ -63,6 +63,7 @@ module FeideeUtils
         self.execute("SELECT * FROM #{table};").empty?
       end
 
+      # TODO: Document all tables instead of dropping all empty tables.
       (tables_empty + UnusedTables).each do |table|
         self.execute("DROP TABLE IF EXISTS #{table}");
       end
