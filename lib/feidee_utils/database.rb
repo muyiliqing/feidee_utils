@@ -67,7 +67,6 @@ module FeideeUtils
         self.execute("DROP TABLE IF EXISTS #{table}");
       end
 
-      # TODO: log this.
       @extra_tables = all_tables - useful_tables
       @missing_tables = Tables.values - all_tables
       if !@missing_tables.empty?
