@@ -43,9 +43,20 @@ class FeideeUtils::DatabaseTest < MiniTest::Test
     assert_equal 308, many_lines.size()
   end
 
+  def test_open_illegal_private_header
+    sqlite_file = Tempfile.new("test_sqlite", binmode: true)
+    real_sqlite = SQLite3::Database.new(sqlite_file.path.to_s)
+    real_sqlite.execute("CREATE TABLE test(testa INT PRIMARY KEY)")
+    real_sqlite.close
+    e = assert_raises do
+      FeideeUtils::Database.open_file(sqlite_file.path.to_s)
+    end
+    assert e.message.start_with?("Unexpected header")
+    assert e.message.end_with?("in private sqlite file.")
+  end
+
   def test_trash_table_name
     assert_equal 't_record_delete', (FeideeUtils::Database.trash_table_name "t_record")
     assert_equal 't_deleted_transaction', (FeideeUtils::Database.trash_table_name "t_transaction")
   end
-
 end
