@@ -10,6 +10,13 @@ module FeideeUtils
     end
     extend ClassMethods
 
+    def validate_integrity
+      raise "Account type should always be 0, but it's #{field["type"]}.\n" + inspect unless field["type"] == 0
+      raise "Account usedCount should always be 0, but it's #{field["usedCount"]}.\n" + inspect unless field["usedCount"] == 0
+      raise "Account uuid should always be empty, but it's #{field["uuid"]}.\n" + inspect unless field["uuid"].to_s.empty?
+      raise "Account hierachy contains more than 2 levels.\n" + inspect unless flat_parent_hierachy?
+    end
+
     FieldMappings = {
       name:                 "name",
       raw_balance:          "balance",
@@ -66,6 +73,10 @@ module FeideeUtils
     end
 
     def flagged_as_parent?
+      # Account with POID -1 doesn't exist. It's just a special
+      # POID used to indicate that this account itself is the parent
+      # of some other accounts.
+      # TODO: verify this when creating databases.
       parent_poid == -1
     end
 

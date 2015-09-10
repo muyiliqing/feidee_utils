@@ -110,4 +110,39 @@ class FeideeUtils::AccountTest < MiniTest::Test
       refute account.hidden?
     end
   end
+
+  def test_validate_integrity_errors
+    e = assert_raises do
+      FeideeUtils::Account.new(["type"], [nil], ["x"])
+    end
+    assert e.message.start_with? "Account type should always be 0, but it's x."
+
+    e = assert_raises do
+      FeideeUtils::Account.new(["type", "usedCount"], [nil, nil], [0, "x"])
+    end
+    assert e.message.start_with? "Account usedCount should always be 0, but it's x."
+
+    e = assert_raises do
+      FeideeUtils::Account.new(["type", "usedCount", "uuid"], [nil, nil, nil], [0, 0, "x"])
+    end
+    assert e.message.start_with? "Account uuid should always be empty, but it's x."
+  end
+
+  def test_validate_integrity_flat_hierachy_errors
+    fake = @saving.clone
+    fake.instance_variable_set :@field, fake.field.clone
+    fake.field["parent"] = @checking.poid
+    e = assert_raises do
+      fake.validate_integrity
+    end
+
+    assert e.message.start_with? "Account hierachy contains more than 2 levels."
+  end
+
+  def test_validate_integrity
+    FeideeUtils::Account.new(
+      ["type", "usedCount", "uuid", "parent"],
+      [nil, nil, nil, nil],
+      [0, 0, nil, 0])
+  end
 end
