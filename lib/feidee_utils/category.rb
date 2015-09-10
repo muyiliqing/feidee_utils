@@ -50,7 +50,13 @@ module FeideeUtils
       TypeEnum[raw_type]
     end
 
-    # TODO: defaine parent and has_parent?
+    def parent
+      self.class.find_by_id(parent_poid)
+    end
+
+    def has_parent?
+      parent_poid != 0
+    end
 
     # Schema
     # categoryPOID LONG NOT NULL

@@ -24,8 +24,19 @@ class FeideeUtils::CategoryTest < MiniTest::Test
     assert_equal :income, @salary.type
   end
 
-  def test_parent
+  def test_parent_poid
     assert_equal @income.poid, @salary.parent_poid
+  end
+
+  def test_parent
+    assert_equal @income.poid, @salary.parent.poid
+  end
+
+  def test_has_parent
+    assert @salary.has_parent?
+    assert @meals.has_parent?
+    refute @income.has_parent?
+    refute @expenditure.has_parent?
   end
 
   def test_path
