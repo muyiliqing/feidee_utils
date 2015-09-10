@@ -56,14 +56,12 @@ module FeideeUtils
         end
       end
 
-      def id_field_name name = nil
-        name ||= entity_name.sub(/^[A-Z]/) { $&.downcase }
-        "#{name}POID"
+      def id_field_name
+        @id_field_name ||= entity_name.sub(/^[A-Z]/) { $&.downcase } + "POID"
       end
 
-      def table_name name = nil
-        name ||= entity_name.gsub(/([a-z\d])([A-Z\d])/, '\1_\2').downcase
-        "t_#{name}"
+      def table_name
+        @table_name ||= "t_" + entity_name.gsub(/([a-z\d])([A-Z\d])/, '\1_\2').downcase
       end
     end
 
