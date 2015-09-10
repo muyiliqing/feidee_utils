@@ -14,32 +14,51 @@ class FeideeUtils::RecordTest < MiniTest::Test
     temp_db = @sqlite_db
     FeideeUtils::Record.class_eval do
       define_singleton_method(:database) { temp_db }
-      define_singleton_method(:entity_name) { 'record' }
     end
 
     @fake_tag_table = Class.new(FeideeUtils::Record) do
-      def self.entity_name
-        'tag'
+      def self.name
+        'Tag'
       end
     end
 
     @fake_transaction_table = Class.new(FeideeUtils::Record) do
-      def self.entity_name
-        'transaction'
+      def self.name
+        'FeideeUtils::Transaction'
+      end
+    end
+
+    @fake_account_group_table = Class.new(FeideeUtils::Record) do
+      def self.name
+        'AccountGroup'
       end
     end
   end
 
   def test_id_field_name
     assert_equal 'recordPOID', FeideeUtils::Record.id_field_name
+    assert_equal 'tagPOID', @fake_tag_table.id_field_name
+    assert_equal 'transactionPOID', @fake_transaction_table.id_field_name
+    assert_equal 'accountGroupPOID', @fake_account_group_table.id_field_name
+  end
+
+  def test_last_known_name
+    assert_equal 'Tag', @fake_tag_table.entity_name
+    assert_equal 'Transaction', @fake_transaction_table.entity_name
+    assert_equal 'AccountGroup', @fake_account_group_table.entity_name
   end
 
   def test_table_name
     assert_equal 't_record', FeideeUtils::Record.table_name
+    assert_equal 't_tag', @fake_tag_table.table_name
+    assert_equal 't_transaction', @fake_transaction_table.table_name
+    assert_equal 't_account_group', @fake_account_group_table.table_name
   end
 
   def test_subclass_entity_name
-    assert_equal 'tag', @fake_tag_table.entity_name
+    assert_equal 'Tag', @fake_tag_table.entity_name
+    assert_equal 'Transaction', @fake_transaction_table.entity_name
+    assert_equal 'AccountGroup', @fake_account_group_table.entity_name
   end
 
   # Accessors

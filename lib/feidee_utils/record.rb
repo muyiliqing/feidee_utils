@@ -39,18 +39,30 @@ module FeideeUtils
         raise NotImplementedError.new("Subclasses must set database")
       end
 
-      def entity_name
-        raise NotImplementedError.new("Subclasses must set entity name")
+      def last_known_name
+        cur = self
+        while cur.name == nil
+          cur = cur.superclass
+        end
+        cur.name
       end
 
       public
+      def entity_name
+        @entity_name ||= if name = last_known_name and i = name.rindex('::')
+          name[(i+2)..-1]
+        else
+          name
+        end
+      end
+
       def id_field_name name = nil
-        name ||= self.entity_name
+        name ||= entity_name.sub(/^[A-Z]/) { $&.downcase }
         "#{name}POID"
       end
 
       def table_name name = nil
-        name ||= self.entity_name
+        name ||= entity_name.gsub(/([a-z\d])([A-Z\d])/, '\1_\2').downcase
         "t_#{name}"
       end
     end
