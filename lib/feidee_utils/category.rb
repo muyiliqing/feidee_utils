@@ -2,14 +2,6 @@ require 'feidee_utils/record'
 
 module FeideeUtils
   class Category < Record
-    module ClassMethods
-      def entity_name
-        "category"
-      end
-    end
-
-    extend ClassMethods
-
     class InconsistentDepthException < Exception
     end
 

@@ -3,13 +3,6 @@ require 'bigdecimal'
 
 module FeideeUtils
   class Account < Record
-    module ClassMethods
-      def entity_name
-        "account"
-      end
-    end
-    extend ClassMethods
-
     def validate_integrity
       raise "Account type should always be 0, but it's #{field["type"]}.\n" + inspect unless field["type"] == 0
       raise "Account usedCount should always be 0, but it's #{field["usedCount"]}.\n" + inspect unless field["usedCount"] == 0
