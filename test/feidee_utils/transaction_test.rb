@@ -196,4 +196,31 @@ class FeideeUtils::TransactionTest < MiniTest::Test
         [0, 0, 0, 0, 1])
     end
   end
+
+  def test_validate_integrity
+    FeideeUtils::Transaction.new(
+      ["buyerAccountPOID", "sellerAccountPOID", "buyerCategoryPOID", "sellerCategoryPOID", "buyerMoney", "sellerMoney"],
+      [nil, nil, nil, nil, nil, nil],
+      [0, 1, 0, 2, 0, 0])
+
+    FeideeUtils::Transaction.new(
+      ["buyerAccountPOID", "sellerAccountPOID", "buyerCategoryPOID", "sellerCategoryPOID", "buyerMoney", "sellerMoney"],
+      [nil, nil, nil, nil, nil, nil],
+      [2, 0, 2, 0, 0, 0])
+    # TODO: enforce that category is set to the matching party (buyer or seller) of account.
+  end
+
+  def test_transfer_validate_integrity
+    # Type 2
+    FeideeUtils::Transaction.new(
+      ["buyerAccountPOID", "sellerAccountPOID", "buyerCategoryPOID", "sellerCategoryPOID", "type"],
+      [nil, nil, nil, nil, nil],
+      [2, 1, 0, 0, 2])
+
+    # Type 3
+    FeideeUtils::Transaction.new(
+      ["buyerAccountPOID", "sellerAccountPOID", "buyerCategoryPOID", "sellerCategoryPOID", "type"],
+      [nil, nil, nil, nil, nil],
+      [2, 1, 0, 0, 3])
+  end
 end
