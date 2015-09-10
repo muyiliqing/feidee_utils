@@ -27,6 +27,7 @@ module FeideeUtils
       parent_poid:            "parentCategoryPOID",
       path:                   "path",
       depth:                  "depth",
+      # TODO: used count is always 0. Show this in the code.
       used_count:             "usedCount",
       raw_type:               "type",
       ordered:                "ordered",

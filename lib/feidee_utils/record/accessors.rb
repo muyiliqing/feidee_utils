@@ -5,6 +5,7 @@ module FeideeUtils
         @field[self.class.id_field_name]
       end
 
+      # TODO: Add a test for this.
       def last_update_time
         timestamp_to_time(@field["lastUpdateTime"])
       end
