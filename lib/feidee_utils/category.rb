@@ -1,9 +1,11 @@
 require 'feidee_utils/record'
 require 'feidee_utils/mixins/parent_and_path'
+require 'feidee_utils/mixins/type'
 
 module FeideeUtils
   class Category < Record
     include FeideeUtils::Mixins::ParentAndPath
+    include FeideeUtils::Mixins::Type
 
     def validate_integrity
       validate_depth_integrity
@@ -30,15 +32,11 @@ module FeideeUtils
 
     define_accessors(FieldMappings)
 
-    TypeEnum = {
+    define_type_enum({
       0 => :expenditure,
       1 => :income,
       2 => :project_root, # unkown
-    }
-
-    def type
-      TypeEnum[raw_type]
-    end
+    })
 
     # Schema
     # categoryPOID LONG NOT NULL

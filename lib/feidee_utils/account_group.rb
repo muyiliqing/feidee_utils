@@ -1,9 +1,11 @@
 require 'feidee_utils/record'
 require 'feidee_utils/mixins/parent_and_path'
+require 'feidee_utils/mixins/type'
 
 module FeideeUtils
   class AccountGroup < Record
     include FeideeUtils::Mixins::ParentAndPath
+    include FeideeUtils::Mixins::Type
 
     def validate_integrity
       validate_depth_integrity
@@ -32,15 +34,11 @@ module FeideeUtils
 
     define_accessors(FieldMappings)
 
-    TypeEnum = {
+    define_type_enum({
       0 => :asset,
       1 => :liability,
       2 => :claim,
-    }
-
-    def type
-      TypeEnum[raw_type]
-    end
+    })
 
     # Schema
     # accountGroupPOID long not null
