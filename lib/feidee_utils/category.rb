@@ -10,6 +10,7 @@ module FeideeUtils
     def validate_integrity
       validate_depth_integrity
       validate_one_level_path_integrity
+      raise "Category usedCount should always be 0, but it's #{field["usedCount"]}.\n" + inspect unless field["usedCount"] == 0
     end
 
     FieldMappings = {
@@ -17,8 +18,6 @@ module FeideeUtils
       parent_poid:            "parentCategoryPOID",
       raw_path:               "path",
       depth:                  "depth",
-      # TODO: used count is always 0. Show this in the code.
-      used_count:             "usedCount",
       raw_type:               "type",
       # TODO: add a test and global validation for ordered.
       ordered:                "ordered",
@@ -27,6 +26,7 @@ module FeideeUtils
     IgnoredFields = [
       "userTradingEntityPOID", # WTF
       "_tempIconName",         # Icon name in the app
+      "usedCount",             # Always 0.
       "clientID",              # WTF
     ]
 
