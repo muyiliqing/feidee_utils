@@ -41,8 +41,10 @@ module FeideeUtils
 
       private
       def inherited subclass
-        collecte_subclass subclass
-        genereate_names subclass
+        if subclass.name != nil and subclass.name.start_with? FeideeUtils.name
+          collect_subclass subclass
+          genereate_names subclass
+        end
       end
     end
 

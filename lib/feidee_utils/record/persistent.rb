@@ -6,9 +6,6 @@ module FeideeUtils
         # Names
         # Must be invoked by Record.inherited
         def genereate_names subclass
-          # Ignore unamed subclasses.
-          return if subclass.name == nil
-
           entity_name =
             if i = subclass.name.rindex("::")
               subclass.name[(i+2)..-1]
