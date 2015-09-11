@@ -29,6 +29,7 @@ module FeideeUtils
       "type",             # Always 0
       "usedCount",        # Always 0
       "uuid",             # Always empty.
+      # TODO: support ordered and add tests/global validation for it.
       "ordered",          # The sequence number when showing in UI.
       "code",             # WTF
       "clientID",         # WTF

@@ -18,6 +18,7 @@ module FeideeUtils
       # TODO: used count is always 0. Show this in the code.
       used_count:             "usedCount",
       raw_type:               "type",
+      # TODO: add a test and global validation for ordered.
       ordered:                "ordered",
     }
 
