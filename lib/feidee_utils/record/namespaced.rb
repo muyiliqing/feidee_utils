@@ -4,7 +4,8 @@ module FeideeUtils
       module ClassMethods
         attr_reader :child_classes
 
-        def inherited(child_class)
+        # Must be invoked by Record.inherited
+        def collecte_subclass(child_class)
           @child_classes ||= Set.new
           if child_class.name != nil && (child_class.name.start_with? FeideeUtils.name)
             @child_classes.add(child_class)

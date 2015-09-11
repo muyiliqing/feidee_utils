@@ -3,6 +3,28 @@ module FeideeUtils
   class Record
     module Persistent
       module ClassMethods
+        # Names
+        # Must be invoked by Record.inherited
+        def genereate_names subclass
+          # Ignore unamed subclasses.
+          return if subclass.name == nil
+
+          entity_name =
+            if i = subclass.name.rindex("::")
+              subclass.name[(i+2)..-1]
+            else
+              subclass.name
+            end
+
+          id_field_name = entity_name.sub(/^[A-Z]/) { $&.downcase } + "POID"
+          table_name = "t_" + entity_name.gsub(/([a-z\d])([A-Z\d])/, '\1_\2').downcase
+          subclass.class_exec do
+            define_singleton_method :entity_name do entity_name end
+            define_singleton_method :id_field_name do id_field_name end
+            define_singleton_method :table_name do table_name end
+          end
+        end
+
         # Persistent
         def all
           arr = []
