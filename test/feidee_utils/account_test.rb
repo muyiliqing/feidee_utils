@@ -111,6 +111,18 @@ class FeideeUtils::AccountTest < MiniTest::Test
     end
   end
 
+  def test_account_group
+    @all.each do |account|
+      assert_equal account.account_group_poid, account.account_group.poid,
+        "Account group poid doesn't match at account #{account.inspect}."
+    end
+
+    assert_equal :asset, @cash.account_group.type
+    assert_equal :asset, @parent.account_group.type
+    assert_equal :asset, @checking.account_group.type
+    assert_equal :liability, @credit_one.account_group.type
+  end
+
   def test_validate_integrity_errors
     e = assert_raises do
       FeideeUtils::Account.new(["type"], [nil], ["x"])

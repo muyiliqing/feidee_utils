@@ -19,7 +19,6 @@ module FeideeUtils
       parent_poid:          "parent",
       memo:                 "memo",
       # Examples: saving accounts, credit cards, cash, insurances and so on.
-      # TODO: Add support for account groups.
       account_group_poid:   "accountGroupPOID",
       raw_hidden:           "hidden",
     }
@@ -55,6 +54,11 @@ module FeideeUtils
 
     def hidden?
       raw_hidden == 1
+    end
+
+    def account_group
+      # TODO: global verify that account group works.
+      self.class.environment::AccountGroup.find_by_id(account_group_poid)
     end
 
     # Parent related.
