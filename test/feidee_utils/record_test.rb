@@ -46,12 +46,6 @@ class FeideeUtils::RecordTest < MiniTest::Test
     assert_equal 'accountGroupPOID', @fake_account_group_table.id_field_name
   end
 
-  def test_last_known_name
-    assert_equal 'Tag', @fake_tag_table.entity_name
-    assert_equal 'Transaction', @fake_transaction_table.entity_name
-    assert_equal 'AccountGroup', @fake_account_group_table.entity_name
-  end
-
   def test_table_name
     assert_equal 't_record', FeideeUtils::Record.table_name
     assert_equal 't_tag', @fake_tag_table.table_name
