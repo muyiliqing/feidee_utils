@@ -1,5 +1,7 @@
 module FeideeUtils
   module Mixins
+    # Requires:
+    #   instance methods: raw_type
     module Type
       module ClassMethods
         def define_type_enum type_enum

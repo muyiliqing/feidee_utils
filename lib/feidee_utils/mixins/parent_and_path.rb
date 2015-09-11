@@ -1,5 +1,8 @@
 module FeideeUtils
   module Mixins
+    # Requires:
+    #   instance methods: poid, parent_poid, raw_path
+    #   class methods: find_by_id
     module ParentAndPath
       class InconsistentDepthException < Exception
       end
