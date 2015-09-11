@@ -28,39 +28,10 @@ class FeideeUtils::CategoryTest < MiniTest::Test
     assert_equal @income.poid, @salary.parent_poid
   end
 
-  def test_parent
-    assert_equal @income.poid, @salary.parent.poid
-  end
-
-  def test_has_parent
-    assert @salary.has_parent?
-    assert @meals.has_parent?
-    refute @income.has_parent?
-    refute @expenditure.has_parent?
-  end
-
-  def test_path
-    nodes = @meals.path.split("/")
-    assert_equal "", nodes[0]
-    assert_equal @expenditure.poid, Integer(nodes[1])
-    assert_equal @meals.parent_poid, Integer(nodes[2])
-    assert_equal @meals.poid, Integer(nodes[3])
-  end
-
   def test_depth
     assert_equal 2, @meals.depth
     assert_equal 1, @salary.depth
     assert_equal 0, @expenditure.depth
     assert_equal 0, @income.depth
-  end
-
-  def test_validate_integrity_errors
-    assert_raises FeideeUtils::Category::InconsistentDepthException do
-      FeideeUtils::Category.new(["path", "depth"], [nil, nil], ["/1/2", 0])
-    end
-  end
-
-  def test_validate_integrity
-    FeideeUtils::Category.new(["path", "depth"], [nil, nil], ["/1/2", 1])
   end
 end

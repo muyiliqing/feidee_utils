@@ -1,23 +1,19 @@
 require 'feidee_utils/record'
+require 'feidee_utils/mixins/parent_and_path'
 
 module FeideeUtils
   class Category < Record
-    class InconsistentDepthException < Exception
-    end
+    include FeideeUtils::Mixins::ParentAndPath
 
     def validate_integrity
-      path_depth = path.split("/").length - 2
-      if path_depth != depth
-        raise InconsistentDepthException,
-          "Path is '#{path}', but the given depth is #{depth}.\n" +
-          inspect
-      end
+      validate_depth_integrity
+      validate_one_level_path_integrity
     end
 
     FieldMappings = {
       name:                   "name",
       parent_poid:            "parentCategoryPOID",
-      path:                   "path",
+      raw_path:               "path",
       depth:                  "depth",
       # TODO: used count is always 0. Show this in the code.
       used_count:             "usedCount",
@@ -41,14 +37,6 @@ module FeideeUtils
 
     def type
       TypeEnum[raw_type]
-    end
-
-    def parent
-      self.class.find_by_id(parent_poid)
-    end
-
-    def has_parent?
-      parent_poid != 0
     end
 
     # Schema
