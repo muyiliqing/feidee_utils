@@ -1,7 +1,10 @@
 require 'feidee_utils/record'
+require 'feidee_utils/mixins/type'
 
 module FeideeUtils
   class Transaction < Record
+    include FeideeUtils::Mixins::Type
+
     class TransferLackBuyerOrSellerException < Exception
     end
 
@@ -80,16 +83,16 @@ module FeideeUtils
       "FSourceKey",           # WTF
     ]
 
-    TypeEnum = {
+    define_accessors(FieldMappings)
+
+    define_type_enum({
       0 => :expenditure,
       1 => :income,
       2 => :transfer,
       3 => :transfer,
       8 => :initial_balance, # Positive.
       9 => :initial_balance, # Negative.
-    }
-
-    define_accessors(FieldMappings)
+    })
 
     def created_at
       timestamp_to_time(raw_created_at)
@@ -101,10 +104,6 @@ module FeideeUtils
 
     def trade_at
       timestamp_to_time(raw_trade_at)
-    end
-
-    def type
-      TypeEnum[raw_type]
     end
 
     def has_category?
