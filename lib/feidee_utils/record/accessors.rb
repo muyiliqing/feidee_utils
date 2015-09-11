@@ -9,11 +9,6 @@ module FeideeUtils
         timestamp_to_time(@field["lastUpdateTime"])
       end
 
-      def last_update_time_str
-        # Only date is in the timestamp. (on iOS)
-        last_update_time.strftime("%F")
-      end
-
       module ClassMethods
         def define_accessors field_mappings
           field_mappings.each do |name, key|
