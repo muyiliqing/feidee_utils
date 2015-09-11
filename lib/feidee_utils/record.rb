@@ -39,29 +39,25 @@ module FeideeUtils
         raise NotImplementedError.new("Subclasses must set database")
       end
 
-      def last_known_name
-        cur = self
-        while cur.name == nil
-          cur = cur.superclass
+      private
+      def inherited subclass
+        # Ignore unamed subclasses.
+        return if subclass.name == nil
+
+        entity_name =
+          if i = subclass.name.rindex("::")
+            subclass.name[(i+2)..-1]
+          else
+            subclass.name
+          end
+
+        id_field_name = entity_name.sub(/^[A-Z]/) { $&.downcase } + "POID"
+        table_name = "t_" + entity_name.gsub(/([a-z\d])([A-Z\d])/, '\1_\2').downcase
+        subclass.class_exec do
+          define_singleton_method :entity_name do entity_name end
+          define_singleton_method :id_field_name do id_field_name end
+          define_singleton_method :table_name do table_name end
         end
-        cur.name
-      end
-
-      public
-      def entity_name
-        @entity_name ||= if name = last_known_name and i = name.rindex('::')
-          name[(i+2)..-1]
-        else
-          name
-        end
-      end
-
-      def id_field_name
-        @id_field_name ||= entity_name.sub(/^[A-Z]/) { $&.downcase } + "POID"
-      end
-
-      def table_name
-        @table_name ||= "t_" + entity_name.gsub(/([a-z\d])([A-Z\d])/, '\1_\2').downcase
       end
     end
 

@@ -15,24 +15,28 @@ class FeideeUtils::RecordTest < MiniTest::Test
     FeideeUtils::Record.class_eval do
       define_singleton_method(:database) { temp_db }
     end
+    FeideeUtils::Record.send :inherited, FeideeUtils::Record
 
     @fake_tag_table = Class.new(FeideeUtils::Record) do
       def self.name
         'Tag'
       end
     end
+    FeideeUtils::Record.send :inherited, @fake_tag_table
 
     @fake_transaction_table = Class.new(FeideeUtils::Record) do
       def self.name
-        'FeideeUtils::Transaction'
+        'Test::FeideeUtils::Transaction'
       end
     end
+    FeideeUtils::Record.send :inherited, @fake_transaction_table
 
     @fake_account_group_table = Class.new(FeideeUtils::Record) do
       def self.name
         'AccountGroup'
       end
     end
+    FeideeUtils::Record.send :inherited, @fake_account_group_table
   end
 
   def test_id_field_name
