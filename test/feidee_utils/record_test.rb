@@ -81,6 +81,15 @@ class FeideeUtils::RecordTest < MiniTest::Test
     assert_equal 1, instance.yyy
   end
 
+  def test_last_update_time
+    instance = FeideeUtils::Record.new(["lastUpdateTime"], [nil], [Time.new(2014, 5, 1).to_i * 1000])
+
+    time = instance.last_update_time
+    assert_equal 2014, time.year
+    assert_equal 5, time.month
+    assert_equal 1, time.day
+  end
+
   # Persistent
   def test_all
     records = FeideeUtils::Record.all
