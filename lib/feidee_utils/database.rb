@@ -6,7 +6,8 @@ module FeideeUtils
   class Database < SQLite3::Database
     UnusedTables = %w(android_metadata t_account_info t_budget_item t_currency t_deleted_tradingEntity
     t_deleted_tag t_deleted_transaction_template t_exchange t_fund t_id_seed t_local_recent
-    t_message t_property t_tag t_tradingEntity t_transaction_template t_usage_count t_user)
+    t_message t_property t_tag t_tradingEntity t_transaction_template t_usage_count t_user
+    t_jct_clientdeviceregist t_jct_clientdevicestatus t_jct_syncbookfilelis t_jct_usergrant t_jct_userlog)
 
     Tables = {
       accounts: "t_account",
@@ -146,11 +147,16 @@ module FeideeUtils
       t_id_seed:                "ID seeds for all tables.",
       t_import_history:         "As named.",
       t_import_source:          "Import data from text messages etc.",
-      t_jct_clientdeviceregist: "???",
-      t_jct_clientdevicestatus: "???",
-      t_jct_syncbookfilelist:   "???",
-      t_jct_usergrant:          "??? Maybe if the user has purchased any service.",
+
+      # JCT stands for Jia Cai Tong, a software for family book keeping.
+      # See http://www.feidee.com/jct/
+      # JCT is quite obsolete. All the related tables can be safely ignored.
+      t_jct_clientdeviceregist: "Client devices.",
+      t_jct_clientdevicestatus: "Client devices status.",
+      t_jct_syncbookfilelist:   "Name of files synced from other devices.",
+      t_jct_usergrant:          "Maybe if the user has purchased any service.",
       t_jct_userlog:            "As named.",
+
       t_local_recent:           "Local merchandise used recently",
       t_message:                "Kingdee ads.",
       t_metadata:               "Database version, client version etc.",
