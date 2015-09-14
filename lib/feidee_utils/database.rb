@@ -4,14 +4,6 @@ require 'feidee_utils/record'
 # A thin wrapper around SQLite3
 module FeideeUtils
   class Database < SQLite3::Database
-    UnusedTables = %w(android_metadata t_account_extra t_accountgrant t_binding t_currency
-    t_deleted_tag t_deleted_tradingEntity t_deleted_transaction_template t_exchange t_fund
-    t_id_seed t_import_source t_import_history t_jct_clientdeviceregist
-    t_jct_clientdevicestatus t_jct_syncbookfilelist t_jct_usergrant t_jct_userlog
-    t_local_recent t_message t_notification t_property
-    t_sync_logs t_syncResource t_tag t_tradingEntity t_trans_debt t_trans_debt_group
-    t_transaction_projectcategory_map t_transaction_template t_usage_count t_user)
-
     Tables = {
       accounts: "t_account",
       account_groups: "t_account_group",
@@ -22,9 +14,20 @@ module FeideeUtils
       profile: "t_profile",
     }
 
+    PotentialUsefulTables = %w(
+      t_account_book
+      t_account_info
+      t_budget_item
+      t_fund_holding
+      t_fund_trans
+      t_fund_price_history
+      t_module_stock_holding
+      t_module_stock_info
+      t_module_stock_tran)
+
     attr_reader :sqlite_file
     attr_reader :platform, :sqlite_name, :sqlite_timestamp
-    attr_reader :extra_tables, :missing_tables
+    attr_reader :missing_tables
     attr_reader :namespaced
 
     def initialize(private_sqlite, strip = false)
@@ -62,16 +65,14 @@ module FeideeUtils
     end
 
     def drop_unused_tables
-      useful_tables = (Tables.values + Tables.values.map do |x| self.class.trash_table_name(x) end).sort
-      @empty_tables = (all_tables - useful_tables).select do |table|
-        self.execute("SELECT * FROM #{table};").empty?
-      end
+      useful_tables = Tables.values + PotentialUsefulTables
+      useful_tables = (useful_tables + useful_tables.map do |x| self.class.trash_table_name(x) end).sort
 
-      UnusedTables.each do |table|
+      # TODO: Record all tables droped.
+      (all_tables - useful_tables).each do |table|
         self.execute("DROP TABLE IF EXISTS #{table}");
       end
 
-      @extra_tables = all_tables - useful_tables
       @missing_tables = Tables.values - all_tables
       if !@missing_tables.empty?
         raise "Missing tables: #{@missing_tables} from kbf backup."
