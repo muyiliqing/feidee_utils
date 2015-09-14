@@ -118,7 +118,7 @@ module FeideeUtils
     end
 
     class << self
-      NoDeleteSuffixTables = %w(account category tradingEntity transaction transaction_template)
+      NoDeleteSuffixTables = %w(account category tag tradingEntity transaction transaction_template)
 
       def trash_table_name name
         NoDeleteSuffixTables.each do |core_name|
