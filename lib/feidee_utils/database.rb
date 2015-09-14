@@ -4,15 +4,13 @@ require 'feidee_utils/record'
 # A thin wrapper around SQLite3
 module FeideeUtils
   class Database < SQLite3::Database
-    UnusedTables = %w(android_metadata t_currency t_deleted_tradingEntity
-    t_deleted_tag t_deleted_transaction_template t_exchange t_fund t_id_seed t_local_recent
-    t_message t_property t_tag t_tradingEntity t_transaction_template t_usage_count t_user
-    t_jct_clientdeviceregist t_jct_clientdevicestatus t_jct_syncbookfilelist t_jct_usergrant t_jct_userlog
-    t_account_extra t_accountgrant t_binding t_notification
-    t_import_source t_import_history
-    t_syncResource t_sync_logs
-    t_trans_debt t_trans_debt_group
-    t_transaction_projectcategory_map)
+    UnusedTables = %w(android_metadata t_account_extra t_accountgrant t_binding t_currency
+    t_deleted_tag t_deleted_tradingEntity t_deleted_transaction_template t_exchange t_fund
+    t_id_seed t_import_source t_import_history t_jct_clientdeviceregist
+    t_jct_clientdevicestatus t_jct_syncbookfilelist t_jct_usergrant t_jct_userlog
+    t_local_recent t_message t_notification t_property
+    t_sync_logs t_syncResource t_tag t_tradingEntity t_trans_debt t_trans_debt_group
+    t_transaction_projectcategory_map t_transaction_template t_usage_count t_user)
 
     Tables = {
       accounts: "t_account",
