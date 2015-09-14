@@ -7,7 +7,10 @@ module FeideeUtils
     UnusedTables = %w(android_metadata t_account_info t_budget_item t_currency t_deleted_tradingEntity
     t_deleted_tag t_deleted_transaction_template t_exchange t_fund t_id_seed t_local_recent
     t_message t_property t_tag t_tradingEntity t_transaction_template t_usage_count t_user
-    t_jct_clientdeviceregist t_jct_clientdevicestatus t_jct_syncbookfilelis t_jct_usergrant t_jct_userlog)
+    t_jct_clientdeviceregist t_jct_clientdevicestatus t_jct_syncbookfilelist t_jct_usergrant t_jct_userlog
+    t_account_extra t_accountgrant t_binding t_notification
+    t_syncResource t_sync_logs
+    t_transaction_projectcategory_map)
 
     Tables = {
       accounts: "t_account",
@@ -131,10 +134,10 @@ module FeideeUtils
     AllKnownTables = {
       t_account:                "As named",
       t_account_book:           "A group of accounts, travel accounts etc.",
-      t_account_extra:          "Extra account configs, key/value pair.",
+      t_account_extra:          "Extra Feidee account configs, key/value pair.",
       t_account_group:          "A group of accounts, saving/chekcing etc.",
       t_account_info:           "Additional info of accounts: banks etc.",
-      t_accountgrant:           "???",
+      t_accountgrant:           "Feidee account VIP related stuff.",
       t_budget_item:            "Used to create budgets. An extension of category.",
       t_binding:                "Netbank / credit card / Taobao bindings.",
       t_category:               "Transaction categories.",
