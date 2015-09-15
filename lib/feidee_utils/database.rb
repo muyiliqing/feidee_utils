@@ -131,21 +131,17 @@ module FeideeUtils
 
     AllKnownTables = {
       t_account:                "As named",
-      # This table is kept for future use.
       t_account_book:           "A group of accounts, travel accounts etc.",
       t_account_extra:          "Extra Feidee account configs, key/value pair.",
       t_account_group:          "A group of accounts, saving/chekcing etc.",
-      # This table is kept for future use.
       t_account_info:           "Additional info of accounts: banks etc.",
       t_accountgrant:           "Feidee account VIP related stuff.",
-      # This table is kept for future use.
       t_budget_item:            "Used to create budgets. An extension of category.",
       t_binding:                "Netbank / credit card / Taobao bindings.",
       t_category:               "Transaction categories.",
       t_currency:               "Currency types.",
       t_exchange:               "Currency exchange rates.",
       t_fund:                   "List of money manage institute names. Abandoned.",
-      # The 3 fund related tables may contain useful information.
       t_fund_holding:           "Fund accounts.",
       t_fund_trans:             "Fund transactions.",
       t_fund_price_history:     "Fund price history",
@@ -165,7 +161,6 @@ module FeideeUtils
       t_local_recent:           "Local merchandise used recently",
       t_message:                "Kingdee ads.",
       t_metadata:               "Database version, client version etc.",
-      # The 3 stock related tables may contain useful information.
       t_module_stock_holding:   "Stock accounts.",
       t_module_stock_info:      "Stock rates.",
       t_module_stock_trans:     "Stock transactions.",
