@@ -20,9 +20,7 @@ module FeideeUtils
       t_budget_item
       t_fund_holding
       t_fund_trans
-      t_fund_price_history
       t_module_stock_holding
-      t_module_stock_info
       t_module_stock_tran)
 
     attr_reader :sqlite_file
