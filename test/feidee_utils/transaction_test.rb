@@ -174,8 +174,6 @@ class FeideeUtils::TransactionTest < MiniTest::Test
     end
   end
 
-  # TODO: test credit transfers.
-
   # ID 1..14
   Amounts = [
     100, -400, -500, 200, # Initial balances
@@ -189,6 +187,8 @@ class FeideeUtils::TransactionTest < MiniTest::Test
       assert_equal amount, transaction.amount, "#{transaction.poid} incorrect amount"
     end
   end
+
+  # TODO: test amount between 2 currencies.
 
   def test_validate_amount_integrity_errors
     assert_raises FeideeUtils::Transaction::InconsistentAmountException do
