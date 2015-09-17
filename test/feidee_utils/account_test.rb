@@ -10,6 +10,7 @@ class FeideeUtils::AccountTest < MiniTest::Test
 
     @cash = @all.find do |account| account.name == "Cash" end
     @debit = @all.find do |account| account.name == "DebitCard" end
+    @usd = @all.find do |account| account.name == "USD" end
 
     @parent = @all.find do |account| account.name == "Parent" end
     @checking = @all.find do |account| account.name == "Checking" end
@@ -19,6 +20,7 @@ class FeideeUtils::AccountTest < MiniTest::Test
     @credit_two = @all.find do |account| account.name == "CreditTwo" end
 
     @hidden_cash = @all.find do |account| account.name == "HiddenCash" end
+    @claim = @all.find do |account| account.name == "Claim" end
 
     @accounts = [
       @cash, @debit,
@@ -34,13 +36,13 @@ class FeideeUtils::AccountTest < MiniTest::Test
     assert_equal 250, @cash.raw_balance
     assert_equal 0, @credit_one.raw_balance
 
-    # TODO: create a claim account and test raw_credit
+    assert_equal 100, @claim.raw_credit
     assert_equal 0, @cash.raw_credit
 
     assert_equal 0, @cash.raw_debit
     assert_equal 450, @credit_one.raw_debit
 
-    # TODO: create a account with a different currency.
+    assert_equal "USD", @usd.currency
     assert_equal "CNY", @cash.currency
 
     assert_equal 0, @cash.parent_poid
