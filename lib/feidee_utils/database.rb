@@ -49,6 +49,12 @@ module FeideeUtils
       backup_sqlite_db.close
     end
 
+    def validate_integrity_globally
+      @namespaced.constants.each do |const|
+        @namespaced.const_get(const).validate_integrity_globally if const != :Database
+      end
+    end
+
     private
     def all_tables
       rows = self.execute <<-SQL

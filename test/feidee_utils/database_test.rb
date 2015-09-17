@@ -59,4 +59,17 @@ class FeideeUtils::DatabaseTest < MiniTest::Test
     assert_equal 't_record_delete', (FeideeUtils::Database.trash_table_name "t_record")
     assert_equal 't_deleted_transaction', (FeideeUtils::Database.trash_table_name "t_transaction")
   end
+
+  def test_validate_integrity_globally
+    @complex_android_backup.validate_integrity_globally
+  end
+
+  def test_validate_integrity_globally_errors
+    # TODO: The db versions of complex_android_backup and the default iOS test db are different.
+    @complex_android_backup.execute("INSERT INTO t_account VALUES(-1, 'invalid_account', -3, 1271747936000, 0, 3, 0, '', '', 0, 0, 0, 2, 0, 0, '')");
+    assert_raises do
+      @complex_android_backup.validate_integrity_globally
+    end
+    @complex_android_backup.execute("DELETE FROM t_account WHERE accountPOID = -1");
+  end
 end

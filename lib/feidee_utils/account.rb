@@ -10,6 +10,13 @@ module FeideeUtils
       raise "Account hierachy contains more than 2 levels.\n" + inspect unless flat_parent_hierachy?
     end
 
+    def self.validate_integrity_globally
+      if self.find_by_id(-1) != nil
+        raise "-1 is used as the parent POID placeholder of a parent account. " +
+          "Account of POID -1 should not exist."
+      end
+    end
+
     FieldMappings = {
       name:                 "name",
       raw_balance:          "balance",
@@ -74,7 +81,6 @@ module FeideeUtils
       # Account with POID -1 doesn't exist. It's just a special
       # POID used to indicate that this account itself is the parent
       # of some other accounts.
-      # TODO: verify this when creating databases.
       parent_poid == -1
     end
 

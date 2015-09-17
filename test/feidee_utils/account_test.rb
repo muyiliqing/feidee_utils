@@ -186,4 +186,17 @@ class FeideeUtils::AccountTest < MiniTest::Test
       [nil, nil, nil, nil],
       [0, 0, nil, 0])
   end
+
+  def test_validate_integrity_globally_errors
+    @sqlite_db.execute("INSERT INTO t_account VALUES(-1, 'invalid_account', -3, 1271747936000, 0, 3, 0, '', '', 0, 0, 0, 2, 0, 0, 0, 0, '')");
+    e = assert_raises do
+      @sqlite_db.namespaced::Account.validate_integrity_globally
+    end
+    assert_equal "-1 is used as the parent POID placeholder of a parent account. Account of POID -1 should not exist.", e.message
+    @sqlite_db.execute("DELETE FROM t_account WHERE accountPOID = -1");
+  end
+
+  def test_validate_integrity_globally
+    @sqlite_db.namespaced::Account.validate_integrity_globally
+  end
 end

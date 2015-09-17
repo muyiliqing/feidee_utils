@@ -33,6 +33,10 @@ module FeideeUtils
       # Do nothing.
     end
 
+    def self.validate_integrity_globally
+      # Do nothing.
+    end
+
     class << self
       protected
       def database
