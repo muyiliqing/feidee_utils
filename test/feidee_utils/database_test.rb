@@ -51,8 +51,7 @@ class FeideeUtils::DatabaseTest < MiniTest::Test
     e = assert_raises do
       FeideeUtils::Database.open_file(sqlite_file.path.to_s)
     end
-    assert e.message.start_with?("Unexpected header")
-    assert e.message.end_with?("in private sqlite file.")
+    assert_match (/^Unexpected header .* in private sqlite file\./), e.message
   end
 
   def test_trash_table_name

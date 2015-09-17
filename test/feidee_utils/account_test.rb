@@ -156,17 +156,17 @@ class FeideeUtils::AccountTest < MiniTest::Test
     e = assert_raises do
       FeideeUtils::Account.new(["type"], [nil], ["x"])
     end
-    assert e.message.start_with? "Account type should always be 0, but it's x."
+    assert_match (/^Account type should always be 0, but it's x\./), e.message
 
     e = assert_raises do
       FeideeUtils::Account.new(["type", "usedCount"], [nil, nil], [0, "x"])
     end
-    assert e.message.start_with? "Account usedCount should always be 0, but it's x."
+    assert_match (/^Account usedCount should always be 0, but it's x\./), e.message
 
     e = assert_raises do
       FeideeUtils::Account.new(["type", "usedCount", "uuid"], [nil, nil, nil], [0, 0, "x"])
     end
-    assert e.message.start_with? "Account uuid should always be empty, but it's x."
+    assert_match (/^Account uuid should always be empty, but it's x\./), e.message
   end
 
   def test_validate_integrity_flat_hierachy_errors
@@ -177,7 +177,7 @@ class FeideeUtils::AccountTest < MiniTest::Test
       fake.validate_integrity
     end
 
-    assert e.message.start_with? "Account hierachy contains more than 2 levels."
+    assert_match (/^Account hierachy contains more than 2 levels\./), e.message
   end
 
   def test_validate_integrity
