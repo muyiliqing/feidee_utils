@@ -64,7 +64,6 @@ module FeideeUtils
     end
 
     def account_group
-      # TODO: global verify that account group works.
       self.class.environment::AccountGroup.find_by_id(account_group_poid)
     end
 
