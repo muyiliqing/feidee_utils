@@ -17,6 +17,26 @@ class FeideeUtils::AccountGroupTest < MiniTest::Test
     @all = [@cash, @pocket, @financial, @bank, @liability, @credit_card, @claim]
   end
 
+  def test_fields
+    assert_equal "现金口袋", @pocket.name
+    assert_equal "存折", @bank.name
+
+    assert_equal 2, @pocket.parent_poid
+    assert_equal 4, @bank.parent_poid
+
+    assert_equal "/0001/0002/0003/", @pocket.raw_path
+    assert_equal "/0001/0004/0006/", @bank.raw_path
+
+    assert_equal 2, @pocket.depth
+    assert_equal 1, @financial.depth
+
+    assert_equal 0, @pocket.raw_type
+    assert_equal 2, @claim.raw_type
+
+    assert_equal 1, @pocket.ordered
+    assert_equal 2, @bank.ordered
+  end
+
   def test_name
     @all.each do |account_group| assert account_group.name.length > 0 end
   end
