@@ -21,7 +21,7 @@ module FeideeUtils
     end
 
     def validate_integrity
-      if type == :transfer
+      if is_transfer?
         unless buyer_account_poid != 0 and seller_account_poid != 0
           raise TransferLackBuyerOrSellerException,
             "Both buyer and seller should be set in a transfer. " +
@@ -61,6 +61,29 @@ module FeideeUtils
       end
     end
 
+    class TransfersNotPaired < Exception
+    end
+
+    def self.validate_integrity_globally
+      uuids_map = all.inject({}) do |uuids, transaction|
+        if transaction.is_transfer?
+          uuid = transaction.uuid
+          uuids[uuid] ||= [nil, nil]
+          uuids[uuid][transaction.raw_type - 2] = transaction
+        end
+        uuids
+      end
+
+      uuids_map.each do |uuid, transfers|
+        valid = true
+        valid &&= transfers[0] != nil
+        valid &&= transfers[1] != nil
+        valid &&= transfers[0].buyer_account_poid == transfers[1].buyer_account_poid
+        valid &&= transfers[0].seller_account_poid == transfers[1].seller_account_poid
+        raise TransfersNotPaired.new([uuid] + transfers) unless valid
+      end
+    end
+
     FieldMappings = {
       raw_created_at:         "createdTime",
       raw_modified_at:        "modifiedTime",
@@ -92,8 +115,8 @@ module FeideeUtils
     define_type_enum({
       0 => :expenditure,
       1 => :income,
-      2 => :transfer,
-      3 => :transfer,
+      2 => :transfer_buyer,
+      3 => :transfer_seller,
       8 => :initial_balance, # Positive.
       9 => :initial_balance, # Negative.
     })
@@ -134,6 +157,10 @@ module FeideeUtils
       (buyer_deduction + seller_addition) / 2
     end
 
+    def is_transfer?
+      type == :transfer_buyer or type == :transfer_seller
+    end
+
     class ModifiedTransaction < ModifiedRecord
       define_custom_methods([
         :created_at,
@@ -146,28 +173,6 @@ module FeideeUtils
         :amount,
       ])
       define_default_methods(FieldMappings)
-    end
-
-    class TransfersNotPaired < Exception
-    end
-
-    def self.remove_uuid_duplications transactions
-      uuids_map = transactions.inject({}) do |uuids, transaction|
-        if transaction.raw_type == 2 or transaction.raw_type == 3
-          uuid = transaction.uuid
-          uuids[uuid] ||= []
-          uuids[uuid] << transaction.poid
-        end
-        uuids
-      end
-
-      uuids_map.each do |uuid, transfers|
-        raise TransfersNotPaired.new([uuid] + transfers) if transfers.size != 2
-      end
-
-      transactions.select do |transaction|
-        !(transaction.raw_type == 3 and uuids_map.has_key? transaction.uuid)
-      end
     end
 
     private

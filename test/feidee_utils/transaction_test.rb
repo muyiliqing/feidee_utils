@@ -61,8 +61,8 @@ class FeideeUtils::TransactionTest < MiniTest::Test
 
     assert_equal 3, @transfer_in.raw_type
     assert_equal 2, @transfer_out.raw_type
-    assert_equal :transfer, @transfer_in.type
-    assert_equal :transfer, @transfer_out.type
+    assert_equal :transfer_seller, @transfer_in.type
+    assert_equal :transfer_buyer, @transfer_out.type
 
     assert_equal 8, @debit_init.raw_type
     assert_equal 9, @credit_init.raw_type
@@ -70,22 +70,38 @@ class FeideeUtils::TransactionTest < MiniTest::Test
     assert_equal :initial_balance, @credit_init.type
   end
 
-  def test_remove_uuid_duplications_extra_one
+  def test_is_transfer
+    refute @income.is_transfer?
+    refute @expenditure.is_transfer?
+    assert @transfer_in.is_transfer?
+    assert @transfer_out.is_transfer?
+    refute @debit_init.is_transfer?
+    refute @credit_init.is_transfer?
+  end
+
+  def test_validate_integrity_globally_errors
     extra_transaction = FeideeUtils::Transaction.new(
       [ "type", "amount", "modifiedTime", "createdTime", "lastUpdateTime", "tradeTime", "buyerCategoryPOID", "sellerCategoryPOID", ],
       [ Integer.class, Integer.class, nil, nil, nil, nil, nil, nil, nil ],
       [ 3, 100, 0, 0, 0, 0, 0, 0],
     )
 
+    assert extra_transaction.is_transfer?
+
     extra_transactions = @all + [ extra_transaction ]
+    @sqlite_db.namespaced::Transaction.class_eval do
+      define_singleton_method :all do
+        extra_transactions
+      end
+    end
 
     assert_raises FeideeUtils::Transaction::TransfersNotPaired do
-      FeideeUtils::Transaction.remove_uuid_duplications(extra_transactions)
+      @sqlite_db.namespaced::Transaction.validate_integrity_globally
     end
   end
 
   def test_uuid
-    transfers = @all.select do |transaction| transaction.type == :transfer end
+    transfers = @all.select do |transaction| transaction.is_transfer? end
 
     refute_empty transfers
     transfers.each do |transfer|
@@ -93,13 +109,8 @@ class FeideeUtils::TransactionTest < MiniTest::Test
     end
   end
 
-  def test_remove_uuid_duplications
-    removed = @all - FeideeUtils::Transaction.remove_uuid_duplications(@all)
-    transfer_out = @all.select do |transaction| transaction.raw_type == 3 end
-
-    refute_empty removed
-    refute_empty transfer_out
-    assert_equal transfer_out, removed
+  def test_validate_integrity_globally
+    @sqlite_db.namespaced::Transaction.validate_integrity_globally
   end
 
   def test_credit_account_init_amount
