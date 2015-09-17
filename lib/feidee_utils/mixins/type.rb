@@ -16,6 +16,7 @@ module FeideeUtils
       def type
        self.class::TypeEnum[raw_type]
       end
+      # TODO: support reverse lookup.
     end
   end
 end
