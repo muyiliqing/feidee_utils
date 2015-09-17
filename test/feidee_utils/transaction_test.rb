@@ -15,7 +15,45 @@ class FeideeUtils::TransactionTest < MiniTest::Test
     @credit_init = @all.find do |transaction| transaction.poid == -2 end
   end
 
-  # TODO: Add raw fields tests.
+  def test_fields
+    assert_equal 1433311141000, @income.raw_created_at
+    assert_equal 1433311126000, @expenditure.raw_created_at
+
+    assert_equal 1433311162000, @income.raw_modified_at
+    assert_equal 1433311316000, @expenditure.raw_modified_at
+
+    assert_equal 1433347200000, @income.raw_trade_at
+    assert_equal 1433347200000, @expenditure.raw_trade_at
+
+    assert_equal 1, @income.raw_type
+    assert_equal 0, @expenditure.raw_type
+
+    assert_equal "", @income.memo
+    assert_equal "", @expenditure.memo
+    assert_equal "Pay back", @transfer_in.memo
+
+    assert_equal 0, @income.buyer_account_poid
+    assert_equal (-18), @expenditure.buyer_account_poid
+
+    assert_equal (-58), @income.buyer_category_poid
+    assert_equal 0, @expenditure.buyer_category_poid
+
+    assert_equal (-17), @income.seller_account_poid
+    assert_equal 0, @expenditure.seller_account_poid
+
+    assert_equal 0, @income.seller_category_poid
+    assert_equal (-16), @expenditure.seller_category_poid
+
+    assert_equal 125, @income.raw_buyer_deduction
+    assert_equal 75, @expenditure.raw_buyer_deduction
+
+    assert_equal 125, @income.raw_seller_addition
+    assert_equal 75, @expenditure.raw_seller_addition
+
+    assert_nil @income.uuid
+    assert_nil @expenditure.uuid
+    assert_equal "03886DB7-F1C0-4667-9148-73498FCAE501", @transfer_in.uuid
+  end
 
   def test_type
     assert_equal :expenditure, @expenditure.type
