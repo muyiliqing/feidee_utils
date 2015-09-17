@@ -27,6 +27,35 @@ class FeideeUtils::AccountTest < MiniTest::Test
     ]
   end
 
+  def test_fields
+    assert_equal "Cash", @cash.name
+    assert_equal "Parent", @parent.name
+
+    assert_equal 250, @cash.raw_balance
+    assert_equal 0, @credit_one.raw_balance
+
+    # TODO: create a claim account and test raw_credit
+    assert_equal 0, @cash.raw_credit
+
+    assert_equal 0, @cash.raw_debit
+    assert_equal 450, @credit_one.raw_debit
+
+    # TODO: create a account with a different currency.
+    assert_equal "CNY", @cash.currency
+
+    assert_equal 0, @cash.parent_poid
+    assert_equal (-22), @checking.parent_poid
+
+    assert_equal "My precious", @cash.memo
+    assert_equal 3, @cash.ordered
+
+    assert_equal 3, @cash.account_group_poid
+    assert_equal 14, @credit_one.account_group_poid
+
+    assert_equal 0, @cash.raw_hidden
+    assert_equal 1, @hidden_cash.raw_hidden
+  end
+
   def test_name
     @accounts.each do |account| refute_nil account end
   end
