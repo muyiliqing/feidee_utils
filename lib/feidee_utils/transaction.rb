@@ -51,13 +51,13 @@ module FeideeUtils
             "Buyer category POID: #{buyer_category_poid}. Seller category POID: #{seller_category_poid}.\n" +
             inspect
         end
+      end
 
-        unless buyer_deduction == seller_addition
-          raise InconsistentAmountException,
-            "Buyer and seller should have the same amount set. " +
-            "Buyer deduction: #{buyer_deduction}, seller_addition: #{seller_addition}.\n" +
-            inspect
-        end
+      unless buyer_deduction == seller_addition
+        raise InconsistentAmountException,
+          "Buyer and seller should have the same amount set. " +
+          "Buyer deduction: #{buyer_deduction}, seller_addition: #{seller_addition}.\n" +
+        inspect
       end
     end
 
