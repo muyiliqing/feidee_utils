@@ -15,6 +15,8 @@ class FeideeUtils::TransactionTest < MiniTest::Test
     @credit_init = @all.find do |transaction| transaction.poid == -2 end
   end
 
+  # TODO: Add raw fields tests.
+
   def test_type
     assert_equal :expenditure, @expenditure.type
     assert_equal :income, @income.type
