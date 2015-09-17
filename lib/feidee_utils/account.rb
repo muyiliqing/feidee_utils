@@ -18,6 +18,8 @@ module FeideeUtils
       currency:             "currencyType",
       parent_poid:          "parent",
       memo:                 "memo",
+      # TODO: add tests/global validation for ordered.
+      ordered:              "ordered",
       # Examples: saving accounts, credit cards, cash, insurances and so on.
       account_group_poid:   "accountGroupPOID",
       raw_hidden:           "hidden",
@@ -28,8 +30,6 @@ module FeideeUtils
       "type",             # Always 0
       "usedCount",        # Always 0
       "uuid",             # Always empty.
-      # TODO: support ordered and add tests/global validation for it.
-      "ordered",          # The sequence number when showing in UI.
       "code",             # WTF
       "clientID",         # WTF
     ]
