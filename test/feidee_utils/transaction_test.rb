@@ -70,33 +70,7 @@ class FeideeUtils::TransactionTest < MiniTest::Test
     assert_equal :initial_balance, @credit_init.type
   end
 
-  def test_self_key_parts
-    @all.each do |transaction|
-      assert_equal transaction.key_parts, transaction.key_parts
-    end
-  end
-
-  def test_duplicate_transaction_key_parts
-    transfer_in = @all.select do |transaction| transaction.raw_type == 2 end
-    transfer_out = @all.select do |transaction| transaction.raw_type == 3 end
-
-    transfer_in_key = transfer_in.map do |transaction| transaction.key_parts end
-    transfer_out_key = transfer_out.map do |transaction| transaction.key_parts end
-    refute_empty transfer_in_key
-    refute_empty transfer_out_key
-    assert_equal transfer_in_key.sort, transfer_out_key.sort
-  end
-
-  def test_remove_duplications
-    removed = @all - FeideeUtils::Transaction.remove_duplications(@all)
-    transfer_out = @all.select do |transaction| transaction.raw_type == 3 end
-
-    refute_empty removed
-    refute_empty transfer_out
-    assert_equal transfer_out, removed
-  end
-
-  def test_remove_duplications_extra_one
+  def test_remove_uuid_duplications_extra_one
     extra_transaction = FeideeUtils::Transaction.new(
       [ "type", "amount", "modifiedTime", "createdTime", "lastUpdateTime", "tradeTime", "buyerCategoryPOID", "sellerCategoryPOID", ],
       [ Integer.class, Integer.class, nil, nil, nil, nil, nil, nil, nil ],
@@ -105,8 +79,9 @@ class FeideeUtils::TransactionTest < MiniTest::Test
 
     extra_transactions = @all + [ extra_transaction ]
 
-    rest = FeideeUtils::Transaction.remove_duplications(extra_transactions)
-    assert rest.include? extra_transaction
+    assert_raises FeideeUtils::Transaction::TransfersNotPaired do
+      FeideeUtils::Transaction.remove_uuid_duplications(extra_transactions)
+    end
   end
 
   def test_uuid

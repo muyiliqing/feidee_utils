@@ -170,45 +170,6 @@ module FeideeUtils
       end
     end
 
-    def self.remove_duplications transactions
-      # count the number of incomming transfers.
-      incomming_count = transactions.inject(Hash.new(0)) do |hash, transaction|
-        if transaction.raw_type == 2
-          key = transaction.key_parts
-          hash[key] += 1
-        end
-        hash
-      end
-
-      # Remove outgoing transfer accordingly.
-      transactions.select do |transaction|
-        if transaction.raw_type == 3
-          key = transaction.key_parts
-          if incomming_count.has_key? key and incomming_count[key] > 0
-            incomming_count[key] -= 1
-            false
-          else
-            true
-          end
-        else
-          true
-        end
-      end
-    end
-
-    def key_parts
-      @key_parts ||= [
-        buyer_account_poid,
-        seller_account_poid,
-        trade_at.to_s,
-        created_at.to_s,
-        modified_at.to_s,
-        buyer_deduction,
-        seller_addition,
-        memo,
-      ]
-    end
-
     private
     def sign_by_type num
       raw_type == 9 ? -num : num
