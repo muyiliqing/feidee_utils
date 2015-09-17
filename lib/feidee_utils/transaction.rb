@@ -41,6 +41,10 @@ module FeideeUtils
             "Buyer account POID: #{buyer_account_poid}. Seller account POID: #{seller_account_poid}.\n" +
             inspect
         end
+
+        # We could enforce that category is set to the matching party (buyer or seller) of account.
+        # However the implementation could handle all situations, as long as only one of them is set.
+        # Thus no extra check is done here.
         unless buyer_category_poid == 0 or seller_category_poid == 0
           raise InconsistentCategoryException,
             "Only one of buyer and seller category should be set in a non-transfer transaction. "
@@ -127,7 +131,7 @@ module FeideeUtils
 
     def amount
       # Buyer deduction is always equal to seller addition.
-      buyer_deduction
+      (buyer_deduction + seller_addition) / 2
     end
 
     class ModifiedTransaction < ModifiedRecord

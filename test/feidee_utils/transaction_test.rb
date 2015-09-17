@@ -209,7 +209,6 @@ class FeideeUtils::TransactionTest < MiniTest::Test
       ["buyerAccountPOID", "sellerAccountPOID", "buyerCategoryPOID", "sellerCategoryPOID", "buyerMoney", "sellerMoney"],
       [nil, nil, nil, nil, nil, nil],
       [2, 0, 2, 0, 0, 0])
-    # TODO: enforce that category is set to the matching party (buyer or seller) of account.
   end
 
   def test_transfer_validate_integrity
