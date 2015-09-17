@@ -13,6 +13,28 @@ module FeideeUtils
       raise "Category usedCount should always be 0, but it's #{field["usedCount"]}.\n" + inspect unless field["usedCount"] == 0
     end
 
+    def self.validate_integrity_globally
+      project_root_code = 2
+      if TypeEnum[project_root_code] != :project_root
+        raise "The type code of project root has been changed, please update the code."
+      end
+
+      rows = self.database.execute <<-SQL
+        SELECT #{id_field_name}, #{FieldMappings[:name]} FROM #{table_name}
+        WHERE #{FieldMappings[:raw_type]}=#{project_root_code};
+      SQL
+
+      if rows.length > 1
+        poids = rows.map do |row| row[0] end
+        raise "More than one category have type project_root. IDs are #{poids.inspect}."
+      elsif rows.length == 1
+        category_name = rows[0][1]
+        if category_name != "projectRoot" and category_name != "root"
+          raise "Category #{category_name} has type project_root. ID: #{rows[0][0]}."
+        end
+      end
+    end
+
     FieldMappings = {
       name:                   "name",
       parent_poid:            "parentCategoryPOID",
