@@ -41,7 +41,6 @@ module FeideeUtils
       raw_path:               "path",
       depth:                  "depth",
       raw_type:               "type",
-      # TODO: add a test and global validation for ordered.
       ordered:                "ordered",
     }
 

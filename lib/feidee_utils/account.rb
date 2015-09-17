@@ -25,7 +25,6 @@ module FeideeUtils
       currency:             "currencyType",
       parent_poid:          "parent",
       memo:                 "memo",
-      # TODO: add tests/global validation for ordered.
       ordered:              "ordered",
       # Examples: saving accounts, credit cards, cash, insurances and so on.
       account_group_poid:   "accountGroupPOID",
