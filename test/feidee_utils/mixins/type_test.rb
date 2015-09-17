@@ -1,4 +1,4 @@
-require "feidee_utils/mixins/parent_and_path"
+require "feidee_utils/mixins/type"
 require 'minitest/autorun'
 
 class FeideeUtils::Mixins::TypeTest < MiniTest::Test
