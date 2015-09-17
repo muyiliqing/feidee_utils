@@ -109,8 +109,12 @@ class FeideeUtils::RecordTest < MiniTest::Test
   end
 
   def test_find_by_id_not_found
+    assert_nil FeideeUtils::Record.find_by_id(-1)
+  end
+
+  def test_find_not_found
     e = assert_raises do
-      FeideeUtils::Record.find_by_id(-1)
+      FeideeUtils::Record.find(-1)
     end
     assert_equal "No FeideeUtils::Record of poid -1 found", e.message
   end
@@ -119,5 +123,9 @@ class FeideeUtils::RecordTest < MiniTest::Test
     tag = @fake_tag_table.find_by_id(2)
     assert_equal 2, (tag.send :field)['tagPOID']
     assert_equal 'base', (tag.send :field)['tag_name']
+  end
+
+  def test_subclass_find
+    @fake_tag_table.find(2)
   end
 end
