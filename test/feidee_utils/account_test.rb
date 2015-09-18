@@ -74,6 +74,15 @@ class FeideeUtils::AccountTest < MiniTest::Test
     end
   end
 
+  def test_credit_and_debit
+    assert_equal 0, @cash.credit
+    assert_equal 0, @cash.debit
+    assert_equal 0, @credit_one.credit
+    assert_equal 450, @credit_one.debit
+    assert_equal 100, @claim.credit
+    assert_equal 0, @claim.debit
+  end
+
   def test_currency
     @accounts.each do |account| assert_equal "CNY", account.currency, account.name + " currency incorrect." end
   end
