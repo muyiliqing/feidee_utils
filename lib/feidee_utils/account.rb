@@ -46,7 +46,8 @@ module FeideeUtils
     # NOTE: balance is not set for credit cards etc. Instead
     # credit/debit are used.
     # Guess: The special behavior is be controlled by
-    # account_group_poid.
+    # account_group_poid. Again, the code can work in all cases,
+    # thus no check is done.
     def balance
       to_bigdecimal(raw_balance) + credit - debit
     end
