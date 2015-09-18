@@ -1,3 +1,4 @@
+require "feidee_utils_test"
 require "feidee_utils/account_group"
 require "feidee_utils/database"
 require 'minitest/autorun'

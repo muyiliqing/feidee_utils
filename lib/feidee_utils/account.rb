@@ -1,4 +1,5 @@
 require 'feidee_utils/record'
+require 'feidee_utils/account_group'
 require 'bigdecimal'
 
 module FeideeUtils
