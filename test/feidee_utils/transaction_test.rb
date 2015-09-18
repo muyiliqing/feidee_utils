@@ -67,8 +67,8 @@ class FeideeUtils::TransactionTest < MiniTest::Test
 
     assert_equal 8, @debit_init.raw_type
     assert_equal 9, @credit_init.raw_type
-    assert_equal :initial_balance, @debit_init.type
-    assert_equal :initial_balance, @credit_init.type
+    assert_equal :positive_initial_balance, @debit_init.type
+    assert_equal :negative_initial_balance, @credit_init.type
   end
 
   def test_is_transfer
@@ -78,6 +78,15 @@ class FeideeUtils::TransactionTest < MiniTest::Test
     assert @transfer_out.is_transfer?
     refute @debit_init.is_transfer?
     refute @credit_init.is_transfer?
+  end
+
+  def test_is_initial_balance
+    refute @income.is_initial_balance?
+    refute @expenditure.is_initial_balance?
+    refute @transfer_in.is_initial_balance?
+    refute @transfer_out.is_initial_balance?
+    assert @debit_init.is_initial_balance?
+    assert @credit_init.is_initial_balance?
   end
 
   def test_validate_integrity_globally_errors

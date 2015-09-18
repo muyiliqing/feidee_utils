@@ -117,9 +117,9 @@ module FeideeUtils
       1 => :income,
       2 => :transfer_buyer,
       3 => :transfer_seller,
-      8 => :initial_balance, # Positive.
-      9 => :initial_balance, # Negative.
-    }, false)
+      8 => :positive_initial_balance,
+      9 => :negative_initial_balance,
+    })
 
     def created_at
       timestamp_to_time(raw_created_at)
@@ -159,6 +159,10 @@ module FeideeUtils
 
     def is_transfer?
       type == :transfer_buyer or type == :transfer_seller
+    end
+
+    def is_initial_balance?
+      type == :positive_initial_balance or type == :negative_initial_balance
     end
 
     class ModifiedTransaction < ModifiedRecord
