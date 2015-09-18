@@ -8,6 +8,7 @@ module FeideeUtils
       raise "Account usedCount should always be 0, but it's #{field["usedCount"]}.\n" + inspect unless field["usedCount"] == 0
       raise "Account uuid should always be empty, but it's #{field["uuid"]}.\n" + inspect unless field["uuid"].to_s.empty?
       raise "Account hierachy contains more than 2 levels.\n" + inspect unless flat_parent_hierachy?
+      raise "Account hidden should be either 0 or 1, but it's #{raw_hidden}.\n" + inspect unless (raw_hidden == 1 or raw_hidden == 0)
     end
 
     def self.validate_integrity_globally

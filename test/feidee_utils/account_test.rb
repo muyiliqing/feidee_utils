@@ -178,6 +178,11 @@ class FeideeUtils::AccountTest < MiniTest::Test
       FeideeUtils::Account.new(["type", "usedCount", "uuid"], [nil, nil, nil], [0, 0, "x"])
     end
     assert_match (/^Account uuid should always be empty, but it's x\./), e.message
+
+    e = assert_raises do
+      FeideeUtils::Account.new(["type", "usedCount", "uuid", "parent", "hidden"], [nil, nil, nil, nil, nil], [0, 0, "", 0, "x"])
+    end
+    assert_match (/^Account hidden should be either 0 or 1, but it's x\./), e.message
   end
 
   def test_validate_integrity_flat_hierachy_errors
@@ -193,9 +198,9 @@ class FeideeUtils::AccountTest < MiniTest::Test
 
   def test_validate_integrity
     FeideeUtils::Account.new(
-      ["type", "usedCount", "uuid", "parent"],
-      [nil, nil, nil, nil],
-      [0, 0, nil, 0])
+      ["type", "usedCount", "uuid", "parent", "hidden"],
+      [nil, nil, nil, nil, nil],
+      [0, 0, nil, 0, 0])
   end
 
   def test_validate_integrity_globally_errors
