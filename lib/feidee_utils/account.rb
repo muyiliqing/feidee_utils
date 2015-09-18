@@ -29,7 +29,7 @@ module FeideeUtils
       # Examples: saving accounts, credit cards, cash, insurances and so on.
       account_group_poid:   "accountGroupPOID",
       raw_hidden:           "hidden",
-    }
+    }.freeze
 
     IgnoredFields = [
       "tradingEntityPOID",
@@ -38,7 +38,7 @@ module FeideeUtils
       "uuid",             # Always empty.
       "code",             # WTF
       "clientID",         # WTF
-    ]
+    ].freeze
 
     define_accessors(FieldMappings)
 

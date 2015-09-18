@@ -12,7 +12,7 @@ module FeideeUtils
 
       metadata: "t_metadata",
       profile: "t_profile",
-    }
+    }.freeze
 
     PotentialUsefulTables = %w(
       t_account_book
@@ -21,7 +21,8 @@ module FeideeUtils
       t_fund_holding
       t_fund_trans
       t_module_stock_holding
-      t_module_stock_tran)
+      t_module_stock_tran
+    ).freeze
 
     attr_reader :sqlite_file
     attr_reader :platform, :sqlite_name, :sqlite_timestamp

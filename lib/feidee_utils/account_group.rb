@@ -23,13 +23,13 @@ module FeideeUtils
       depth:                  "depth",
       raw_type:               "type",
       ordered:                "ordered",
-    }
+    }.freeze
 
     IgnoredFields = [
       "userTradingEntityPOID", # WTF
       "_tempIconName",         # Icon name in the app
       "clientID",              # WTF
-    ]
+    ].freeze
 
     define_accessors(FieldMappings)
 

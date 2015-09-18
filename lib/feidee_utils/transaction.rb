@@ -97,7 +97,7 @@ module FeideeUtils
       raw_buyer_deduction:    "buyerMoney",
       raw_seller_addition:    "sellerMoney",
       uuid:                   "relation",
-    }
+    }.freeze
 
     IgnoredFields = [
       "creatorTradingEntityPOID",
@@ -108,7 +108,7 @@ module FeideeUtils
       "relationUnitPOID",     # WTF
       "clientID",             # WTF
       "FSourceKey",           # WTF
-    ]
+    ].freeze
 
     define_accessors(FieldMappings)
 
