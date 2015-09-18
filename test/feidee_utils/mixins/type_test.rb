@@ -39,15 +39,32 @@ class FeideeUtils::Mixins::TypeTest < MiniTest::Test
     assert_equal 1, TestClass::TypeCode[:xyz]
   end
 
-  def test_duplicate_enum
+  def test_reverse_lookup_duplicate_enum
+    e = assert_raises do
+      Class.new do
+        include FeideeUtils::Mixins::Type
+        define_type_enum({
+          0 => :abc,
+          1 => :xyz,
+          2 => :abc,
+        })
+      end
+    end
+    assert_match (/^Duplicate values in enum .*/), e.message
+  end
+
+  def test_no_reverse_lookup
     klass = Class.new do
       include FeideeUtils::Mixins::Type
       define_type_enum({
         0 => :abc,
         1 => :xyz,
         2 => :abc,
-      })
+      }, false)
     end
-    assert_equal ({}), klass::TypeCode
+    assert klass.const_defined? :TypeEnum
+    assert klass.method_defined? :type
+    refute klass.const_defined? :TypeCode
+    refute klass.respond_to? :type_code
   end
 end

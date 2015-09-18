@@ -119,7 +119,7 @@ module FeideeUtils
       3 => :transfer_seller,
       8 => :initial_balance, # Positive.
       9 => :initial_balance, # Negative.
-    })
+    }, false)
 
     def created_at
       timestamp_to_time(raw_created_at)

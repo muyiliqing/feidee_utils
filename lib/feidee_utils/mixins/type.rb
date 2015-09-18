@@ -4,21 +4,20 @@ module FeideeUtils
     #   instance methods: raw_type
     module Type
       module ClassMethods
-        def define_type_enum type_enum
+        def define_type_enum type_enum, reverse_lookup = true
           const_set :TypeEnum, type_enum.freeze
 
-          enum_values = type_enum.values
-          type_code = if enum_values.size == enum_values.uniq.size
-            type_enum.invert
-          else
-            {}
+          if reverse_lookup
+            enum_values = type_enum.values
+            if enum_values.size != enum_values.uniq.size
+              raise "Duplicate values in enum #{type_enum}."
+            end
+
+            const_set :TypeCode, type_enum.invert.freeze
+            define_singleton_method :type_code do |type_enum_value|
+              self::TypeCode[type_enum_value]
+            end
           end
-
-          const_set :TypeCode, type_code.freeze
-        end
-
-        def type_code type_enum
-          self::TypeCode[type_enum]
         end
       end
 
