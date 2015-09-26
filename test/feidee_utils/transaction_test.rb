@@ -258,4 +258,23 @@ class FeideeUtils::TransactionTest < MiniTest::Test
       [nil, nil, nil, nil, nil],
       [2, 1, 0, 0, 3])
   end
+
+  def test_revised_account_poid
+    assert_equal (-17), @income.revised_account_poid
+    assert_equal (-18), @expenditure.revised_account_poid
+    assert_equal (-19), @transfer_in.revised_account_poid
+    assert_equal (-20), @transfer_out.revised_account_poid
+    assert_equal (-17), @debit_init.revised_account_poid
+    assert_equal (-18), @credit_init.revised_account_poid
+  end
+
+  def test_revised_amount
+    assert_equal @income.amount, @income.revised_amount
+    assert_equal (-@expenditure.amount), @expenditure.revised_amount
+    assert_equal @transfer_in.amount, @transfer_in.revised_amount
+    assert_equal (-@transfer_out.amount), @transfer_out.revised_amount
+    assert_equal @debit_init.amount, @debit_init.revised_amount
+    # This looks wrong to me.
+    assert_equal @credit_init.seller_addition, @credit_init.revised_amount
+  end
 end

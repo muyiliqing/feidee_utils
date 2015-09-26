@@ -165,6 +165,27 @@ module FeideeUtils
       type == :positive_initial_balance or type == :negative_initial_balance
     end
 
+    def revised_account_poid
+      if type == :transfer_buyer
+        buyer_account_poid
+      elsif type == :transfer_seller
+        seller_account_poid
+      else
+        buyer_account_poid + seller_account_poid
+      end
+    end
+
+    def revised_amount
+      account_poid = revised_account_poid
+      if account_poid == buyer_account_poid
+        -buyer_deduction
+      elsif account_poid == seller_account_poid
+        seller_addition
+      else
+        raise "Unexpected revised account poid #{account_poid}."
+      end
+    end
+
     class ModifiedTransaction < ModifiedRecord
       define_custom_methods([
         :created_at,
