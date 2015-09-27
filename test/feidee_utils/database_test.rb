@@ -44,14 +44,22 @@ class FeideeUtils::DatabaseTest < MiniTest::Test
   end
 
   def test_open_illegal_private_header
-    sqlite_file = Tempfile.new("test_sqlite", binmode: true)
-    real_sqlite = SQLite3::Database.new(sqlite_file.path.to_s)
-    real_sqlite.execute("CREATE TABLE test(testa INT PRIMARY KEY)")
-    real_sqlite.close
+    test_file = Tempfile.new("feidee_test", binmode: true)
+    test_file.write("hello world goodbye world")
+    test_file.fsync
+    test_file.close
+
     e = assert_raises do
-      FeideeUtils::Database.open_file(sqlite_file.path.to_s)
+      FeideeUtils::Database.open_file(test_file.path.to_s)
     end
     assert_match (/^Unexpected header .* in private sqlite file\./), e.message
+  end
+
+  def test_reopen_
+    sqlite_file = Tempfile.new("test_sqlite_backup", binmode: true)
+    sqlite_file.close
+    @complex_android_backup.sqlite_backup(sqlite_file.path.to_s).close
+    FeideeUtils::Database.open_file(sqlite_file.path.to_s)
   end
 
   def test_trash_table_name

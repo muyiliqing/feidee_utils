@@ -108,7 +108,7 @@ module FeideeUtils
         # Discard the first a few bytes content.
         private_header = private_sqlite.read(Header.length)
 
-        if private_header != FeideeHeader_iOS and private_header != FeideeHeader_Android
+        unless [FeideeHeader_iOS, FeideeHeader_Android, Header].include? private_header
           raise "Unexpected header #{private_header.inspect} in private sqlite file."
         end
 
