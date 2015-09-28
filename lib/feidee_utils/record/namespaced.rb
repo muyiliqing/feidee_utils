@@ -1,3 +1,5 @@
+require 'set'
+
 module FeideeUtils
   class Record
     module Namespaced
