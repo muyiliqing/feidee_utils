@@ -1,5 +1,6 @@
 Feidee Utils
 ============
+[![Build Status](https://travis-ci.org/muyiliqing/feidee_utils.svg?branch=master)](https://travis-ci.org/muyiliqing/feidee_utils)
 
 Free users' data from [Feidee](http://www.feidee.com) private backups (.kbf).
 
