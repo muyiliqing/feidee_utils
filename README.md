@@ -20,8 +20,8 @@ require 'feidee_utils'
 
 kbf = FeideeUtils::Kbf.open_file(path_to_kbf_file)
 database = kbf.sqlite_db
-all_accounts = database.namespaced::Accounts.all
-all_transactions = database.namespaced::Transactions.all
+all_accounts = database.namespaced::Account.all
+all_transactions = database.namespaced::Transaction.all
 ```
 
 For more examples see ```examples/``` (To be added).
