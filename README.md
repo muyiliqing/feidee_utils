@@ -13,7 +13,7 @@ The database itself is NOT encrypted. Almost all useful information is in the SQ
 
 Usage
 ----------
-A set of ActiveRecord like classes are provided to access the information in the backup. See the quick example below.
+A set of ActiveRecord-like classes are provided to access the information in the backup. See the quick example below.
 
 ```ruby
 require 'feidee_utils'
@@ -42,6 +42,6 @@ Disclaimer
 ---------
 Use at your own risk. Study purpose only. Please do NOT use for any illegal purpose. For details see MIT-LICENSE in the repo.
 
-This software DOES NOT involve any kind of jail break, reverse engineer or crack of any Feidee's software or app.
+This software DOES NOT involve any kind of jail break, reverse engineering or crack of any Feidee's software or app.
 
 The trademark Feidee, Feidee MyMoney, kbf file format and database design are intellecture properties of Feidee, or whoever the owners are.
