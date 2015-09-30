@@ -33,6 +33,14 @@ all_transactions = database.namespaced::Transaction.all
 
 For more examples see ```examples/``` (To be added).
 
+Supported Entities
+-----------------
+
+*  Account
+*  Transaction
+*  AccountGroup
+*  Category
+
 Why not ActiveRecord
 ----------------
 Sometimes we have to compare the content of two backups and must open them at the same time.
