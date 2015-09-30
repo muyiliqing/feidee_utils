@@ -41,6 +41,11 @@ Supported Entities
 *  AccountGroup
 *  Category
 
+Chinese Characters
+-----------------
+
+The database contains many Chinese characters such as builtin category names. Some of the characters are also included in tests. The gem is developed under OSX so presumably the gem should work fine in Unix-like environments with Unicode/UTF8 or whatever the encoding is.
+
 Why not ActiveRecord
 ----------------
 Sometimes we have to compare the content of two backups and must open them at the same time.
