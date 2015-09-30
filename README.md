@@ -12,6 +12,12 @@ A kbf file is in fact a zip file contains a modified SQLite database and other a
 The first 16 bits of the SQLite database is modified so that it could not be read directly by SQLite.
 The database itself is NOT encrypted. Almost all useful information is in the SQLite database.
 
+Install
+---------
+```bash
+gem install feidee_utils
+```
+
 Usage
 ----------
 A set of ActiveRecord-like classes are provided to access the information in the backup. See the quick example below.
