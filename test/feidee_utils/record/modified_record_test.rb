@@ -50,15 +50,15 @@ class FeideeUtils::Record::ModifiedRecordTest < MiniTest::Test
 
   def test_custom_methods
     assert @fake_modified_record.field_a_changed?
-    assert "base", @fake_modified_record.field_a.old
-    assert "head", @fake_modified_record.field_a.new
+    assert "base", @fake_modified_record.field_a.old_value
+    assert "head", @fake_modified_record.field_a.new_value
     refute @fake_modified_record.field_b_changed?
   end
 
   def test_default_methods
     assert @fake_modified_record.bname_changed?
-    assert "base123", @fake_modified_record.bname.old
-    assert "base421", @fake_modified_record.bname.new
+    assert "base123", @fake_modified_record.bname.old_value
+    assert "base421", @fake_modified_record.bname.new_value
     refute @fake_modified_record.btype_changed?
   end
 

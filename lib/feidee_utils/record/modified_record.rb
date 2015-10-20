@@ -16,10 +16,10 @@ module FeideeUtils
       end
 
       class ValuePair
-        attr_reader :old, :new
-        def initialize(old, new)
-          @old = old
-          @new = new
+        attr_reader :old_value, :new_value
+        def initialize(old_value, new_value)
+          @old = old_value
+          @new = new_value
         end
       end
 
