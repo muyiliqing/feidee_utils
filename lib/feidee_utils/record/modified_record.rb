@@ -1,5 +1,6 @@
 module FeideeUtils
   class Record
+    # TODO: Reconsider this class and ship full support to all entities.
     class ModifiedRecord
       attr_reader :poid
       attr_reader :base, :head
