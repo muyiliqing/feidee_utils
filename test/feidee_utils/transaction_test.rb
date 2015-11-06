@@ -89,7 +89,7 @@ class FeideeUtils::TransactionTest < MiniTest::Test
     assert @credit_init.is_initial_balance?
   end
 
-  def test_validate_integrity_globally_errors
+  def test_validate_global_integrity_errors
     extra_transaction = FeideeUtils::Transaction.new(
       [ "type", "amount", "modifiedTime", "createdTime", "lastUpdateTime", "tradeTime", "buyerCategoryPOID", "sellerCategoryPOID", ],
       [ Integer.class, Integer.class, nil, nil, nil, nil, nil, nil, nil ],
@@ -106,7 +106,7 @@ class FeideeUtils::TransactionTest < MiniTest::Test
     end
 
     assert_raises FeideeUtils::Transaction::TransfersNotPaired do
-      @sqlite_db.namespaced::Transaction.validate_integrity_globally
+      @sqlite_db.namespaced::Transaction.validate_global_integrity
     end
   end
 
@@ -119,8 +119,8 @@ class FeideeUtils::TransactionTest < MiniTest::Test
     end
   end
 
-  def test_validate_integrity_globally
-    @sqlite_db.namespaced::Transaction.validate_integrity_globally
+  def test_validate_global_integrity
+    @sqlite_db.namespaced::Transaction.validate_global_integrity
   end
 
   def test_credit_account_init_amount

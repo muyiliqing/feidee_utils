@@ -64,7 +64,7 @@ module FeideeUtils
     class TransfersNotPaired < Exception
     end
 
-    def self.validate_integrity_globally
+    def self.validate_global_integrity
       uuids_map = all.inject({}) do |uuids, transaction|
         if transaction.is_transfer?
           uuid = transaction.uuid

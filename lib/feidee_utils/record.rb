@@ -33,7 +33,7 @@ module FeideeUtils
       # Do nothing.
     end
 
-    def self.validate_integrity_globally
+    def self.validate_global_integrity
       # Do nothing.
     end
 

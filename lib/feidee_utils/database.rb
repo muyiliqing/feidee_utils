@@ -50,9 +50,9 @@ module FeideeUtils
       backup_sqlite_db.close
     end
 
-    def validate_integrity_globally
+    def validate_global_integrity
       @namespaced.constants.each do |const|
-        @namespaced.const_get(const).validate_integrity_globally if const != :Database
+        @namespaced.const_get(const).validate_global_integrity if const != :Database
       end
     end
 

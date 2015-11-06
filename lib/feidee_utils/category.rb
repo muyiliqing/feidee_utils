@@ -13,7 +13,7 @@ module FeideeUtils
       raise "Category usedCount should always be 0, but it's #{field["usedCount"]}.\n" + inspect unless field["usedCount"] == 0
     end
 
-    def self.validate_integrity_globally
+    def self.validate_global_integrity
       project_root_code = 2
       if TypeEnum[project_root_code] != :project_root
         raise "The type code of project root has been changed, please update the code."

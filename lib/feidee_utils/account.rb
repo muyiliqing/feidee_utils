@@ -12,7 +12,7 @@ module FeideeUtils
       raise "Account hidden should be either 0 or 1, but it's #{raw_hidden}.\n" + inspect unless (raw_hidden == 1 or raw_hidden == 0)
     end
 
-    def self.validate_integrity_globally
+    def self.validate_global_integrity
       if self.find_by_id(-1) != nil
         raise "-1 is used as the parent POID placeholder of a parent account. " +
           "Account of POID -1 should not exist."
