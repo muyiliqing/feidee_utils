@@ -5,7 +5,7 @@ require 'bigdecimal'
 module FeideeUtils
   class Account < Record
     def validate_integrity
-      raise "Account type should always be 0, but it's #{field["type"]}.\n" + inspect unless field["type"] == 0
+      raise "Account type should always be 0, but it's #{field["type"]}.\n" + inspect unless not field["type"] or field["type"] == 0
       raise "Account usedCount should always be 0, but it's #{field["usedCount"]}.\n" + inspect unless field["usedCount"] == 0
       raise "Account uuid should always be empty, but it's #{field["uuid"]}.\n" + inspect unless field["uuid"].to_s.empty?
       raise "Account hierachy contains more than 2 levels.\n" + inspect unless flat_parent_hierachy?
@@ -35,9 +35,12 @@ module FeideeUtils
 
     IgnoredFields = [
       "tradingEntityPOID",
+      # TODO: Field type is removed from database_version 73. Not sure about
+      # earlier versions.
       "type",             # Always 0
       "usedCount",        # Always 0
       "uuid",             # Always empty.
+      # TODO: code is also removed.
       "code",             # WTF
       "clientID",         # WTF
     ].freeze
