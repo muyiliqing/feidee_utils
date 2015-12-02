@@ -165,10 +165,10 @@ class FeideeUtils::TransactionTest < MiniTest::Test
   end
 
   def test_validate_account_integrity_errors
-    assert_raises FeideeUtils::Transaction::InconsistentBuyerAndSellerSetException do
+    assert_raises FeideeUtils::Transaction::InconsistentBuyerAndSellerException do
       FeideeUtils::Transaction.new(["buyerAccountPOID", "sellerAccountPOID"], [nil, nil], [2, 3])
     end
-    assert_raises FeideeUtils::Transaction::InconsistentBuyerAndSellerSetException do
+    assert_raises FeideeUtils::Transaction::InconsistentBuyerAndSellerException do
       FeideeUtils::Transaction.new(["buyerAccountPOID", "sellerAccountPOID"], [nil, nil], [0, 0])
     end
   end

@@ -11,7 +11,7 @@ module FeideeUtils
     class TransferWithCategoryException < Exception
     end
 
-    class InconsistentBuyerAndSellerSetException < Exception
+    class InconsistentBuyerAndSellerException < Exception
     end
 
     class InconsistentCategoryException < Exception
@@ -36,7 +36,7 @@ module FeideeUtils
         end
       else
         unless (buyer_account_poid == 0) ^ (seller_account_poid == 0)
-          raise InconsistentBuyerAndSellerSetException,
+          raise InconsistentBuyerAndSellerException,
             "Exactly one of buyer and seller should be set in a non-transfer transaction. " +
             "Buyer account POID: #{buyer_account_poid}. Seller account POID: #{seller_account_poid}.\n" +
             inspect
