@@ -19,6 +19,8 @@ module FeideeUtils
       end
     end
 
+    NullPOID = 0
+
     FieldMappings = {
       name:                 "name",
       raw_balance:          "balance",
@@ -78,7 +80,7 @@ module FeideeUtils
     end
 
     def has_parent?
-      parent_poid != 0 && !flagged_as_parent?
+      parent_poid != NullPOID && !flagged_as_parent?
     end
 
     def flagged_as_parent?

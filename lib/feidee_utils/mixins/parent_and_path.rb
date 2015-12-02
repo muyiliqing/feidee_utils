@@ -4,6 +4,8 @@ module FeideeUtils
     #   instance methods: poid, parent_poid, raw_path
     #   class methods: find_by_id
     module ParentAndPath
+      NullPOID = 0
+
       class InconsistentDepthException < Exception
       end
 
@@ -62,7 +64,7 @@ module FeideeUtils
       end
 
       def has_parent?
-        parent_poid != 0
+        parent_poid != NullPOID
       end
     end
   end
