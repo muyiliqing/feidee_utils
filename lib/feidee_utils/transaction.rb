@@ -202,6 +202,14 @@ module FeideeUtils
 
     private
     def sign_by_type num
+      # This is awkward. For transactions of type positive_initial_balance, the
+      # buyer is always 0, but the seller have to **add** the amount shown as
+      # sellerMoney, which is consistent with other type of transactions.
+      #
+      # Whereas for transactions of type negative_initial_balance (9),  the
+      # buyer is always 0, and the seller will have to **deduct** the amount
+      # shown as sellerMoney from balance. Here the sign of
+      # negative_initial_balance is reversed to reflect this awkwardness.
       raw_type == 9 ? -num : num
     end
 
