@@ -16,6 +16,24 @@ module FeideeUtils
             define_method name do field[key] end
           end
         end
+
+        def define_entity_accessor poid_callback_name, target_class_name = nil
+          accessor_name = poid_callback_name.to_s.chomp!("_poid")
+          if accessor_name == nil
+            raise "No trailing 'poid' in callback name #{poid_callback_name}."
+          end
+
+          if not target_class_name
+            target_class_name = accessor_name
+          end
+          target_class_name = target_class_name.to_s
+          target_class_name.gsub!(/(^|_)(.)/) { $2.upcase }
+
+          define_method accessor_name do
+            poid = method(poid_callback_name).call
+            self.class.environment.const_get(target_class_name).find(poid)
+          end
+        end
       end
     end
   end

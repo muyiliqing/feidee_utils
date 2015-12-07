@@ -68,7 +68,8 @@ class FeideeUtils::RecordTest < MiniTest::Test
   end
 
   def test_define_accessors
-    assert (FeideeUtils::Record.respond_to? :define_accessors), "Record doesn't have define_accessors class method."
+    assert (FeideeUtils::Record.respond_to? :define_accessors),
+        "Record doesn't have define_accessors class method."
     klass = Class.new(FeideeUtils::Record) do
       def field
         { "x" => 2, "y" => 1}
@@ -79,6 +80,33 @@ class FeideeUtils::RecordTest < MiniTest::Test
     instance = klass.new([], [], [])
     assert_equal 2, instance.xxx
     assert_equal 1, instance.yyy
+  end
+
+  def test_define_entity_accessor
+    assert (FeideeUtils::Record.respond_to? :define_entity_accessor),
+        "Record doesn't have define_entity_accessor class method."
+
+    klass = Class.new(FeideeUtils::Record) do
+      def self.environment
+        Module.new do
+          const_set :A, (Class.new do
+            def self.find id
+              "find id " + id
+            end
+          end)
+        end
+      end
+
+      def a_poid
+        "a1"
+      end
+
+      define_entity_accessor :a_poid, :A
+    end
+
+    instance = klass.new([], [], [])
+    assert_equal "find id xx", klass.environment::A.find("xx")
+    assert_equal "find id a1", instance.a
   end
 
   def test_last_update_time
