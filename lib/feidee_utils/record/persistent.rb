@@ -14,7 +14,9 @@ module FeideeUtils
             end
 
           id_field_name = entity_name.sub(/^[A-Z]/) { $&.downcase } + "POID"
-          table_name = "t_" + entity_name.gsub(/([a-z\d])([A-Z\d])/, '\1_\2').downcase
+          entity_name_underscore =
+              entity_name.gsub(/([a-z\d])([A-Z\d])/, '\1_\2').downcase
+          table_name = "t_" + entity_name_underscore
           subclass.class_exec do
             define_singleton_method :entity_name do entity_name end
             define_singleton_method :id_field_name do id_field_name end
