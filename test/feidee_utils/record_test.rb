@@ -89,24 +89,30 @@ class FeideeUtils::RecordTest < MiniTest::Test
     klass = Class.new(FeideeUtils::Record) do
       def self.environment
         Module.new do
-          const_set :A, (Class.new do
+          const_set :ClassA, (Class.new do
             def self.find id
-              "find id " + id
+              "A find id " + id
             end
           end)
         end
       end
 
-      def a_poid
+      def class_a_poid
         "a1"
       end
 
-      define_entity_accessor :a_poid, :A
+      def b_poid
+        "b1"
+      end
+
+      define_entity_accessor :class_a_poid
+      define_entity_accessor :b_poid, :class_a
     end
 
+    assert_equal "A find id xx", klass.environment::ClassA.find("xx")
     instance = klass.new([], [], [])
-    assert_equal "find id xx", klass.environment::A.find("xx")
-    assert_equal "find id a1", instance.a
+    assert_equal "A find id b1", instance.b
+    assert_equal "A find id a1", instance.class_a
   end
 
   def test_last_update_time

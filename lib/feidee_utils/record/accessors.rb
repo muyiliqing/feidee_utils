@@ -26,7 +26,7 @@ module FeideeUtils
           if not target_class_name
             target_class_name = accessor_name
           end
-          target_class_name = target_class_name.to_s
+          target_class_name = target_class_name.to_s.clone
           target_class_name.gsub!(/(^|_)(.)/) { $2.upcase }
 
           define_method accessor_name do
