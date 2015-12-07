@@ -98,6 +98,8 @@ module FeideeUtils
       raw_seller_addition:    "sellerMoney",
       uuid:                   "relation",
     }.freeze
+    define_entity_accessor :buyer_account_poid, :account
+    define_entity_accessor :seller_account_poid, :account
 
     IgnoredFields = [
       "creatorTradingEntityPOID",
@@ -141,6 +143,7 @@ module FeideeUtils
       # At least one of those two must be 0.
       buyer_category_poid + seller_category_poid
     end
+    define_entity_accessor :category_poid
 
     # Amount accessors
 
@@ -174,6 +177,7 @@ module FeideeUtils
         buyer_account_poid + seller_account_poid
       end
     end
+    define_entity_accessor :revised_account_poid, :account
 
     def revised_amount
       account_poid = revised_account_poid
