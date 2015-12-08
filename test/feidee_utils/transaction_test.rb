@@ -10,8 +10,8 @@ class FeideeUtils::TransactionTest < MiniTest::Test
     @all = @sqlite_db.namespaced::Transaction.all
     @income = @all.find do |transaction| transaction.poid == -6 end
     @expenditure = @all.find do |transaction| transaction.poid == -5 end
-    @transfer_in = @all.find do |transaction| transaction.poid == -9 end
-    @transfer_out = @all.find do |transaction| transaction.poid == -10 end
+    @transfer_out = @all.find do |transaction| transaction.poid == -9 end
+    @transfer_in = @all.find do |transaction| transaction.poid == -10 end
     @debit_init = @all.find do |transaction| transaction.poid == -1 end
     @credit_init = @all.find do |transaction| transaction.poid == -2 end
   end
@@ -60,8 +60,8 @@ class FeideeUtils::TransactionTest < MiniTest::Test
     assert_equal :expenditure, @expenditure.type
     assert_equal :income, @income.type
 
-    assert_equal 3, @transfer_in.raw_type
-    assert_equal 2, @transfer_out.raw_type
+    assert_equal 2, @transfer_in.raw_type
+    assert_equal 3, @transfer_out.raw_type
     assert_equal :transfer_seller, @transfer_in.type
     assert_equal :transfer_buyer, @transfer_out.type
 
@@ -276,5 +276,7 @@ class FeideeUtils::TransactionTest < MiniTest::Test
     assert_equal @debit_init.amount, @debit_init.revised_amount
     # This looks wrong to me.
     assert_equal @credit_init.seller_addition, @credit_init.revised_amount
+    # TODO: Add a test for forex transaction where buyer/seller amount are
+    # different
   end
 end

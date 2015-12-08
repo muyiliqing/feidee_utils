@@ -117,8 +117,8 @@ module FeideeUtils
     define_type_enum({
       0 => :expenditure,
       1 => :income,
-      2 => :transfer_buyer,
-      3 => :transfer_seller,
+      2 => :transfer_seller,
+      3 => :transfer_buyer,
       8 => :positive_initial_balance,
       9 => :negative_initial_balance,
     })
