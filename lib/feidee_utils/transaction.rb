@@ -53,7 +53,7 @@ module FeideeUtils
         end
       end
 
-      unless buyer_deduction == seller_addition
+      unless raw_buyer_deduction == raw_seller_addition
         raise InconsistentAmountException,
           "Buyer and seller should have the same amount set. " +
           "Buyer deduction: #{buyer_deduction}, seller_addition: #{seller_addition}.\n" +
@@ -148,11 +148,11 @@ module FeideeUtils
     # Amount accessors
 
     def buyer_deduction
-      sign_by_type(raw_buyer_deduction)
+      to_bigdecimal sign_by_type(raw_buyer_deduction)
     end
 
     def seller_addition
-      sign_by_type(raw_seller_addition)
+      to_bigdecimal sign_by_type(raw_seller_addition)
     end
 
     def amount
