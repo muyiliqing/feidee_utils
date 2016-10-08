@@ -3,6 +3,7 @@ require 'feidee_utils/database_test'
 require 'feidee_utils/record_test'
 require 'feidee_utils/account_test'
 require 'feidee_utils/transaction_test'
+require 'feidee_utils/integration_test'
 
 require 'pathname'
 
