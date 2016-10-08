@@ -190,6 +190,16 @@ module FeideeUtils
       end
     end
 
+    def to_s
+      if is_transfer?
+        "Transfer #{amount.to_f} from #{buyer_account} to #{seller_account}"
+      elsif is_initial_balance?
+        "Balance of #{revised_account} set to #{revised_amount.to_f}"
+      else
+        "Transaction of #{revised_amount.to_f} on #{revised_account} in #{category}"
+      end
+    end
+
     class ModifiedTransaction < ModifiedRecord
       define_custom_methods([
         :created_at,

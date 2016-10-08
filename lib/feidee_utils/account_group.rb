@@ -39,6 +39,10 @@ module FeideeUtils
       2 => :claim,
     })
 
+    def to_s
+      "#{name} (AccountGroup/#{poid})"
+    end
+
     # Schema
     # accountGroupPOID long not null
     # name varchar(100) not null

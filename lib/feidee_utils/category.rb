@@ -59,6 +59,10 @@ module FeideeUtils
       2 => :project_root, # unkown
     })
 
+    def to_s
+      "#{name} (Category/#{poid})"
+    end
+
     # Schema
     # categoryPOID LONG NOT NULL
     # name varchar(100) NOT NULL

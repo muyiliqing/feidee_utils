@@ -104,6 +104,10 @@ module FeideeUtils
       arr
     end
 
+    def to_s
+      "#{name} (Account/#{poid})"
+    end
+
     class ModifiedAccount < Record::ModifiedRecord
       define_custom_methods([
         :balance,
