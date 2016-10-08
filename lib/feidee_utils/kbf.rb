@@ -12,7 +12,7 @@ module FeideeUtils
     attr_reader :zipfile, :sqlite_db
 
     def initialize(input_stream)
-      @zipfile = Zip::File.open_buffer(input_stream) do |zipfile|
+      Zip::File.open_buffer(input_stream) do |zipfile|
         zipfile.each do |entry|
           if entry.name == DatabaseName
             # Each call to get_input_stream will create a new stream
