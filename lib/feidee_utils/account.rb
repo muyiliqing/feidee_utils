@@ -36,15 +36,12 @@ module FeideeUtils
     }.freeze
 
     IgnoredFields = [
-      "tradingEntityPOID",
-      # TODO: Field type is removed from database_version 73. Not sure about
-      # earlier versions.
-      "type",             # Always 0
+      "tradingEntityPOID", # Foreign key to t_user or maybe t_tradingEntity.
+      "type",             # Always 0, removed since database version 73.
       "usedCount",        # Always 0
       "uuid",             # Always empty.
-      # TODO: code is also removed.
-      "code",             # WTF
-      "clientID",         # WTF
+      "code",             # Always 0, removed since database version 73.
+      "clientID",         # Always equal to poid.
     ].freeze
 
     define_accessors(FieldMappings)

@@ -102,13 +102,13 @@ module FeideeUtils
     define_entity_accessor :seller_account_poid, :account
 
     IgnoredFields = [
-      "creatorTradingEntityPOID",
-      "modifierTradingEntityPOID",
+      "creatorTradingEntityPOID",  # Foreign key to to_user.
+      "modifierTradingEntityPOID", # Foreign key to to_user.
       "ffrom",                # The signature of the App writting this transaction.
       "photoName",            # To be added
       "photoNeedUpload",      # To be added
-      "relationUnitPOID",     # WTF
-      "clientID",             # WTF
+      "relationUnitPOID",     # Foreign key to t_tradingEntity: Merchant.
+      "clientID",             # Always 0 for ealier versions, or equal to poid.
       "FSourceKey",           # WTF
     ].freeze
 

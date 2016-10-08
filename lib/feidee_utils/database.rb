@@ -22,6 +22,8 @@ module FeideeUtils
       t_fund_trans
       t_module_stock_holding
       t_module_stock_tran
+      t_tradingEntity
+      t_user
     ).freeze
 
     attr_reader :sqlite_file

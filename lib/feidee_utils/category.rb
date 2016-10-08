@@ -45,10 +45,10 @@ module FeideeUtils
     }.freeze
 
     IgnoredFields = [
-      "userTradingEntityPOID", # WTF
+      "userTradingEntityPOID", # Foreign key to t_user.
       "_tempIconName",         # Icon name in the app
       "usedCount",             # Always 0.
-      "clientID",              # WTF
+      "clientID",              # Always equal to poid.
     ].freeze
 
     define_accessors(FieldMappings)
