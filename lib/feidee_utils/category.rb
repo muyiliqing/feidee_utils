@@ -10,13 +10,18 @@ module FeideeUtils
     def validate_integrity
       validate_depth_integrity
       validate_one_level_path_integrity
-      raise "Category usedCount should always be 0, but it's #{field["usedCount"]}.\n" + inspect unless field["usedCount"] == 0
+      unless field["usedCount"] == 0
+        raise "Category usedCount should always be 0, " +
+          "but it's #{field["usedCount"]}.\n" +
+          inspect
+      end
     end
 
     def self.validate_global_integrity
       project_root_code = 2
       if TypeEnum[project_root_code] != :project_root
-        raise "The type code of project root has been changed, please update the code."
+        raise "The type code of project root has been changed," +
+          " please update the code."
       end
 
       rows = self.database.execute <<-SQL
@@ -26,11 +31,13 @@ module FeideeUtils
 
       if rows.length > 1
         poids = rows.map do |row| row[0] end
-        raise "More than one category have type project_root. IDs are #{poids.inspect}."
+        raise "More than one category have type project_root." +
+          " IDs are #{poids.inspect}."
       elsif rows.length == 1
         category_name = rows[0][1]
         if category_name != "projectRoot" and category_name != "root"
-          raise "Category #{category_name} has type project_root. ID: #{rows[0][0]}."
+          raise "Category #{category_name} has type project_root." +
+            " ID: #{rows[0][0]}."
         end
       end
     end

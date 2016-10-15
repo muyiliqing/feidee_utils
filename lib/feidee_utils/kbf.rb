@@ -24,7 +24,10 @@ module FeideeUtils
     end
 
     def extract_original_sqlite(dest_file_path = nil)
-      FeideeUtils::Database.feidee_to_sqlite(@original_sqlite_db_entry.get_input_stream, dest_file_path)
+      FeideeUtils::Database.feidee_to_sqlite(
+        @original_sqlite_db_entry.get_input_stream,
+        dest_file_path
+      )
     end
 
     class << self
