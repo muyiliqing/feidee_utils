@@ -5,10 +5,16 @@ require 'sqlite3'
 class FeideeUtils::RecordTest < MiniTest::Test
   def setup
     @sqlite_db = SQLite3::Database.new(":memory:")
-    @sqlite_db.execute("CREATE TABLE t_record(recordPOID INT PRIMARY KEY, record_key INT, record_value VARCHAR(255));")
+    @sqlite_db.execute <<-SQL
+      CREATE TABLE t_record(
+        recordPOID INT PRIMARY KEY, record_key INT, record_value VARCHAR(255)
+      );
+    SQL
     @sqlite_db.execute("INSERT INTO t_record values(1, 1, 'stupid record');")
     @sqlite_db.execute("INSERT INTO t_record values(2, 2, 'base');")
-    @sqlite_db.execute("CREATE TABLE t_tag(tagPOID INT PRIMARY KEY, tag_name VARCHAR(255));")
+    @sqlite_db.execute <<-SQL
+      CREATE TABLE t_tag(tagPOID INT PRIMARY KEY, tag_name VARCHAR(255));
+    SQL
     @sqlite_db.execute("INSERT INTO t_tag values(2, 'base');")
 
     temp_db = @sqlite_db
@@ -63,7 +69,11 @@ class FeideeUtils::RecordTest < MiniTest::Test
   def test_poid
     raw_result = @sqlite_db.query("SELECT * FROM t_record WHERE record_key = 1")
     raw_row = raw_result.next
-    record = FeideeUtils::Record.new(raw_result.columns, raw_result.types, raw_row)
+    record = FeideeUtils::Record.new(
+      raw_result.columns,
+      raw_result.types,
+      raw_row
+    )
     assert_equal 1, record.poid
   end
 
