@@ -74,7 +74,10 @@ module FeideeUtils
 
     def drop_unused_tables
       useful_tables = Tables.values + PotentialUsefulTables
-      useful_tables = (useful_tables + useful_tables.map do |x| self.class.trash_table_name(x) end).sort
+      useful_tables += useful_tables.map do |x|
+        self.class.trash_table_name(x)
+      end
+      useful_tables.sort!
 
       # TODO: Record all tables droped.
       (all_tables - useful_tables).each do |table|
@@ -88,14 +91,20 @@ module FeideeUtils
     end
 
     def extract_metadata
-      @platform = self.execute("SELECT platform from #{Tables[:metadata]}")[0][0];
+      @platform = self.execute(
+        "SELECT platform from #{Tables[:metadata]}"
+      )[0][0];
 
-      @ledger_name = self.get_first_row("SELECT accountBookName FROM #{Tables[:profile]};")[0];
+      @ledger_name = self.get_first_row(
+        "SELECT accountBookName FROM #{Tables[:profile]};"
+      )[0];
 
-      # This is not recorded in the database, so the lastest lastUpdateTime of all
-      # transactions is chosen.
-      timestamp = self.get_first_row("SELECT max(lastUpdateTime) FROM #{Tables[:transactions]};")[0]
-      @last_modified_at = timestamp == nil ? Time.at(0) : Time.at(timestamp / 1000)
+      # This is not recorded in the database, so the lastest lastUpdateTime of
+      # all transactions is chosen.
+      timestamp = self.get_first_row(
+        "SELECT max(lastUpdateTime) FROM #{Tables[:transactions]};"
+      )[0]
+      @last_modified_at = Time.at((timestamp or 0.0) / 1000)
     end
 
     class << self
@@ -106,13 +115,14 @@ module FeideeUtils
       Header = "SQLite format 3\0".force_encoding("binary")
       FeideeHeader_iOS = "%$^#&!@_@- -!F\xff\0".force_encoding('binary')
       FeideeHeader_Android = ("\0" * 13 + "F\xff\0").force_encoding("binary")
+      AllHeaders = [FeideeHeader_iOS, FeideeHeader_Android, Header]
 
       def feidee_to_sqlite(private_sqlite, sqlite_file = nil)
         # Discard the first a few bytes content.
         private_header = private_sqlite.read(Header.length)
 
-        unless [FeideeHeader_iOS, FeideeHeader_Android, Header].include? private_header
-          raise "Unexpected header #{private_header.inspect} in private sqlite file."
+        unless AllHeaders.include? private_header
+          raise "Unexpected private sqlite header #{private_header.inspect}."
         end
 
         # Write the rest to a tempfile.
@@ -126,7 +136,10 @@ module FeideeUtils
     end
 
     class << self
-      NoDeleteSuffixTables = %w(account category tag tradingEntity transaction transaction_template)
+      NoDeleteSuffixTables = %w(
+        account category tag tradingEntity
+        transaction transaction_template
+      )
 
       def trash_table_name name
         NoDeleteSuffixTables.each do |core_name|
