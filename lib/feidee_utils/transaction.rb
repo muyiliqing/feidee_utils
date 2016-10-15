@@ -201,14 +201,15 @@ module FeideeUtils
     end
 
     def to_s
-      if is_transfer?
-        "Transfer #{amount.to_f} from #{buyer_account} to #{seller_account}"
+      str = if is_transfer?
+        (type == :transfer_buyer ? "Buyer" : "Seller") +
+        " transfer #{amount.to_f} from #{buyer_account} to #{seller_account}"
       elsif is_initial_balance?
         "Balance of #{revised_account} set to #{revised_amount.to_f}"
       else
-        "Transaction of #{revised_amount.to_f} on #{revised_account} in " +
-          "#{category}"
+        "Entry of #{revised_amount.to_f} on #{revised_account} in #{category}"
       end
+      str + " at #{trade_at} (Transaction #{poid})";
     end
 
     class ModifiedTransaction < ModifiedRecord
