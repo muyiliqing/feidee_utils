@@ -12,7 +12,9 @@ module FeideeUtils
       module ClassMethods
         def define_accessors field_mappings
           field_mappings.each do |name, key|
-            raise "Accessor #{name} already exists in #{self.name}." if method_defined? name
+            if method_defined? name
+              raise "Accessor #{name} already exists in #{self.name}."
+            end
             define_method name do field[key] end
           end
         end

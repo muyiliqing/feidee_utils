@@ -36,13 +36,17 @@ module FeideeUtils
         end
 
         def find_by_id(id)
-          raw_result = database.query("SELECT * FROM #{self.table_name} WHERE #{self.id_field_name} = ?", id)
+          raw_result = database.query(
+            "SELECT * FROM #{self.table_name} WHERE #{self.id_field_name} = ?",
+            id
+          )
 
           raw_row = raw_result.next
           return nil if raw_row == nil
 
           if raw_result.next != nil
-            raise "Getting more than one result with the same ID #{id} in table #{self.table_name}."
+            raise "Getting more than one result with the same ID #{id} " +
+              "in table #{self.table_name}."
           end
 
           self.new(raw_result.columns, raw_result.types, raw_row)

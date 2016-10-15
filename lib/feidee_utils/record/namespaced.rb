@@ -12,7 +12,8 @@ module FeideeUtils
           @child_classes.add(child_class)
         end
 
-        # To use Record with different databases, generate a set of classes for each db
+        # To use Record with different databases, generate a set of classes for
+        # each db
         def generate_namespaced_record_classes(db)
           @child_classes ||= Set.new
           this = self
