@@ -7,7 +7,7 @@ class FeideeUtils::AccountTest < MiniTest::Test
   def setup
     @sqlite_db = FeideeUtils::TestUtils.open_test_sqlite
 
-    @all = @sqlite_db.namespaced::Account.all
+    @all = @sqlite_db.ledger::Account.all
 
     @cash = @all.find do |account| account.name == "Cash" end
     @debit = @all.find do |account| account.name == "DebitCard" end
@@ -207,13 +207,13 @@ class FeideeUtils::AccountTest < MiniTest::Test
   def test_validate_global_integrity_errors
     @sqlite_db.execute("INSERT INTO t_account VALUES(-1, 'invalid_account', -3, 1271747936000, 0, 3, 0, '', '', 0, 0, 0, 2, 0, 0, 0, 0, '')");
     e = assert_raises do
-      @sqlite_db.namespaced::Account.validate_global_integrity
+      @sqlite_db.ledger::Account.validate_global_integrity
     end
     assert_equal "-1 is used as the parent POID placeholder of a parent account. Account of POID -1 should not exist.", e.message
     @sqlite_db.execute("DELETE FROM t_account WHERE accountPOID = -1");
   end
 
   def test_validate_global_integrity
-    @sqlite_db.namespaced::Account.validate_global_integrity
+    @sqlite_db.ledger::Account.validate_global_integrity
   end
 end

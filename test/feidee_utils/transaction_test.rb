@@ -7,7 +7,7 @@ class FeideeUtils::TransactionTest < MiniTest::Test
   def setup
     @sqlite_db = FeideeUtils::TestUtils.open_test_sqlite
 
-    @all = @sqlite_db.namespaced::Transaction.all
+    @all = @sqlite_db.ledger::Transaction.all
     @income = @all.find do |transaction| transaction.poid == -6 end
     @expenditure = @all.find do |transaction| transaction.poid == -5 end
     @transfer_out = @all.find do |transaction| transaction.poid == -9 end
@@ -99,14 +99,14 @@ class FeideeUtils::TransactionTest < MiniTest::Test
     assert extra_transaction.is_transfer?
 
     extra_transactions = @all + [ extra_transaction ]
-    @sqlite_db.namespaced::Transaction.class_eval do
+    @sqlite_db.ledger::Transaction.class_eval do
       define_singleton_method :all do
         extra_transactions
       end
     end
 
     assert_raises FeideeUtils::Transaction::TransfersNotPaired do
-      @sqlite_db.namespaced::Transaction.validate_global_integrity
+      @sqlite_db.ledger::Transaction.validate_global_integrity
     end
   end
 
@@ -120,7 +120,7 @@ class FeideeUtils::TransactionTest < MiniTest::Test
   end
 
   def test_validate_global_integrity
-    @sqlite_db.namespaced::Transaction.validate_global_integrity
+    @sqlite_db.ledger::Transaction.validate_global_integrity
   end
 
   def test_credit_account_init_amount

@@ -27,8 +27,8 @@ require 'feidee_utils'
 
 kbf = FeideeUtils::Kbf.open_file(path_to_kbf_file)
 database = kbf.db
-all_accounts = database.namespaced::Account.all
-all_transactions = database.namespaced::Transaction.all
+all_accounts = database.ledger::Account.all
+all_transactions = database.ledger::Transaction.all
 ```
 
 For more examples see ```examples/``` (To be added).

@@ -7,12 +7,12 @@ class FeideeUtils::CategoryTest < MiniTest::Test
   def setup
     @sqlite_db = FeideeUtils::TestUtils.open_test_sqlite
 
-    @expenditure = @sqlite_db.namespaced::Category.find_by_id(-1)
-    @meals = @sqlite_db.namespaced::Category.find_by_id(-16)
-    @income = @sqlite_db.namespaced::Category.find_by_id(-56)
-    @salary = @sqlite_db.namespaced::Category.find_by_id(-57)
+    @expenditure = @sqlite_db.ledger::Category.find_by_id(-1)
+    @meals = @sqlite_db.ledger::Category.find_by_id(-16)
+    @income = @sqlite_db.ledger::Category.find_by_id(-56)
+    @salary = @sqlite_db.ledger::Category.find_by_id(-57)
 
-    @fruit = @sqlite_db.namespaced::Category.find_by_id(-18)
+    @fruit = @sqlite_db.ledger::Category.find_by_id(-18)
   end
 
   def test_fields
@@ -61,7 +61,7 @@ class FeideeUtils::CategoryTest < MiniTest::Test
   def test_validate_global_integrity_errors_multiple_project_root
     @sqlite_db.execute("INSERT into t_category VALUES(170, 'category1', 0, '/170/', 0, 0, -3, '', 0, 2, 100, -1);");
     e = assert_raises do
-      @sqlite_db.namespaced::Category.validate_global_integrity
+      @sqlite_db.ledger::Category.validate_global_integrity
     end
     assert_equal "More than one category have type project_root. IDs are [-69, 170].", e.message
     @sqlite_db.execute("DELETE FROM t_category WHERE categoryPOID=170;");
@@ -70,13 +70,13 @@ class FeideeUtils::CategoryTest < MiniTest::Test
   def test_validate_global_integrity_errors_unexpected_name
     @sqlite_db.execute("UPDATE t_category SET name='another_root' WHERE name='root'");
     e = assert_raises do
-      @sqlite_db.namespaced::Category.validate_global_integrity
+      @sqlite_db.ledger::Category.validate_global_integrity
     end
     assert_equal "Category another_root has type project_root. ID: -69.", e.message
     @sqlite_db.execute("UPDATE t_category SET name='root' WHERE name='another_root'");
   end
 
   def test_validate_global_integrity
-    @sqlite_db.namespaced::Category.validate_global_integrity
+    @sqlite_db.ledger::Category.validate_global_integrity
   end
 end

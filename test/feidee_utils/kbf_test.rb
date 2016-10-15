@@ -21,9 +21,9 @@ class FeideeUtils::KbfTest < MiniTest::Test
   end
 
   def test_read_backup
-    empty_rows = @fresh_ios_backup.db.namespaced::Transaction.all
+    empty_rows = @fresh_ios_backup.db.ledger::Transaction.all
     assert empty_rows.empty?
-    one_line = @oneline_ios_backup.db.namespaced::Account.all
+    one_line = @oneline_ios_backup.db.ledger::Account.all
     assert_equal 1, one_line.size()
   end
 end

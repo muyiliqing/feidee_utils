@@ -29,7 +29,7 @@ module FeideeUtils
     attr_reader :sqlite_file
     attr_reader :platform, :ledger_name, :last_modified_at
     attr_reader :missing_tables
-    attr_reader :namespaced
+    attr_reader :ledger
 
     def initialize(private_sqlite, strip = false)
       @sqlite_file = Database.feidee_to_sqlite(private_sqlite)
@@ -39,7 +39,8 @@ module FeideeUtils
       extract_metadata
       drop_unused_tables if strip
 
-      @namespaced = Record.generate_namespaced_record_classes(self)
+      # TODO: make Ledger a first class object.
+      @ledger = Record.generate_namespaced_record_classes(self)
     end
 
     def sqlite_backup(dest_file_path)
@@ -53,8 +54,8 @@ module FeideeUtils
     end
 
     def validate_global_integrity
-      @namespaced.constants.each do |const|
-        @namespaced.const_get(const).validate_global_integrity if const != :Database
+      @ledger.constants.each do |const|
+        @ledger.const_get(const).validate_global_integrity if const != :Database
       end
     end
 
