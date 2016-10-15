@@ -91,7 +91,8 @@ class FeideeUtils::TransactionTest < MiniTest::Test
 
   def test_validate_global_integrity_errors
     extra_transaction = FeideeUtils::Transaction.new(
-      [ "type", "amount", "modifiedTime", "createdTime", "lastUpdateTime", "tradeTime", "buyerCategoryPOID", "sellerCategoryPOID", ],
+      [ "type", "amount", "modifiedTime", "createdTime", "lastUpdateTime",
+        "tradeTime", "buyerCategoryPOID", "sellerCategoryPOID", ],
       [ Integer.class, Integer.class, nil, nil, nil, nil, nil, nil, nil ],
       [ 3, 100, 0, 0, 0, 0, 0, 0],
     )
@@ -165,20 +166,28 @@ class FeideeUtils::TransactionTest < MiniTest::Test
   end
 
   def test_validate_account_integrity_errors
-    assert_raises FeideeUtils::Transaction::InconsistentBuyerAndSellerException do
-      FeideeUtils::Transaction.new(["buyerAccountPOID", "sellerAccountPOID"], [nil, nil], [2, 3])
+    assert_raises FeideeUtils::Transaction::InconsistentBuyerAndSellerException do # nolint
+      FeideeUtils::Transaction.new(
+        ["buyerAccountPOID", "sellerAccountPOID"], [nil, nil], [2, 3]
+      )
     end
-    assert_raises FeideeUtils::Transaction::InconsistentBuyerAndSellerException do
-      FeideeUtils::Transaction.new(["buyerAccountPOID", "sellerAccountPOID"], [nil, nil], [0, 0])
+    assert_raises FeideeUtils::Transaction::InconsistentBuyerAndSellerException do # nolint
+      FeideeUtils::Transaction.new(
+        ["buyerAccountPOID", "sellerAccountPOID"], [nil, nil], [0, 0]
+      )
     end
   end
 
   def test_transfer_validate_account_integrity_errors
-    assert_raises FeideeUtils::Transaction::TransferLackBuyerOrSellerException do
-      FeideeUtils::Transaction.new(["type", "buyerAccountPOID"], [nil, nil], [2, 0])
+    assert_raises FeideeUtils::Transaction::TransferLackBuyerOrSellerException do # nolint
+      FeideeUtils::Transaction.new(
+        ["type", "buyerAccountPOID"], [nil, nil], [2, 0]
+      )
     end
-    assert_raises FeideeUtils::Transaction::TransferLackBuyerOrSellerException do
-      FeideeUtils::Transaction.new(["type", "sellerAccountPOID"], [nil, nil], [2, 0])
+    assert_raises FeideeUtils::Transaction::TransferLackBuyerOrSellerException do # nolint
+      FeideeUtils::Transaction.new(
+        ["type", "sellerAccountPOID"], [nil, nil], [2, 0]
+      )
     end
   end
 
@@ -195,16 +204,23 @@ class FeideeUtils::TransactionTest < MiniTest::Test
 
   def test_validate_category_integrity_errors
     assert_raises FeideeUtils::Transaction::InconsistentCategoryException do
-      FeideeUtils::Transaction.new(["buyerAccountPOID", "buyerCategoryPOID", "sellerCategoryPOID"], [nil, nil, nil], [0, 1, 2])
+      FeideeUtils::Transaction.new(
+        ["buyerAccountPOID", "buyerCategoryPOID", "sellerCategoryPOID"],
+        [nil, nil, nil], [0, 1, 2]
+      )
     end
   end
 
   def test_transfer_validate_category_integrity_errors
     assert_raises FeideeUtils::Transaction::TransferWithCategoryException do
-      FeideeUtils::Transaction.new(["type", "buyerCategoryPOID"], [nil, nil], [3, 2])
+      FeideeUtils::Transaction.new(
+        ["type", "buyerCategoryPOID"], [nil, nil], [3, 2]
+      )
     end
     assert_raises FeideeUtils::Transaction::TransferWithCategoryException do
-      FeideeUtils::Transaction.new(["type", "sellerCategoryPOID"], [nil, nil], [3, 2])
+      FeideeUtils::Transaction.new(
+        ["type", "sellerCategoryPOID"], [nil, nil], [3, 2]
+      )
     end
   end
 
@@ -220,14 +236,16 @@ class FeideeUtils::TransactionTest < MiniTest::Test
 
   def test_amount
     @all.zip(Amounts).each do |transaction, amount|
-      assert_equal amount, transaction.amount, "#{transaction.poid} incorrect amount"
+      assert_equal amount, transaction.amount,
+        "#{transaction.poid} incorrect amount"
     end
   end
 
   def test_validate_amount_integrity_errors
     assert_raises FeideeUtils::Transaction::InconsistentAmountException do
       FeideeUtils::Transaction.new(
-        ["buyerAccountPOID", "buyerCategoryPOID", "sellerCategoryPOID", "buyerMoney", "sellerMoney"],
+        ["buyerAccountPOID", "buyerCategoryPOID", "sellerCategoryPOID",
+         "buyerMoney", "sellerMoney"],
         [nil, nil, nil, nil, nil],
         [0, 0, 0, 0, 1])
     end
@@ -235,12 +253,16 @@ class FeideeUtils::TransactionTest < MiniTest::Test
 
   def test_validate_integrity
     FeideeUtils::Transaction.new(
-      ["buyerAccountPOID", "sellerAccountPOID", "buyerCategoryPOID", "sellerCategoryPOID", "buyerMoney", "sellerMoney"],
+      ["buyerAccountPOID", "sellerAccountPOID",
+       "buyerCategoryPOID", "sellerCategoryPOID",
+       "buyerMoney", "sellerMoney"],
       [nil, nil, nil, nil, nil, nil],
       [0, 1, 0, 2, 0, 0])
 
     FeideeUtils::Transaction.new(
-      ["buyerAccountPOID", "sellerAccountPOID", "buyerCategoryPOID", "sellerCategoryPOID", "buyerMoney", "sellerMoney"],
+      ["buyerAccountPOID", "sellerAccountPOID",
+       "buyerCategoryPOID", "sellerCategoryPOID",
+       "buyerMoney", "sellerMoney"],
       [nil, nil, nil, nil, nil, nil],
       [2, 0, 2, 0, 0, 0])
   end
@@ -248,13 +270,15 @@ class FeideeUtils::TransactionTest < MiniTest::Test
   def test_transfer_validate_integrity
     # Type 2
     FeideeUtils::Transaction.new(
-      ["buyerAccountPOID", "sellerAccountPOID", "buyerCategoryPOID", "sellerCategoryPOID", "type"],
+      ["buyerAccountPOID", "sellerAccountPOID",
+       "buyerCategoryPOID", "sellerCategoryPOID", "type"],
       [nil, nil, nil, nil, nil],
       [2, 1, 0, 0, 2])
 
     # Type 3
     FeideeUtils::Transaction.new(
-      ["buyerAccountPOID", "sellerAccountPOID", "buyerCategoryPOID", "sellerCategoryPOID", "type"],
+      ["buyerAccountPOID", "sellerAccountPOID",
+       "buyerCategoryPOID", "sellerCategoryPOID", "type"],
       [nil, nil, nil, nil, nil],
       [2, 1, 0, 0, 3])
   end

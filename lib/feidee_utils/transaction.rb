@@ -25,30 +25,37 @@ module FeideeUtils
         unless buyer_account_poid != 0 and seller_account_poid != 0
           raise TransferLackBuyerOrSellerException,
             "Both buyer and seller should be set in a transfer. " +
-            "Buyer account POID: #{buyer_account_poid}. Seller account POID: #{seller_account_poid}.\n" +
+            "Buyer account POID: #{buyer_account_poid}. " +
+            "Seller account POID: #{seller_account_poid}.\n" +
             inspect
         end
         unless buyer_category_poid == 0 and seller_category_poid == 0
           raise TransferWithCategoryException,
             "Neither buyer or seller category should be set in a transfer. " +
-            "Buyer category POID: #{buyer_category_poid}. Seller category POID: #{seller_category_poid}.\n" +
+            "Buyer category POID: #{buyer_category_poid}. " +
+            "Seller category POID: #{seller_category_poid}.\n" +
             inspect
         end
       else
         unless (buyer_account_poid == 0) ^ (seller_account_poid == 0)
           raise InconsistentBuyerAndSellerException,
-            "Exactly one of buyer and seller should be set in a non-transfer transaction. " +
-            "Buyer account POID: #{buyer_account_poid}. Seller account POID: #{seller_account_poid}.\n" +
+            "Exactly one of buyer and seller should be set in a non-transfer " +
+            "transaction. " +
+            "Buyer account POID: #{buyer_account_poid}. " +
+            "Seller account POID: #{seller_account_poid}.\n" +
             inspect
         end
 
-        # We could enforce that category is set to the matching party (buyer or seller) of account.
-        # However the implementation could handle all situations, as long as only one of them is set.
-        # Thus no extra check is done here.
+        # We could enforce that category is set to the matching party (buyer or
+        # seller) of account. However the implementation could handle all
+        # situations, as long as only one of them is set. Thus no extra check is
+        # done here.
         unless buyer_category_poid == 0 or seller_category_poid == 0
           raise InconsistentCategoryException,
-            "Only one of buyer and seller category should be set in a non-transfer transaction. "
-            "Buyer category POID: #{buyer_category_poid}. Seller category POID: #{seller_category_poid}.\n" +
+            "Only one of buyer and seller category should be set in a " +
+            "non-transfer transaction. " +
+            "Buyer category POID: #{buyer_category_poid}. " +
+            "Seller category POID: #{seller_category_poid}.\n" +
             inspect
         end
       end
@@ -56,7 +63,8 @@ module FeideeUtils
       unless raw_buyer_deduction == raw_seller_addition
         raise InconsistentAmountException,
           "Buyer and seller should have the same amount set. " +
-          "Buyer deduction: #{buyer_deduction}, seller_addition: #{seller_addition}.\n" +
+          "Buyer deduction: #{buyer_deduction}. "+
+          "Seller_addition: #{seller_addition}.\n" +
         inspect
       end
     end
@@ -78,8 +86,10 @@ module FeideeUtils
         valid = true
         valid &&= transfers[0] != nil
         valid &&= transfers[1] != nil
-        valid &&= transfers[0].buyer_account_poid == transfers[1].buyer_account_poid
-        valid &&= transfers[0].seller_account_poid == transfers[1].seller_account_poid
+        valid &&=
+          transfers[0].buyer_account_poid == transfers[1].buyer_account_poid
+        valid &&=
+          transfers[0].seller_account_poid == transfers[1].seller_account_poid
         raise TransfersNotPaired.new([uuid] + transfers) unless valid
       end
     end
@@ -104,7 +114,7 @@ module FeideeUtils
     IgnoredFields = [
       "creatorTradingEntityPOID",  # Foreign key to to_user.
       "modifierTradingEntityPOID", # Foreign key to to_user.
-      "ffrom",                # The signature of the App writting this transaction.
+      "ffrom",                # The signature of the App.
       "photoName",            # To be added
       "photoNeedUpload",      # To be added
       "relationUnitPOID",     # Foreign key to t_tradingEntity: Merchant.
@@ -196,7 +206,8 @@ module FeideeUtils
       elsif is_initial_balance?
         "Balance of #{revised_account} set to #{revised_amount.to_f}"
       else
-        "Transaction of #{revised_amount.to_f} on #{revised_account} in #{category}"
+        "Transaction of #{revised_amount.to_f} on #{revised_account} in " +
+          "#{category}"
       end
     end
 
