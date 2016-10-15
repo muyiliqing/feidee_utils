@@ -5,17 +5,34 @@ require 'bigdecimal'
 module FeideeUtils
   class Account < Record
     def validate_integrity
-      raise "Account type should always be 0, but it's #{field["type"]}.\n" + inspect unless not field["type"] or field["type"] == 0
-      raise "Account usedCount should always be 0, but it's #{field["usedCount"]}.\n" + inspect unless field["usedCount"] == 0
-      raise "Account uuid should always be empty, but it's #{field["uuid"]}.\n" + inspect unless field["uuid"].to_s.empty?
-      raise "Account hierachy contains more than 2 levels.\n" + inspect unless flat_parent_hierachy?
-      raise "Account hidden should be either 0 or 1, but it's #{raw_hidden}.\n" + inspect unless (raw_hidden == 1 or raw_hidden == 0)
+      unless not field["type"] or field["type"] == 0
+        raise "Account type should always be 0, but it's #{field["type"]}.\n" +
+          inspect
+      end
+      unless field["usedCount"] == 0
+        raise "Account usedCount should always be 0," +
+          " but it's #{field["usedCount"]}.\n"+
+          inspect
+      end
+      unless field["uuid"].to_s.empty?
+        raise "Account uuid should always be empty,"+
+          " but it's #{field["uuid"]}.\n" +
+          inspect
+      end
+      unless flat_parent_hierachy?
+        raise "Account hierachy contains more than 2 levels.\n" + inspect
+      end
+      unless (raw_hidden == 1 or raw_hidden == 0)
+        raise "Account hidden should be either 0 or 1," +
+          " but it's #{raw_hidden}.\n" +
+          inspect
+      end
     end
 
     def self.validate_global_integrity
       if self.find_by_id(-1) != nil
-        raise "-1 is used as the parent POID placeholder of a parent account. " +
-          "Account of POID -1 should not exist."
+        raise "-1 is used as the parent POID placeholder of a parent account." +
+          " Account of POID -1 should not exist."
       end
     end
 
@@ -93,7 +110,9 @@ module FeideeUtils
 
     def children
       arr = []
-      self.class.database.query("SELECT * FROM #{self.class.table_name} WHERE parent = ?", poid) do |result|
+      self.class.database.query(
+        "SELECT * FROM #{self.class.table_name} WHERE parent = ?", poid
+      ) do |result|
         result.each do |raw_row|
           arr << self.class.new(result.columns, result.types, raw_row)
         end

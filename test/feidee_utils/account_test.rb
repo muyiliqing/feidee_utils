@@ -71,7 +71,8 @@ class FeideeUtils::AccountTest < MiniTest::Test
 
   def test_balance
     @accounts.zip(Balances).each do |account, balance|
-      assert_equal balance, account.balance, account.name + " balance incorrect: #{account.balance.to_s}."
+      assert_equal balance, account.balance,
+        account.name + " balance incorrect: #{account.balance.to_s}."
     end
   end
 
@@ -85,7 +86,10 @@ class FeideeUtils::AccountTest < MiniTest::Test
   end
 
   def test_currency
-    @accounts.each do |account| assert_equal "CNY", account.currency, account.name + " currency incorrect." end
+    @accounts.each do |account|
+      assert_equal "CNY", account.currency,
+        account.name + " currency incorrect."
+    end
   end
 
   def test_parent_poid
@@ -113,7 +117,9 @@ class FeideeUtils::AccountTest < MiniTest::Test
     refute @credit_two.has_parent?
 
     assert @parent.flagged_as_parent?
-    @accounts.each do |account| refute account.flagged_as_parent? if account.poid != @parent.poid end
+    @accounts.each do |account|
+      refute account.flagged_as_parent? if account.poid != @parent.poid
+    end
   end
 
   def test_flat_parent_hierachy
@@ -128,7 +134,8 @@ class FeideeUtils::AccountTest < MiniTest::Test
   end
 
   def test_children
-    assert_equal [@saving.poid, @checking.poid].sort, (@parent.children.map do |x| x.poid end).sort
+    assert_equal [@saving.poid, @checking.poid].sort,
+      (@parent.children.map do |x| x.poid end).sort
   end
 
   def test_account_group_poid
@@ -173,17 +180,25 @@ class FeideeUtils::AccountTest < MiniTest::Test
     e = assert_raises do
       FeideeUtils::Account.new(["type", "usedCount"], [nil, nil], [0, "x"])
     end
-    assert_match (/^Account usedCount should always be 0, but it's x\./), e.message
+    assert_match (/^Account usedCount should always be 0, but it's x\./),
+      e.message
 
     e = assert_raises do
-      FeideeUtils::Account.new(["type", "usedCount", "uuid"], [nil, nil, nil], [0, 0, "x"])
+      FeideeUtils::Account.new(
+        ["type", "usedCount", "uuid"], [nil, nil, nil], [0, 0, "x"]
+      )
     end
-    assert_match (/^Account uuid should always be empty, but it's x\./), e.message
+    assert_match (/^Account uuid should always be empty, but it's x\./),
+      e.message
 
     e = assert_raises do
-      FeideeUtils::Account.new(["type", "usedCount", "uuid", "parent", "hidden"], [nil, nil, nil, nil, nil], [0, 0, "", 0, "x"])
+      FeideeUtils::Account.new(
+        ["type", "usedCount", "uuid", "parent", "hidden"],
+        [nil, nil, nil, nil, nil], [0, 0, "", 0, "x"]
+      )
     end
-    assert_match (/^Account hidden should be either 0 or 1, but it's x\./), e.message
+    assert_match (/^Account hidden should be either 0 or 1, but it's x\./),
+      e.message
   end
 
   def test_validate_integrity_flat_hierachy_errors
@@ -205,11 +220,16 @@ class FeideeUtils::AccountTest < MiniTest::Test
   end
 
   def test_validate_global_integrity_errors
-    @sqlite_db.execute("INSERT INTO t_account VALUES(-1, 'invalid_account', -3, 1271747936000, 0, 3, 0, '', '', 0, 0, 0, 2, 0, 0, 0, 0, '')");
+    @sqlite_db.execute <<-SQL
+      INSERT INTO t_account
+      VALUES(-1, 'invalid_account', -3, 1271747936000,
+        0, 3, 0, '', '', 0, 0, 0, 2, 0, 0, 0, 0, '')
+    SQL
     e = assert_raises do
       @sqlite_db.ledger::Account.validate_global_integrity
     end
-    assert_equal "-1 is used as the parent POID placeholder of a parent account. Account of POID -1 should not exist.", e.message
+    assert_equal "-1 is used as the parent POID placeholder of a parent" +
+      " account. Account of POID -1 should not exist.", e.message
     @sqlite_db.execute("DELETE FROM t_account WHERE accountPOID = -1");
   end
 
