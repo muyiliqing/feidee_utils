@@ -17,15 +17,15 @@ class FeideeUtils::DatabaseTest < MiniTest::Test
   end
 
   def test_timestamp
-    assert_equal Time.parse("1970-01-01 10:00:00 +1000"), @fresh_ios_backup.sqlite_timestamp
-    assert_equal Time.parse("2015-04-22 20:40:29 +1000"), @oneline_ios_backup.sqlite_timestamp
-    assert_equal Time.parse("2014-04-01 11:54:44 +1100"), @complex_android_backup.sqlite_timestamp
+    assert_equal Time.parse("1970-01-01 10:00:00 +1000"), @fresh_ios_backup.last_modified_at
+    assert_equal Time.parse("2015-04-22 20:40:29 +1000"), @oneline_ios_backup.last_modified_at
+    assert_equal Time.parse("2014-04-01 11:54:44 +1100"), @complex_android_backup.last_modified_at
   end
 
-  def test_sqlite_name
-    assert_equal "QiQi", @fresh_ios_backup.sqlite_name
-    assert_equal "QiQi", @oneline_ios_backup.sqlite_name
-    assert_equal "Daily", @complex_android_backup.sqlite_name
+  def test_ledger_name
+    assert_equal "QiQi", @fresh_ios_backup.ledger_name
+    assert_equal "QiQi", @oneline_ios_backup.ledger_name
+    assert_equal "Daily", @complex_android_backup.ledger_name
   end
 
   def test_read_fresh_backup

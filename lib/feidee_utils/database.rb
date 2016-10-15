@@ -27,7 +27,7 @@ module FeideeUtils
     ).freeze
 
     attr_reader :sqlite_file
-    attr_reader :platform, :sqlite_name, :sqlite_timestamp
+    attr_reader :platform, :ledger_name, :last_modified_at
     attr_reader :missing_tables
     attr_reader :namespaced
 
@@ -89,12 +89,12 @@ module FeideeUtils
     def extract_metadata
       @platform = self.execute("SELECT platform from #{Tables[:metadata]}")[0][0];
 
-      @sqlite_name = self.get_first_row("SELECT accountBookName FROM #{Tables[:profile]};")[0];
+      @ledger_name = self.get_first_row("SELECT accountBookName FROM #{Tables[:profile]};")[0];
 
       # This is not recorded in the database, so the lastest lastUpdateTime of all
       # transactions is chosen.
       timestamp = self.get_first_row("SELECT max(lastUpdateTime) FROM #{Tables[:transactions]};")[0]
-      @sqlite_timestamp = timestamp == nil ? Time.at(0) : Time.at(timestamp / 1000)
+      @last_modified_at = timestamp == nil ? Time.at(0) : Time.at(timestamp / 1000)
     end
 
     class << self

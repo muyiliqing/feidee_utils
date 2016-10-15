@@ -26,7 +26,7 @@ A set of ActiveRecord-like classes are provided to access the information in the
 require 'feidee_utils'
 
 kbf = FeideeUtils::Kbf.open_file(path_to_kbf_file)
-database = kbf.sqlite_db
+database = kbf.db
 all_accounts = database.namespaced::Account.all
 all_transactions = database.namespaced::Transaction.all
 ```

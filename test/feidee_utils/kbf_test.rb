@@ -10,8 +10,8 @@ class FeideeUtils::KbfTest < MiniTest::Test
   end
 
   def test_parse_zip
-    assert @fresh_ios_backup.sqlite_db.is_a? FeideeUtils::Database
-    assert @oneline_ios_backup.sqlite_db.is_a? FeideeUtils::Database
+    assert @fresh_ios_backup.db.is_a? FeideeUtils::Database
+    assert @oneline_ios_backup.db.is_a? FeideeUtils::Database
   end
 
   def test_extract_sqlite
@@ -21,9 +21,9 @@ class FeideeUtils::KbfTest < MiniTest::Test
   end
 
   def test_read_backup
-    empty_rows = @fresh_ios_backup.sqlite_db.namespaced::Transaction.all
+    empty_rows = @fresh_ios_backup.db.namespaced::Transaction.all
     assert empty_rows.empty?
-    one_line = @oneline_ios_backup.sqlite_db.namespaced::Account.all
+    one_line = @oneline_ios_backup.db.namespaced::Account.all
     assert_equal 1, one_line.size()
   end
 end

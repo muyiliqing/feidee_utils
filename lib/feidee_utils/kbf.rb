@@ -9,7 +9,7 @@ module FeideeUtils
   class Kbf
     DatabaseName = 'mymoney.sqlite'
 
-    attr_reader :zipfile, :sqlite_db
+    attr_reader :zipfile, :db
 
     def initialize(input_stream)
       Zip::File.open_buffer(input_stream) do |zipfile|
@@ -17,7 +17,7 @@ module FeideeUtils
           if entry.name == DatabaseName
             # Each call to get_input_stream will create a new stream
             @original_sqlite_db_entry = entry
-            @sqlite_db = FeideeUtils::Database.new(entry.get_input_stream, true)
+            @db = FeideeUtils::Database.new(entry.get_input_stream, true)
           end
         end
       end
