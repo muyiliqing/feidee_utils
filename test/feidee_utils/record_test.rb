@@ -100,7 +100,7 @@ class FeideeUtils::RecordTest < MiniTest::Test
       def self.environment
         Module.new do
           const_set :ClassA, (Class.new do
-            def self.find id
+            def self.find_by_id id
               "A find id " + id
             end
           end)
@@ -119,7 +119,7 @@ class FeideeUtils::RecordTest < MiniTest::Test
       define_entity_accessor :b_poid, :class_a
     end
 
-    assert_equal "A find id xx", klass.environment::ClassA.find("xx")
+    assert_equal "A find id xx", klass.environment::ClassA.find_by_id("xx")
     instance = klass.new([], [], [])
     assert_equal "A find id b1", instance.b
     assert_equal "A find id a1", instance.class_a

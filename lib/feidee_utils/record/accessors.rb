@@ -33,7 +33,7 @@ module FeideeUtils
 
           define_method accessor_name do
             poid = method(poid_callback_name).call
-            self.class.environment.const_get(target_class_name).find(poid)
+            self.class.environment.const_get(target_class_name).find_by_id(poid)
           end
         end
       end
