@@ -53,7 +53,7 @@ module FeideeUtils
         end
 
         def find(id)
-          find_by_id(id) or raise "No #{self.name} of poid #{id} found"
+          find_by_id(id) or raise "No #{self.entity_name} of poid #{id} found"
         end
       end
     end
