@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'rake', '~> 10.4', '>= 10.4.0'
   s.add_dependency 'rubyzip', '~> 1.1', '>= 1.1.6'
   s.add_dependency 'sqlite3', '~> 1.3', '>= 1.3.10'
+  s.add_dependency 'tzinfo', '~> 1.2', '>= 1.2.2'
 
   s.add_development_dependency 'minitest', '~> 5.8', '>= 5.8.1'
 

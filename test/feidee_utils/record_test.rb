@@ -1,6 +1,7 @@
 require "feidee_utils/record"
 require 'minitest/autorun'
 require 'sqlite3'
+require "tzinfo"
 
 class FeideeUtils::RecordTest < MiniTest::Test
   def setup
@@ -126,12 +127,16 @@ class FeideeUtils::RecordTest < MiniTest::Test
   end
 
   def test_last_update_time
-    instance = FeideeUtils::Record.new(["lastUpdateTime"], [nil], [Time.new(2014, 5, 1).to_i * 1000])
+    # See comments in feidee_utils/record/utils.rb
+    instance = FeideeUtils::Record.new(
+      ["lastUpdateTime"], [nil], [Time.utc(2014, 5, 1).to_i * 1000]
+    )
 
     time = instance.last_update_time
     assert_equal 2014, time.year
     assert_equal 5, time.month
     assert_equal 1, time.day
+    assert_equal 8, time.hour
   end
 
   # Persistent
