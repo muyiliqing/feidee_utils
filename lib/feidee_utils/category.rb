@@ -17,16 +17,17 @@ module FeideeUtils
       end
     end
 
+    ProjectRootTypeCode = 2
+
     def self.validate_global_integrity
-      project_root_code = 2
-      if TypeEnum[project_root_code] != :project_root
+      if TypeEnum[ProjectRootTypeCode] != :project_root
         raise "The type code of project root has been changed," +
           " please update the code."
       end
 
       rows = self.database.execute <<-SQL
         SELECT #{id_field_name}, #{FieldMappings[:name]} FROM #{table_name}
-        WHERE #{FieldMappings[:raw_type]}=#{project_root_code};
+        WHERE #{FieldMappings[:raw_type]}=#{ProjectRootTypeCode};
       SQL
 
       if rows.length > 1
