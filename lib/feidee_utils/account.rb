@@ -51,6 +51,7 @@ module FeideeUtils
       account_group_poid:   "accountGroupPOID",
       raw_hidden:           "hidden",
     }.freeze
+    define_entity_accessor :account_group_poid, :account_group
 
     IgnoredFields = [
       "tradingEntityPOID", # Foreign key to t_user or maybe t_tradingEntity.
@@ -82,10 +83,6 @@ module FeideeUtils
 
     def hidden?
       raw_hidden == 1
-    end
-
-    def account_group
-      self.class.environment::AccountGroup.find_by_id(account_group_poid)
     end
 
     # Parent related.
