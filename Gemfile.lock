@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    feidee_utils (0.0.4.5)
+    feidee_utils (0.0.4.6)
       rake (~> 10.4, >= 10.4.0)
       rubyzip (~> 1.1, >= 1.1.6)
       sqlite3 (~> 1.3, >= 1.3.10)
@@ -14,8 +14,8 @@ GEM
     rake (10.5.0)
     rubyzip (1.2.1)
     sqlite3 (1.3.13)
-    thread_safe (0.3.5)
-    tzinfo (1.2.2)
+    thread_safe (0.3.6)
+    tzinfo (1.2.4)
       thread_safe (~> 0.1)
 
 PLATFORMS
