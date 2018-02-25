@@ -1,4 +1,5 @@
 require 'feidee_utils/record/accessors'
+require 'feidee_utils/record/computed'
 require 'feidee_utils/record/namespaced'
 require 'feidee_utils/record/persistent'
 require 'feidee_utils/record/utils'
@@ -59,6 +60,8 @@ module FeideeUtils
     include Accessors
     # Helper methods to define accessors
     extend Accessors::ClassMethods
+    # Helper methods to define computed fields.
+    extend Computed::ClassMethods
     # Helper methods to define new classes in a given namespace.
     extend Namespaced::ClassMethods
     # Helper methods to look up records.

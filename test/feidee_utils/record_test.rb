@@ -139,6 +139,26 @@ class FeideeUtils::RecordTest < MiniTest::Test
     assert_equal 8, time.hour
   end
 
+  # Computed
+  def test_computed
+    assert (FeideeUtils::Record.respond_to? :computed),
+        "Record doesn't have computed class method."
+    klass = Class.new(FeideeUtils::Record) do
+      computed :count do
+        @counter ||= 0
+        @counter += 1
+      end
+    end
+    instance = klass.new([], [], [])
+    assert_nil (instance.instance_variable_get "@counter".to_sym)
+    assert_equal 1, instance.count
+    assert_equal 1, (instance.instance_variable_get "@counter".to_sym)
+    assert_equal 1, instance.count
+    assert_equal 1, (instance.instance_variable_get "@counter".to_sym)
+    assert_equal 1, instance.count
+    assert_equal 1, (instance.instance_variable_get "@counter".to_sym)
+  end
+
   # Persistent
   def test_all
     records = FeideeUtils::Record.all

@@ -133,15 +133,15 @@ module FeideeUtils
       9 => :negative_initial_balance,
     })
 
-    def created_at
+    computed :created_at do
       timestamp_to_time(raw_created_at)
     end
 
-    def modified_at
+    computed :modified_at do
       timestamp_to_time(raw_modified_at)
     end
 
-    def trade_at
+    computed :trade_at do
       timestamp_to_time(raw_trade_at)
     end
 
