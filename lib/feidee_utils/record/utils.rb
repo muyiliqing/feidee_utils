@@ -16,8 +16,13 @@ module FeideeUtils
       # Note utc_to_local() would return 2017-12-09 11:30 UTC, of which the
       # timezone is different from physical timezone CST. The actual timezone
       # has been lost when the timestamp was written to database.
-      def timestamp_to_time num
+      def timestamp_to_time_slow num
         AssumedTimezone.utc_to_local(Time.at(num / 1000.0, num % 1000).utc)
+      end
+
+      AssumedTimezoneAdjust = 8 * 3600 # 8 hours difference between CST and UTC.
+      def timestamp_to_time num
+        Time.at(num / 1000.0 + AssumedTimezoneAdjust, num % 1000).utc
       end
 
       def to_bigdecimal number
