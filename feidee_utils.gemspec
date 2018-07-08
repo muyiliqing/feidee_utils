@@ -5,7 +5,7 @@ require 'feidee_utils/version'
 Gem::Specification.new do |s|
   s.name        = 'feidee_utils'
   s.version     = FeideeUtils::VERSION
-  s.date        = '2015-05-01'
+  s.date        = '2018-07-08'
   s.summary     = "Utils to extract useful information from Feidee Mymoney backup."
   s.description = "Feidee Utils provides a set of ActiveReocrd-like classes to read Feidee private backups (.kbf files). It also provides a better abstraction to the general format of transaction-account style data."
   s.authors     = ["Liqing Muyi"]
