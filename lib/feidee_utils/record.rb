@@ -24,8 +24,9 @@ module FeideeUtils
   # is copied to the new namespace, with it's database method overloaded.
   class Record
     public
-    def initialize(columns, types, raw_row)
-      @field = Hash[ columns.zip(raw_row) ]
+    def initialize(columns, types, row)
+      @columns = columns.freeze
+      @row = row.freeze
 
       validate_integrity
     end
@@ -68,7 +69,14 @@ module FeideeUtils
 
     protected
     def column key
-      @field[key]
+      # Looking up index is not as slow as it appears. The size of the array is
+      # usually less than 20 and the strings are usually different in the first
+      # few characters. The overhead is relatively low.
+      # In fact, a downstream benchmark showed that it is faster than building a
+      # hash upfront and lookup the hash here.
+      index = @columns.index key
+      return nil if index.nil?
+      @row[index]
     end
 
   end
