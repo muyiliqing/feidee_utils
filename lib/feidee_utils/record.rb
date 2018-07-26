@@ -23,12 +23,9 @@ module FeideeUtils
   # is created in a new namepsace.  For each subclass of Record, a new subclass
   # is copied to the new namespace, with it's database method overloaded.
   class Record
-    attr_reader :field_type
-
     public
     def initialize(columns, types, raw_row)
       @field = Hash[ columns.zip(raw_row) ]
-      @field_type = Hash[ columns.zip(types) ]
 
       validate_integrity
     end

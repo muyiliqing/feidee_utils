@@ -173,9 +173,6 @@ class FeideeUtils::RecordTest < MiniTest::Test
     assert_equal 1, (record.send :column, 'recordPOID')
     assert_equal 1, (record.send :column, 'record_key')
     assert_equal 'stupid record', (record.send :column, 'record_value')
-    assert_equal 'INT', (record.send :field_type)['recordPOID']
-    assert_equal 'INT', (record.send :field_type)['record_key']
-    assert_equal 'VARCHAR(255)', (record.send :field_type)['record_value']
   end
 
   def test_find_by_id_not_found
