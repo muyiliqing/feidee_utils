@@ -46,6 +46,13 @@ class FeideeUtils::RecordTest < MiniTest::Test
     FeideeUtils::Record.send :genereate_names, @fake_account_group_table
   end
 
+  def test_column
+    record = FeideeUtils::Record.find_by_id(1)
+    assert_equal 1, (record.send :column, "recordPOID")
+    assert_equal 1, (record.send :column, "record_key")
+    assert_equal "stupid record", (record.send :column, "record_value")
+  end
+
   def test_id_field_name
     assert_equal 'recordPOID', FeideeUtils::Record.id_field_name
     assert_equal 'tagPOID', @fake_tag_table.id_field_name
