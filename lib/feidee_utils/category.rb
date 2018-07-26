@@ -10,9 +10,9 @@ module FeideeUtils
     def validate_integrity
       validate_depth_integrity
       validate_one_level_path_integrity
-      unless field["usedCount"] == 0
+      unless column("usedCount") == 0
         raise "Category usedCount should always be 0, " +
-          "but it's #{field["usedCount"]}.\n" +
+          "but it's #{column("usedCount")}.\n" +
           inspect
       end
     end

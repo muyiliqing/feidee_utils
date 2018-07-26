@@ -23,7 +23,7 @@ module FeideeUtils
   # is created in a new namepsace.  For each subclass of Record, a new subclass
   # is copied to the new namespace, with it's database method overloaded.
   class Record
-    attr_reader :field, :field_type
+    attr_reader :field_type
 
     public
     def initialize(columns, types, raw_row)
@@ -68,5 +68,11 @@ module FeideeUtils
     extend Persistent::ClassMethods
     # Helper methods to convert data types.
     include Utils
+
+    protected
+    def column key
+      @field[key]
+    end
+
   end
 end

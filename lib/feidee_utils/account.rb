@@ -5,18 +5,18 @@ require 'bigdecimal'
 module FeideeUtils
   class Account < Record
     def validate_integrity
-      unless not field["type"] or field["type"] == 0
-        raise "Account type should always be 0, but it's #{field["type"]}.\n" +
+      unless not column("type") or column("type") == 0
+        raise "Account type should always be 0, but it's #{column("type")}.\n" +
           inspect
       end
-      unless field["usedCount"] == 0
+      unless column("usedCount") == 0
         raise "Account usedCount should always be 0," +
-          " but it's #{field["usedCount"]}.\n"+
+          " but it's #{column("usedCount")}.\n"+
           inspect
       end
-      unless field["uuid"].to_s.empty?
+      unless column("uuid").to_s.empty?
         raise "Account uuid should always be empty,"+
-          " but it's #{field["uuid"]}.\n" +
+          " but it's #{column("uuid")}.\n" +
           inspect
       end
       unless flat_parent_hierachy?

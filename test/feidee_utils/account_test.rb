@@ -126,9 +126,7 @@ class FeideeUtils::AccountTest < MiniTest::Test
     @accounts.each do |account| assert account.flat_parent_hierachy? end
     fake = @saving.clone
 
-    fake.instance_variable_set :@field, fake.field.clone
-    fake.field["parent"] = @checking.poid
-    assert_equal @parent.poid, @saving.field["parent"]
+    set_fake_parent fake, @checking.poid
 
     refute fake.flat_parent_hierachy?
   end
@@ -203,8 +201,7 @@ class FeideeUtils::AccountTest < MiniTest::Test
 
   def test_validate_integrity_flat_hierachy_errors
     fake = @saving.clone
-    fake.instance_variable_set :@field, fake.field.clone
-    fake.field["parent"] = @checking.poid
+    set_fake_parent fake, @checking.poid
     e = assert_raises do
       fake.validate_integrity
     end
@@ -235,5 +232,14 @@ class FeideeUtils::AccountTest < MiniTest::Test
 
   def test_validate_global_integrity
     @sqlite_db.ledger::Account.validate_global_integrity
+  end
+
+  def set_fake_parent fake, new_parent
+    fake.instance_variable_set :@new_parent, new_parent
+    fake.instance_eval do
+      def parent_poid
+        @new_parent
+      end
+    end
   end
 end

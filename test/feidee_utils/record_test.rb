@@ -82,8 +82,9 @@ class FeideeUtils::RecordTest < MiniTest::Test
     assert (FeideeUtils::Record.respond_to? :define_accessors),
         "Record doesn't have define_accessors class method."
     klass = Class.new(FeideeUtils::Record) do
-      def field
-        { "x" => 2, "y" => 1}
+      def column key
+        value = { "x" => 2, "y" => 1}
+        value[key]
       end
 
       define_accessors({ xxx: "x", yyy: "y" })
@@ -169,9 +170,9 @@ class FeideeUtils::RecordTest < MiniTest::Test
 
   def test_find_by_id
     record = FeideeUtils::Record.find_by_id(1)
-    assert_equal 1, (record.send :field)['recordPOID']
-    assert_equal 1, (record.send :field)['record_key']
-    assert_equal 'stupid record', (record.send :field)['record_value']
+    assert_equal 1, (record.send :column, 'recordPOID')
+    assert_equal 1, (record.send :column, 'record_key')
+    assert_equal 'stupid record', (record.send :column, 'record_value')
     assert_equal 'INT', (record.send :field_type)['recordPOID']
     assert_equal 'INT', (record.send :field_type)['record_key']
     assert_equal 'VARCHAR(255)', (record.send :field_type)['record_value']
@@ -190,8 +191,8 @@ class FeideeUtils::RecordTest < MiniTest::Test
 
   def test_subclass_find_by_id
     tag = @fake_tag_table.find_by_id(2)
-    assert_equal 2, (tag.send :field)['tagPOID']
-    assert_equal 'base', (tag.send :field)['tag_name']
+    assert_equal 2, (tag.send :column, 'tagPOID')
+    assert_equal 'base', (tag.send :column, 'tag_name')
   end
 
   def test_subclass_find
