@@ -249,6 +249,13 @@ class FeideeUtils::RecordTest < MiniTest::Test
     assert_equal "tag_name", tag_columns[1]["name"]
   end
 
+  def test_column_names
+    columns = FeideeUtils::Record.column_names
+    assert_equal "recordPOID", columns[0]
+    assert_equal "record_key", columns[1]
+    assert_equal "record_value", columns[2]
+  end
+
   # namespace
   def test_generate_subclasses
     FeideeUtils::Record.child_classes.clear

@@ -28,6 +28,10 @@ module FeideeUtils
           database.table_info(self.table_name)
         end
 
+        def column_names
+          @column_names ||= self.columns.map do |entry| entry["name"] end.freeze
+        end
+
         # Persistent
         def all
           arr = []

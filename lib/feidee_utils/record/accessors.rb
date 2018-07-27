@@ -50,13 +50,12 @@ module FeideeUtils
           field_mappings = superclass.indexed_accessor_field_mappings
           return if field_mappings.nil?
 
-          column_names = self.columns.map do |entry| entry["name"] end
           field_mappings.each do |name, column_name|
             if method_defined? name
               raise "Accessor #{name} already exists in #{self.name}."
             end
 
-            index = column_names.index column_name
+            index = self.column_names.index column_name
             if index.nil?
               raise "Cannot find column #{column_name} in #{inspect}."
             end
