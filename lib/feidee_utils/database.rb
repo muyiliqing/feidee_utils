@@ -40,7 +40,7 @@ module FeideeUtils
       drop_unused_tables if strip
 
       # TODO: make Ledger a first class object.
-      @ledger = Record.generate_namespaced_record_classes(self)
+      @ledger = Record.generate_subclasses(self)
     end
 
     def sqlite_backup(dest_file_path)

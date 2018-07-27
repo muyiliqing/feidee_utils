@@ -24,6 +24,10 @@ module FeideeUtils
           end
         end
 
+        def columns
+          database.table_info(self.table_name)
+        end
+
         # Persistent
         def all
           arr = []

@@ -4,6 +4,13 @@ require 'sqlite3'
 require "tzinfo"
 
 class FeideeUtils::RecordTest < MiniTest::Test
+  class FeideeUtils::Tag < FeideeUtils::Record
+    FieldMappings = { name: "tag_name" }
+    IgnoredFields = {}
+    register_indexed_accessors FieldMappings
+    FeideeUtils::Record.child_classes.delete self
+  end
+
   def setup
     @sqlite_db = SQLite3::Database.new(":memory:")
     @sqlite_db.execute <<-SQL
@@ -31,6 +38,8 @@ class FeideeUtils::RecordTest < MiniTest::Test
     end
     FeideeUtils::Record.send :genereate_names, @fake_tag_table
 
+    @tag_table = FeideeUtils::Tag
+
     @fake_transaction_table = Class.new(FeideeUtils::Record) do
       def self.name
         'Test::FeideeUtils::Transaction'
@@ -44,6 +53,8 @@ class FeideeUtils::RecordTest < MiniTest::Test
       end
     end
     FeideeUtils::Record.send :genereate_names, @fake_account_group_table
+
+    @saved = FeideeUtils::Record.child_classes.clone
   end
 
   def test_column
@@ -51,6 +62,13 @@ class FeideeUtils::RecordTest < MiniTest::Test
     assert_equal 1, (record.send :column, "recordPOID")
     assert_equal 1, (record.send :column, "record_key")
     assert_equal "stupid record", (record.send :column, "record_value")
+  end
+
+  def test_column_at_index
+    record = FeideeUtils::Record.find_by_id(1)
+    assert_equal 1, (record.send :column_at_index, 0)
+    assert_equal 1, (record.send :column_at_index, 1)
+    assert_equal "stupid record", (record.send :column_at_index, 2)
   end
 
   def test_id_field_name
@@ -147,6 +165,23 @@ class FeideeUtils::RecordTest < MiniTest::Test
     assert_equal 8, time.hour
   end
 
+  def test_indexed_accssor_field_mappings
+    assert_equal(
+      { name: "tag_name" },
+      @tag_table.indexed_accessor_field_mappings
+    )
+  end
+
+  def test_define_indexed_accessors_do_nothing
+    @fake_tag_table.send :define_indexed_accessors
+    tag = @fake_tag_table.find_by_id(2)
+    assert_equal 2, tag.poid
+    e = assert_raises NoMethodError do
+      tag.name
+    end
+    assert_match /^undefined method `name' for .*/, e.message
+  end
+
   # Computed
   def test_computed
     assert (FeideeUtils::Record.respond_to? :computed),
@@ -201,5 +236,41 @@ class FeideeUtils::RecordTest < MiniTest::Test
 
   def test_subclass_find
     @fake_tag_table.find(2)
+  end
+
+  def test_columns
+    columns = FeideeUtils::Record.columns
+    assert_equal "recordPOID", columns[0]["name"]
+    assert_equal "record_key", columns[1]["name"]
+    assert_equal "record_value", columns[2]["name"]
+
+    tag_columns = @fake_tag_table.columns
+    assert_equal "tagPOID", tag_columns[0]["name"]
+    assert_equal "tag_name", tag_columns[1]["name"]
+  end
+
+  # namespace
+  def test_generate_subclasses
+    FeideeUtils::Record.child_classes.clear
+    FeideeUtils::Record.child_classes.add @tag_table
+
+    env = FeideeUtils::Record.generate_subclasses @sqlite_db
+    contained_classes = env.contained_classes
+
+    assert_equal 1, contained_classes.size
+    contained_class = contained_classes.first
+
+    assert_equal env, contained_class.environment
+    assert_equal @sqlite_db, contained_class.database
+
+    tag = contained_class.find_by_id(2)
+    assert_equal 2, tag.poid
+    assert_equal "base", tag.name
+
+    FeideeUtils::Record.child_classes.clear
+  end
+
+  def teardown
+    FeideeUtils::Record.send :instance_variable_set, :@child_classes, @saved
   end
 end

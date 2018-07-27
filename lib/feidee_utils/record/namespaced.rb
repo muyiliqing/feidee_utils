@@ -23,7 +23,7 @@ module FeideeUtils
               define_method("environment") { mod }
             })
 
-            this.child_classes.each do |child_class|
+            @contained_classes = this.child_classes.map do |child_class|
               if child_class.name.start_with? FeideeUtils.name
                 class_name = child_class.name.sub(/#{FeideeUtils.name}::/, '')
                 # Generate a const for the child class
@@ -31,6 +31,10 @@ module FeideeUtils
                   extend mod::Database
                 })
               end
+            end
+
+            def self.contained_classes
+              @contained_classes
             end
           end
         end

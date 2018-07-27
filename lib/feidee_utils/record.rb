@@ -39,6 +39,14 @@ module FeideeUtils
       # Do nothing.
     end
 
+    def self.generate_subclasses db
+      env = generate_namespaced_record_classes db
+      env.contained_classes.each do |klass|
+        klass.define_indexed_accessors
+      end
+      env
+    end
+
     class << self
       protected
       def database
@@ -76,6 +84,10 @@ module FeideeUtils
       # hash upfront and lookup the hash here.
       index = @columns.index key
       return nil if index.nil?
+      @row[index]
+    end
+
+    def column_at_index index
       @row[index]
     end
 
