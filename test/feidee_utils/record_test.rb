@@ -165,7 +165,7 @@ class FeideeUtils::RecordTest < MiniTest::Test
   def test_indexed_accssor_field_mappings
     assert_equal(
       { name: "tag_name" },
-      @tag_table.indexed_accessor_field_mappings
+      @tag_table::IndexedAccessorFieldMappings
     )
   end
 

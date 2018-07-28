@@ -37,20 +37,18 @@ module FeideeUtils
           end
         end
 
-        attr_reader :indexed_accessor_field_mappings
         def register_indexed_accessors field_mappings
           # The indexes of those columns are unknown until we see the schema.
-          @indexed_accessor_field_mappings = field_mappings
+          const_set :IndexedAccessorFieldMappings, field_mappings
         end
 
         # NOTE: Here we assume the underlaying database schema does not change.
         # The assumption is safe in the sense that it is generally expected to
         # restart and/or recompile your application after updating the schema.
         def define_indexed_accessors
-          field_mappings = superclass.indexed_accessor_field_mappings
-          return if field_mappings.nil?
+          return if !const_defined? :IndexedAccessorFieldMappings
 
-          field_mappings.each do |name, column_name|
+          self::IndexedAccessorFieldMappings.each do |name, column_name|
             if method_defined? name
               raise "Accessor #{name} already exists in #{self.name}."
             end
