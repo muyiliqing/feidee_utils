@@ -122,7 +122,7 @@ module FeideeUtils
       "FSourceKey",           # WTF
     ].freeze
 
-    define_accessors(FieldMappings)
+    register_indexed_accessors(FieldMappings)
 
     define_type_enum({
       0 => :expenditure,

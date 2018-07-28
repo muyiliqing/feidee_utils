@@ -62,7 +62,7 @@ module FeideeUtils
       "clientID",         # Always equal to poid.
     ].freeze
 
-    define_accessors(FieldMappings)
+    register_indexed_accessors(FieldMappings)
 
     # NOTE: balance is not set for credit cards etc. Instead
     # credit/debit are used.
