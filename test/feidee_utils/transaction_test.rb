@@ -90,12 +90,17 @@ class FeideeUtils::TransactionTest < MiniTest::Test
   end
 
   def test_validate_global_integrity_errors
-    extra_transaction = FeideeUtils::Transaction.new(
-      [ "type", "amount", "modifiedTime", "createdTime", "lastUpdateTime",
-        "tradeTime", "buyerCategoryPOID", "sellerCategoryPOID", ],
-      [ Integer.class, Integer.class, nil, nil, nil, nil, nil, nil, nil ],
-      [ 3, 100, 0, 0, 0, 0, 0, 0],
-    )
+    values = build_transaction_with_columns({
+      "type" => 3,
+      "amount" => 100,
+      "modifiedTime" => 0,
+      "createdTime" => 0,
+      "lastUpdateTime" => 0,
+      "tradeTime" => 0,
+      "buyerCategoryPOID" => 0,
+      "sellerCategoryPOID" => 0,
+    })
+    extra_transaction = @sqlite_db.ledger::Transaction.new(values)
 
     assert extra_transaction.is_transfer?
 
@@ -166,28 +171,36 @@ class FeideeUtils::TransactionTest < MiniTest::Test
   end
 
   def test_validate_account_integrity_errors
+    values1 = build_transaction_with_columns({
+      "buyerAccountPOID" => 2,
+      "sellerAccountPOID" => 3
+    })
     assert_raises FeideeUtils::Transaction::InconsistentBuyerAndSellerException do # nolint
-      FeideeUtils::Transaction.new(
-        ["buyerAccountPOID", "sellerAccountPOID"], [nil, nil], [2, 3]
-      )
+      @sqlite_db.ledger::Transaction.new(values1)
     end
+    values2 = build_transaction_with_columns({
+      "buyerAccountPOID" => 0,
+      "sellerAccountPOID" => 0
+    })
     assert_raises FeideeUtils::Transaction::InconsistentBuyerAndSellerException do # nolint
-      FeideeUtils::Transaction.new(
-        ["buyerAccountPOID", "sellerAccountPOID"], [nil, nil], [0, 0]
-      )
+      @sqlite_db.ledger::Transaction.new(values2)
     end
   end
 
   def test_transfer_validate_account_integrity_errors
+    values1 = build_transaction_with_columns({
+      "type" => 2,
+      "buyerAccountPOID" => 0
+    })
     assert_raises FeideeUtils::Transaction::TransferLackBuyerOrSellerException do # nolint
-      FeideeUtils::Transaction.new(
-        ["type", "buyerAccountPOID"], [nil, nil], [2, 0]
-      )
+      @sqlite_db.ledger::Transaction.new(values1)
     end
+    values2 = build_transaction_with_columns({
+      "type" => 2,
+      "sellerAccountPOID" => 0
+    })
     assert_raises FeideeUtils::Transaction::TransferLackBuyerOrSellerException do # nolint
-      FeideeUtils::Transaction.new(
-        ["type", "sellerAccountPOID"], [nil, nil], [2, 0]
-      )
+      @sqlite_db.ledger::Transaction.new(values2)
     end
   end
 
@@ -203,24 +216,30 @@ class FeideeUtils::TransactionTest < MiniTest::Test
   end
 
   def test_validate_category_integrity_errors
+    values = build_transaction_with_columns({
+      "buyerAccountPOID" => 0,
+      "buyerCategoryPOID" => 1,
+      "sellerCategoryPOID" => 2
+    })
     assert_raises FeideeUtils::Transaction::InconsistentCategoryException do
-      FeideeUtils::Transaction.new(
-        ["buyerAccountPOID", "buyerCategoryPOID", "sellerCategoryPOID"],
-        [nil, nil, nil], [0, 1, 2]
-      )
+      @sqlite_db::ledger::Transaction.new(values)
     end
   end
 
   def test_transfer_validate_category_integrity_errors
+    values1 = build_transaction_with_columns({
+      "type" => 3,
+      "buyerCategoryPOID" => 2
+    })
     assert_raises FeideeUtils::Transaction::TransferWithCategoryException do
-      FeideeUtils::Transaction.new(
-        ["type", "buyerCategoryPOID"], [nil, nil], [3, 2]
-      )
+      @sqlite_db::ledger::Transaction.new(values1)
     end
+    values2 = build_transaction_with_columns({
+      "type" => 3,
+      "sellerCategoryPOID" => 2
+    })
     assert_raises FeideeUtils::Transaction::TransferWithCategoryException do
-      FeideeUtils::Transaction.new(
-        ["type", "sellerCategoryPOID"], [nil, nil], [3, 2]
-      )
+      @sqlite_db::ledger::Transaction.new(values2)
     end
   end
 
@@ -242,45 +261,60 @@ class FeideeUtils::TransactionTest < MiniTest::Test
   end
 
   def test_validate_amount_integrity_errors
+    values = build_transaction_with_columns({
+      "buyerAccountPOID" => 0,
+      "buyerCategoryPOID" => 0,
+      "sellerCategoryPOID" => 0,
+      "buyerMoney" => 0,
+      "sellerMoney" => 1
+    })
     assert_raises FeideeUtils::Transaction::InconsistentAmountException do
-      FeideeUtils::Transaction.new(
-        ["buyerAccountPOID", "buyerCategoryPOID", "sellerCategoryPOID",
-         "buyerMoney", "sellerMoney"],
-        [nil, nil, nil, nil, nil],
-        [0, 0, 0, 0, 1])
+      @sqlite_db::ledger::Transaction.new(values)
     end
   end
 
   def test_validate_integrity
-    FeideeUtils::Transaction.new(
-      ["buyerAccountPOID", "sellerAccountPOID",
-       "buyerCategoryPOID", "sellerCategoryPOID",
-       "buyerMoney", "sellerMoney"],
-      [nil, nil, nil, nil, nil, nil],
-      [0, 1, 0, 2, 0, 0])
+    values1 = build_transaction_with_columns({
+      "buyerAccountPOID" => 0,
+      "sellerAccountPOID" => 1,
+      "buyerCategoryPOID" => 0,
+      "sellerCategoryPOID" => 2,
+      "buyerMoney" => 0,
+      "sellerMoney" => 0
+    })
+    @sqlite_db.ledger::Transaction.new(values1)
 
-    FeideeUtils::Transaction.new(
-      ["buyerAccountPOID", "sellerAccountPOID",
-       "buyerCategoryPOID", "sellerCategoryPOID",
-       "buyerMoney", "sellerMoney"],
-      [nil, nil, nil, nil, nil, nil],
-      [2, 0, 2, 0, 0, 0])
+    values2 = build_transaction_with_columns({
+      "buyerAccountPOID" => 2,
+      "sellerAccountPOID" => 0,
+      "buyerCategoryPOID" => 2,
+      "sellerCategoryPOID" => 0,
+      "buyerMoney" => 0,
+      "sellerMoney" => 0
+    })
+    @sqlite_db.ledger::Transaction.new(values2)
   end
 
   def test_transfer_validate_integrity
     # Type 2
-    FeideeUtils::Transaction.new(
-      ["buyerAccountPOID", "sellerAccountPOID",
-       "buyerCategoryPOID", "sellerCategoryPOID", "type"],
-      [nil, nil, nil, nil, nil],
-      [2, 1, 0, 0, 2])
+    values1 = build_transaction_with_columns({
+      "buyerAccountPOID" => 2,
+      "sellerAccountPOID" => 1,
+      "buyerCategoryPOID" => 0,
+      "sellerCategoryPOID" => 0,
+      "type" => 2
+    })
+    @sqlite_db.ledger::Transaction.new(values1)
 
     # Type 3
-    FeideeUtils::Transaction.new(
-      ["buyerAccountPOID", "sellerAccountPOID",
-       "buyerCategoryPOID", "sellerCategoryPOID", "type"],
-      [nil, nil, nil, nil, nil],
-      [2, 1, 0, 0, 3])
+    values2 = build_transaction_with_columns({
+      "buyerAccountPOID" => 2,
+      "sellerAccountPOID" => 1,
+      "buyerCategoryPOID" => 0,
+      "sellerCategoryPOID" => 0,
+      "type" => 3
+    })
+    @sqlite_db.ledger::Transaction.new(values2)
   end
 
   def test_revised_account_poid
@@ -302,5 +336,11 @@ class FeideeUtils::TransactionTest < MiniTest::Test
     assert_equal @credit_init.seller_addition, @credit_init.revised_amount
     # TODO: Add a test for forex transaction where buyer/seller amount are
     # different
+  end
+
+  def build_transaction_with_columns values
+    @sqlite_db.ledger::Transaction.column_names.map do |name|
+      values[name]
+    end
   end
 end

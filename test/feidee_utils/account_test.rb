@@ -170,30 +170,39 @@ class FeideeUtils::AccountTest < MiniTest::Test
   end
 
   def test_validate_integrity_errors
+    values1 = build_account_with_columns({ "type" => "x" })
     e = assert_raises do
-      FeideeUtils::Account.new(["type"], [nil], ["x"])
+      @sqlite_db.ledger::Account.new values1
     end
     assert_match (/^Account type should always be 0, but it's x\./), e.message
 
+    values2 = build_account_with_columns({ "type" => 0, "usedCount" => "x" })
     e = assert_raises do
-      FeideeUtils::Account.new(["type", "usedCount"], [nil, nil], [0, "x"])
+      @sqlite_db.ledger::Account.new values2
     end
     assert_match (/^Account usedCount should always be 0, but it's x\./),
       e.message
 
+    values3 = build_account_with_columns({
+      "type" => 0,
+      "usedCount" => 0,
+      "uuid" => "x"
+    })
     e = assert_raises do
-      FeideeUtils::Account.new(
-        ["type", "usedCount", "uuid"], [nil, nil, nil], [0, 0, "x"]
-      )
+      @sqlite_db.ledger::Account.new values3
     end
     assert_match (/^Account uuid should always be empty, but it's x\./),
       e.message
 
+    values4 = build_account_with_columns({
+      "type" => 0,
+      "usedCount" => 0,
+      "uuid" => "",
+      "parent" => 0,
+      "hidden" => "x"
+    })
     e = assert_raises do
-      FeideeUtils::Account.new(
-        ["type", "usedCount", "uuid", "parent", "hidden"],
-        [nil, nil, nil, nil, nil], [0, 0, "", 0, "x"]
-      )
+      @sqlite_db.ledger::Account.new values4
     end
     assert_match (/^Account hidden should be either 0 or 1, but it's x\./),
       e.message
@@ -210,10 +219,14 @@ class FeideeUtils::AccountTest < MiniTest::Test
   end
 
   def test_validate_integrity
-    FeideeUtils::Account.new(
-      ["type", "usedCount", "uuid", "parent", "hidden"],
-      [nil, nil, nil, nil, nil],
-      [0, 0, nil, 0, 0])
+    values = build_account_with_columns({
+      "type" => 0,
+      "usedCount" => 0,
+      "uuid" => nil,
+      "parent" => 0,
+      "hidden" => 0
+    })
+    @sqlite_db.ledger::Account.new values
   end
 
   def test_validate_global_integrity_errors
@@ -240,6 +253,12 @@ class FeideeUtils::AccountTest < MiniTest::Test
       def parent_poid
         @new_parent
       end
+    end
+  end
+
+  def build_account_with_columns(values)
+    arr = @sqlite_db.ledger::Account.column_names.map do |name|
+      values[name]
     end
   end
 end

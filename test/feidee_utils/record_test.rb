@@ -15,11 +15,12 @@ class FeideeUtils::RecordTest < MiniTest::Test
     @sqlite_db = SQLite3::Database.new(":memory:")
     @sqlite_db.execute <<-SQL
       CREATE TABLE t_record(
-        recordPOID INT PRIMARY KEY, record_key INT, record_value VARCHAR(255)
+        recordPOID INT PRIMARY KEY, record_key INT, record_value VARCHAR(255),
+        lastUpdateTime LONG
       );
     SQL
-    @sqlite_db.execute("INSERT INTO t_record values(1, 1, 'stupid record');")
-    @sqlite_db.execute("INSERT INTO t_record values(2, 2, 'base');")
+    @sqlite_db.execute("INSERT INTO t_record values(1, 1, 'stupid record', 3);")
+    @sqlite_db.execute("INSERT INTO t_record values(2, 2, 'base', 7);")
     @sqlite_db.execute <<-SQL
       CREATE TABLE t_tag(tagPOID INT PRIMARY KEY, tag_name VARCHAR(255));
     SQL
@@ -95,11 +96,7 @@ class FeideeUtils::RecordTest < MiniTest::Test
   def test_poid
     raw_result = @sqlite_db.query("SELECT * FROM t_record WHERE record_key = 1")
     raw_row = raw_result.next
-    record = FeideeUtils::Record.new(
-      raw_result.columns,
-      raw_result.types,
-      raw_row
-    )
+    record = FeideeUtils::Record.new(raw_row)
     assert_equal 1, record.poid
   end
 
@@ -114,7 +111,7 @@ class FeideeUtils::RecordTest < MiniTest::Test
 
       define_accessors({ xxx: "x", yyy: "y" })
     end
-    instance = klass.new([], [], [])
+    instance = klass.new([])
     assert_equal 2, instance.xxx
     assert_equal 1, instance.yyy
   end
@@ -147,7 +144,7 @@ class FeideeUtils::RecordTest < MiniTest::Test
     end
 
     assert_equal "A find id xx", klass.environment::ClassA.find_by_id("xx")
-    instance = klass.new([], [], [])
+    instance = klass.new([])
     assert_equal "A find id b1", instance.b
     assert_equal "A find id a1", instance.class_a
   end
@@ -155,7 +152,7 @@ class FeideeUtils::RecordTest < MiniTest::Test
   def test_last_update_time
     # See comments in feidee_utils/record/utils.rb
     instance = FeideeUtils::Record.new(
-      ["lastUpdateTime"], [nil], [Time.utc(2014, 5, 1).to_i * 1000]
+      [0, 0, 0, Time.utc(2014, 5, 1).to_i * 1000]
     )
 
     time = instance.last_update_time
@@ -192,7 +189,7 @@ class FeideeUtils::RecordTest < MiniTest::Test
         @counter += 1
       end
     end
-    instance = klass.new([], [], [])
+    instance = klass.new([])
     assert_nil (instance.instance_variable_get "@counter".to_sym)
     assert_equal 1, instance.count
     assert_equal 1, (instance.instance_variable_get "@counter".to_sym)
@@ -243,6 +240,7 @@ class FeideeUtils::RecordTest < MiniTest::Test
     assert_equal "recordPOID", columns[0]["name"]
     assert_equal "record_key", columns[1]["name"]
     assert_equal "record_value", columns[2]["name"]
+    assert_equal "lastUpdateTime", columns[3]["name"]
 
     tag_columns = @fake_tag_table.columns
     assert_equal "tagPOID", tag_columns[0]["name"]

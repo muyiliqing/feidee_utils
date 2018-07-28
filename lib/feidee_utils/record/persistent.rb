@@ -37,7 +37,7 @@ module FeideeUtils
           arr = []
           database.query("SELECT * FROM #{self.table_name}") do |result|
             result.each do |raw_row|
-              arr << self.new(result.columns, result.types, raw_row)
+              arr << self.new(raw_row)
             end
           end
           arr
@@ -57,7 +57,7 @@ module FeideeUtils
               "in table #{self.table_name}."
           end
 
-          self.new(raw_result.columns, raw_result.types, raw_row)
+          self.new(raw_row)
         end
 
         def find(id)

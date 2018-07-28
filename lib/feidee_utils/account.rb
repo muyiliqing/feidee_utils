@@ -111,7 +111,7 @@ module FeideeUtils
         "SELECT * FROM #{self.class.table_name} WHERE parent = ?", poid
       ) do |result|
         result.each do |raw_row|
-          arr << self.class.new(result.columns, result.types, raw_row)
+          arr << self.class.new(raw_row)
         end
       end
       arr

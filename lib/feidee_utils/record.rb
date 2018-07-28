@@ -24,8 +24,7 @@ module FeideeUtils
   # is copied to the new namespace, with it's database method overloaded.
   class Record
     public
-    def initialize(columns, types, row)
-      @columns = columns.freeze
+    def initialize(row)
       @row = row.freeze
 
       validate_integrity
@@ -82,7 +81,7 @@ module FeideeUtils
       # few characters. The overhead is relatively low.
       # In fact, a downstream benchmark showed that it is faster than building a
       # hash upfront and lookup the hash here.
-      index = @columns.index key
+      index = self.class.column_names.index key
       return nil if index.nil?
       @row[index]
     end
