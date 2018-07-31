@@ -41,8 +41,7 @@ module FeideeUtils
     def self.generate_subclasses db
       env = generate_namespaced_record_classes db
       env.contained_classes.each do |klass|
-        # private method.
-        klass.send :define_indexed_accessors
+        klass.define_indexed_accessors
       end
       env
     end

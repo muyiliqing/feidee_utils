@@ -45,6 +45,7 @@ module FeideeUtils
           const_set :IndexedAccessorFieldMappings, field_mappings
         end
 
+        protected
         # NOTE: Here we assume the underlaying database schema does not change.
         # The assumption is safe in the sense that it is generally expected to
         # restart and/or recompile your application after updating the schema.
