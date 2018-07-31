@@ -6,6 +6,8 @@ module FeideeUtils
       module ClassMethods
         attr_reader :child_classes
 
+        private
+
         # Must be invoked by Record.inherited
         def collect_subclass(child_class)
           @child_classes ||= Set.new

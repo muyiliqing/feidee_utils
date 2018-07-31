@@ -10,6 +10,9 @@ module FeideeUtils
       end
 
       module ClassMethods
+
+        private
+
         def define_accessors field_mappings
           field_mappings.each do |name, key|
             if method_defined? name

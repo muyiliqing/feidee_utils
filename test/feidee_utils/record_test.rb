@@ -101,7 +101,7 @@ class FeideeUtils::RecordTest < MiniTest::Test
   end
 
   def test_define_accessors
-    assert (FeideeUtils::Record.respond_to? :define_accessors),
+    assert (FeideeUtils::Record.private_methods.include? :define_accessors),
         "Record doesn't have define_accessors class method."
     klass = Class.new(FeideeUtils::Record) do
       def column key
@@ -117,7 +117,7 @@ class FeideeUtils::RecordTest < MiniTest::Test
   end
 
   def test_define_entity_accessor
-    assert (FeideeUtils::Record.respond_to? :define_entity_accessor),
+    assert (FeideeUtils::Record.private_methods.include? :define_entity_accessor),
         "Record doesn't have define_entity_accessor class method."
 
     klass = Class.new(FeideeUtils::Record) do

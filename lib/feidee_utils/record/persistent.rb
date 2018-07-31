@@ -3,6 +3,8 @@ module FeideeUtils
   class Record
     module Persistent
       module ClassMethods
+        private
+
         # Names
         # Must be invoked by Record.inherited
         def genereate_names subclass
@@ -23,6 +25,8 @@ module FeideeUtils
             define_singleton_method :table_name do table_name end
           end
         end
+
+        public
 
         def columns
           database.table_info(self.table_name)
