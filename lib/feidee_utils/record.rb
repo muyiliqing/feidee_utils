@@ -56,7 +56,7 @@ module FeideeUtils
       def inherited subclass
         if subclass.name != nil and subclass.name.start_with? FeideeUtils.name
           collect_subclass subclass
-          genereate_names subclass
+          subclass.generate_names
         end
       end
     end

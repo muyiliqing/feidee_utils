@@ -30,14 +30,14 @@ class FeideeUtils::RecordTest < MiniTest::Test
     FeideeUtils::Record.class_eval do
       define_singleton_method(:database) { temp_db }
     end
-    FeideeUtils::Record.send :genereate_names, FeideeUtils::Record
+    FeideeUtils::Record.send :generate_names
 
     @fake_tag_table = Class.new(FeideeUtils::Record) do
       def self.name
         'Tag'
       end
     end
-    FeideeUtils::Record.send :genereate_names, @fake_tag_table
+    @fake_tag_table.send :generate_names
 
     @tag_table = FeideeUtils::Tag
 
@@ -46,14 +46,14 @@ class FeideeUtils::RecordTest < MiniTest::Test
         'Test::FeideeUtils::Transaction'
       end
     end
-    FeideeUtils::Record.send :genereate_names, @fake_transaction_table
+    @fake_transaction_table.send :generate_names
 
     @fake_account_group_table = Class.new(FeideeUtils::Record) do
       def self.name
         'AccountGroup'
       end
     end
-    FeideeUtils::Record.send :genereate_names, @fake_account_group_table
+    @fake_account_group_table.send :generate_names
 
     @saved = FeideeUtils::Record.child_classes.clone
   end
