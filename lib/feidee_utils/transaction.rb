@@ -212,20 +212,6 @@ module FeideeUtils
       str + " at #{trade_at} (Transaction #{poid})";
     end
 
-    class ModifiedTransaction < ModifiedRecord
-      define_custom_methods([
-        :created_at,
-        :modified_at,
-        :trade_at,
-        :type,
-        :category_poid,
-        :buyer_deduction,
-        :seller_addition,
-        :amount,
-      ])
-      define_default_methods(FieldMappings)
-    end
-
     private
     def sign_by_type num
       # This is awkward. For transactions of type positive_initial_balance, the

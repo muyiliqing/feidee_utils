@@ -3,7 +3,6 @@ require 'feidee_utils/record/computed'
 require 'feidee_utils/record/namespaced'
 require 'feidee_utils/record/persistent'
 require 'feidee_utils/record/utils'
-require 'feidee_utils/record/modified_record'
 
 module FeideeUtils
   # The implementation here is wired.

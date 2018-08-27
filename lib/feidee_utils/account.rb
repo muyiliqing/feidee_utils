@@ -121,16 +121,6 @@ module FeideeUtils
       "#{name} (Account/#{poid})"
     end
 
-    class ModifiedAccount < Record::ModifiedRecord
-      define_custom_methods([
-        :balance,
-        :credit,
-        :debit,
-        :parent,
-      ])
-      define_default_methods(FieldMappings)
-    end
-
     # Schema:
     # accountPOID LONG NOT NULL,
     # name varchar(100) NOT NULL,
