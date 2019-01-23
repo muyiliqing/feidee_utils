@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.required_ruby_version = '>= 2.0.0'
 
   s.add_dependency 'rake', '~> 10.5', '>= 10.5.0'
-  s.add_dependency 'rubyzip', '~> 1.2', '>= 1.2.0'
+  s.add_dependency 'rubyzip', '~> 1.2', '>= 1.2.2'
   s.add_dependency 'sqlite3', '~> 1.3', '>= 1.3.10'
   s.add_dependency 'tzinfo', '~> 1.2', '>= 1.2.2'
 
